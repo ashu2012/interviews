@@ -1,0 +1,117 @@
+.commentlist li, #commentform input, #commentform textarea {
+	font: 0.9em 'Lucida Grande', Verdana, Arial, Sans-Serif;
+}
+.commentlist li ul li {
+	font-size: 1em;
+}
+.commentlist li {
+	font-weight: bold;
+}
+.commentlist li .avatar { 
+	float: right;
+	border: 1px solid #eee;
+	padding: 2px;
+	background: #fff;
+}
+.commentlist cite, .commentlist cite a {
+	font-weight: bold;
+	font-style: normal;
+	font-size: 1.1em;
+}
+.commentlist p {
+	font-weight: normal;
+	line-height: 1.5em;
+	text-transform: none;
+}
+#commentform p {
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+}
+.commentmetadata {
+	font-weight: normal;
+}
+h3.comments {
+	padding: 0;
+	margin: 40px auto 20px ;
+}
+.alt {
+	margin: 0;
+	padding: 10px;
+}
+.commentlist {
+	padding: 0;
+	text-align: justify;
+	margin:0;
+}
+.commentlist li {
+	margin: 15px 0 10px;
+	padding: 5px 5px 10px 10px;
+	list-style: none;
+}
+.commentlist li ul li { 
+	margin-right: -5px;
+	margin-left: 10px;
+}
+.commentlist p {
+	margin: 10px 5px 10px 0;
+}
+.children { padding: 0; }
+#commentform p {
+	margin: 5px 0;
+}
+.nocomments {
+	text-align: center;
+	margin: 0;
+	padding: 0;
+}
+.commentmetadata {
+	margin: 0;
+	display: block;
+}	
+.thread-alt {
+	background-color: #f8f8f8;
+}
+.thread-even {
+	background-color: white;
+}
+.depth-1 {
+	border: 1px solid #ddd;
+}
+.even, .alt {
+	padding:10px;
+	border-left: 1px solid #ddd;
+}
+#commentform input {
+	width: 170px;
+	padding: 2px;
+	margin: 5px 5px 1px 0;
+}
+#commentform {
+	margin: 5px 10px 0 0;
+}
+#commentform textarea {
+	width: 100%;
+	padding: 2px;
+}
+#respond:after {
+	content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+#commentform #submit {
+	margin: 0 0 5px auto;
+	float: right;
+}
+#respond{
+	padding-bottom:5px;
+}
+textarea{
+	resize:none;
+}
+.alignleft{
+	float:left;
+}
+.alignright{
+	float:right;
+}

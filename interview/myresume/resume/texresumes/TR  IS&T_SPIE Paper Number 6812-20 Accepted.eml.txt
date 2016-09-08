@@ -1,0 +1,204 @@
+Subject:
+TR: IS&T/SPIE Paper Number 6812-20 Accepted
+From:
+"Mihai MITREA" <mihai.mitrea@int-edu.eu>
+Date:
+Thu, 20 Sep 2007 10:44:27 +0200
+To:
+'Françoise Préteux' <Francoise.Preteux@int-edu.eu>, "'Pierre Rolin'" <pierre.rolin@telecomint.eu>
+CC:
+"Octavian Dumitru" <octavian.dumitru@int-edu.eu>, <apathak@iitk.ac.in>
+
+Dear Dr. Rolin,
+Dear Professor Prêteux,
+
+Please, find attached some good news: our paper including some of Ashutosh
+results has been accepted for Electronic Imaging 2008.
+Of course, this means for Ashutosh some more experiments to do but I am
+quite confident he will confirm the very good impression he gave us.
+With my highest consideration,
+Mihai 
+
+
+
+-----Message d'origine-----
+De : jeannea@spie.org [mailto:jeannea@spie.org] 
+Envoyé : jeudi 20 septembre 2007 00:38
+À : mihai.mitrea@int-edu.eu
+Objet : IS&T/SPIE Paper Number 6812-20 Accepted
+
+Dear Dr. Mihai P. Mitrea,
+
+PLEASE SAVE THIS MESSAGE FOR REFERENCE
+This message includes information regarding:
+*	Presentation Details
+*	Important Dates
+*	Visa and Invitation Letters
+*	Meeting Contact Information
+*	Manuscript Contact Information
+*	Manuscript Specifications and Manuscript Submission
+
+On behalf of the chairs for the conference on Image Processing: Algorithms
+and Systems VI it is my pleasure to confirm the acceptance of the submission
+Probability density function estimation for video in the DCT domain. This
+conference is part of the 20th Annual IS&T/SPIE Symposium on Electronic
+Imaging which will be held 27-31 January 2008 at the San Jose Convention
+Center in San Jose, California USA. 
+
+PRESENTATION DETAILS
+
+Paper Number:  6812-20 
+Please refer to this IS&T/SPIE Paper Number in all correspondence about the
+presentation or submission of this manuscript.
+
+Presentation Type:  oral  
+The decision of oral or poster presentation is made by the conference
+chair(s). If you are scheduled to present a poster, you will receive a
+poster tips and board reservation email in approximately 5 weeks. Please
+respond to that email to confirm that you or a coauthor will attend the
+meeting to present the poster so that we can reserve a poster board for you.
+
+A full-length manuscript is required for all accepted oral and poster
+presentations, including invited and keynote presentations. Manuscript
+specifications are included below.
+
+Presentation Date:  29 Jan 2008
+
+IMPORTANT DATES
+
+*Today*
+If you need a visa, begin the visa application process now! Please apply for
+your visa as soon as possible and no later than 3 months before the meeting.
+Stricter security requirements are delaying visa approvals. Please be ready
+to provide your resume (in English), a list of publications, and your travel
+itinerary at your visa interview. Information about visas is available at
+http://national-academies.org/visas 
+
+If you require an invitation letter in order to receive a visa, or if you
+need a letter to confirm your presentation acceptance for funding purposes
+for your institution, please complete the form found at
+http://SPIE.org/InvitationLetterPDF and return it to SPIE, fax number:
+1-360-647-1445.
+
+*22 October*
+The technical program will be available at http://electronicimaging.org
+during the week of 22 October. The program will include a complete list of
+technical presentations and special events (based on commitments received up
+to the time of publication), travel information, a hotel accommodation form,
+and a registration form.
+
+*19 November*
+If you or a co-author are unable to make your presentation please notify me
+no later than 19 November so we can remove the presentation from the final
+program. If you are a scheduled for a poster presentation, please reserve
+your board by this date. If you do not contact me by this date and you do
+not give your presentation at the meeting, this will be noted in your
+permanent record with IS&T/SPIE and you risk not being accepted to present
+at future IS&T/SPIE events.
+
+*Manuscript Due Date: 07 Jan 2008*
+Submit your manuscript by 07 Jan 2008. The manuscript submission website
+will be open approximately 5 weeks prior to this date. All authors (poster,
+oral, invited, keynote, and plenary) are expected to submit manuscripts.
+Late manuscripts will not be published. If we receive all of the finalized
+manuscripts on or before this date, we will be able to publish the
+proceedings volume in a timely manner. Only manuscripts that are presented
+at the meeting will be published. Manuscript guidelines are included below
+and can also be found at: http://SPIE.org/manuscripts 
+
+*6 January*
+Preregister for the meeting by 6 January (fees increase by ~US$100 after
+this date). All authors including invited, keynote, and solicited speakers
+are responsible for registering and paying the reduced author registration
+fee. (Current IS&T and SPIE Members receive a discount on the registration
+fee.) You are responsible for all of your travel expenses and your
+registration fee.
+
+MEETING CONTACT INFORMATION
+For questions about your presentation, or the meeting, contact Jeanne
+Anderson, (jeannea@spie.org)
+For questions about your manuscript, contact your SPIE Staff Proceedings
+Editor, Matthew Novak (mattn@spie.org)
+
+We look forward to your participation!
+
+Sincerely,
+
+Jeanne Anderson
+Manager, SPIE Technical Programs Department
+(jeannea@spie.org)
+
+MANUSCRIPT SPECIFICATIONS AND SUBMISSION
+-------------------------------------------------
+
+1. FORMATTING
+                                      
+a. Consult IS&T/SPIE's Presentation and Publication Policy at
+http://SPIE.org/manuscripts
+
+b. Manuscripts should be 8-12 pages single-spaced (15 page limit for invited
+papers). There is a publication charge of $35 for each additional page (see
+link to the Publication Charges Form below to make payment). 
+
+c. For information about formatting requirements, manuscript specifications,
+a sample manuscript in PDF format, Templates for Microsoft Word, links to
+further information for LaTeX users, and author forms such as copyright,
+reprint order, and publication Charges form, please go to
+http://SPIE.org/manuscripts and consult the list on the left side of the
+page.
+
+-------------------------------------------------
+
+2. MANUSCRIPT SUBMISSION 
+ 
+To submit your manuscript, sign in to MySPIE at http://MySPIE.org. You do
+not need to send a hard-copy version to IS&T/SPIE, or the conference chairs.
+Please note that MySPIE accepts only PostScript or MS Word files and you
+will need your IS&T/SPIE paper number to submit your manuscript. On-line
+MySPIE Submission Help is available at http://MySPIE.org/troubleshooter. If
+you have questions about MySPIE account creation, or your MySPIE account,
+please contact CustomerService@SPIE.org
+ 
+-------------------------------------------------
+
+3. AFTER MANUSCRIPT SUBMISSION
+
+After you submit your manuscript through MySPIE, please mail the following
+to SPIE via regular post (write paper number on all forms and on the reverse
+side of all manuscript pages). Please note that Adobe Acrobat Reader is
+required to view all forms and is available at
+http://www.adobe.com/products/acrobat/readstep.html
+
+a.	 Signed Copyright Form found at http://SPIE.org/CopyrightPDF. This
+is required for all submissions. 
+
+b.	 Reprint Order Form with payment found at
+http://SPIE.org/manuscripts. This is necessary *only* if reprints are
+desired.
+
+c.	 Publications Charges Form with payment found at
+http://SPIE.org/PubCharges. This is necessary *only* if color printing is
+desired or the manuscript contains extra pages.
+
+
+Jeanne Anderson
+jeannea@spie.org
+Manager, SPIE Technical Programs Department
+Contact for all program and meeting-related questions
+
+Matthew Novak
+mattn@spie.org
+Proceedings Editor for Volume 6812, Proceedings Department
+Contact for all manuscript questions
+
+SPIE
+P.O. Box 10
+Bellingham, WA  98227-0010 USA
+Tel (Switchboard): +1 360 676 3290
+Fax: +1 360 647 1445
+
+SPIE.org
+SPIE is an international society advancing an interdisciplinary approach to
+the science and application of light.
+
+

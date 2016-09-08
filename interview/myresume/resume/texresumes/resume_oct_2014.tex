@@ -1,0 +1,279 @@
+\documentclass[]{res}
+%-----------------------------------------------------------
+%Margin setup
+
+%\setlength{\voffset}{-0.4in}
+%\pdfpagewidth 8.5in
+%\pdfpageheight 11in
+%\setlength{\paperwidth}{8.5in}
+%\setlength{\paperheight}{11in}
+%\setlength\topmargin{-0.2in}
+%\setlength{\headheight}{0in}
+%\setlength{\headsep}{0in}
+%\setlength{\textheight}{11.0in}
+%\setlength{\textwidth}{8.0in}
+%\setlength{\topskip}{0in}
+%\setlength{\footskip}{0.2in}
+%\setlength{\oddsidemargin}{-2.25in}
+%\setlength{\evensidemargin}{-2.25in}
+%-----------------------------------------------------------
+%\usepackage{fullpage}
+\usepackage{hyperref}
+%\usepackage[a4paper]{geometry}
+\usepackage[a4paper, top=1cm, bottom=1cm, left= -0.5cm, right=2cm]{geometry} 
+\usepackage{shading}
+%\textheight=9.0in
+%\pagestyle{empty}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+%-----------------------------------------------------------
+%Custom commands
+\newcommand{\resitem}[1]{\item #1 \vspace{-2pt}}
+\newcommand{\resheading}[1]{{\large \parashade[.9]{sharpcorners}{\textbf{#1 \vphantom{p\^{E}}}}}}
+\newcommand{\ressubheading}[4]{
+\begin{tabular*}{6.5in}{l@{\extracolsep{\fill}}r}
+		\textbf{#1} & #2 \\
+		\textit{#3} & \textit{#4} \\
+\end{tabular*}\vspace{-6pt}}
+\rmfamily
+%\usefont{T1}{tnr}{m}{sl} 
+\sffamily
+%-----------------------------------------------------------
+\begin{document}
+\begin{tabular*}{7in}{l@{\extracolsep{\fill}}r}
+\textbf{\Large Ashutosh Pathak} \\ \textbf{Bachelor and Master's in Computer Science \& Engineering }&   \textbf{+91-9911656022}\\
+\textbf{Dual degree from Indian Institute of Technology Kanpur 2004-2009} &  \textbf{atp.iitk@gmail.com}\\
+\end{tabular*}
+\\
+\vspace{0.1in}
+
+
+
+\resheading{Objective \& Goal}
+\vspace{-0.2in}
+\begin{description}
+\item[]
+\begin{itemize}
+To learn and apply the knowledged gathered by experience in the field of Computer Science .
+\end {itemize}
+
+\end{description}
+\rmfamily
+
+\resheading{Work Experience}
+\vspace{-0.2in}
+\begin{description}
+
+\item[]
+\begin{itemize}
+\item{   \textbf{Senior Software Developer,  Limeroad.com , Bangalore (Jun2012 -Oct 2014)}}\\
+
+\item{Worked on the development of an E-commerce website for online selling of woman products using Ruby on Rails(front end) , cakephp framework (for backend vendor portal) and SOA architectture where java services written using Spring , Maven talk to frontend website .}
+ 
+\item{ I am among the top 5 member founding engineer team who build website and backend admin portal for Limeroad.com .}
+
+\item{ Designed from scratch backnd bussiness logic and schema for brands, products upload, inventory creation, image upload for backend admin portal from scratch.}
+
+\item{ Developed product listing with infinite scroll and search functionality powerd by solr for front end website using jquery  ajax, rails , twiter bootrap css framework .}
+
+\item{ Developed the business logic for dataentry team , the process was similer to magento ie using xlsheet to upload information in backend portal for frontend products display.}
+
+\item{ Worked on the nosql database like mongodb , solr for serach on indexed documents using n-grams , redis for cached product information. }
+
+\item {handled the infrastructure issues like elb for server load , amazon rds for database. Did A-B type testing for ui cchanges and record the information in google analytcs.  }
+
+\end {itemize}
+
+\item[]
+\begin{itemize}
+\item{ \textbf{  \textbf{Software developer Literaturebay.com }, Bangalore (Nov 2010- jun2012)}}\\
+
+ 
+\item{ Designed  website fully supported latest facebook app frame work such as OAuth2.0, CSRF protection.}
+ 
+\item{ Designed website has advanced search feature using natural language and LRU  caching facility which was designed customly. Future work involving automatic string correction using lipschitz  or edit distance algorithm .  }
+ 
+\item{ Designed website support  multi level categories  retrieval  algorithm using  modified preorder traversal where a top level category can access all products in the tree below it in single access to dbtable. Future work involve use of  MangoDB}
+
+\item{ Designed website support custom spam protection framework for user information. The user information is stored in dynamic image form rather than textual form which make crawlers useless. }
+ 
+\item{ Designed website has 3 level tagging support also known as toxi with weight handling which fulfill Folksonomy and web 2.0 standards. }
+ 
+\item  Provided the  administration and maintenance of web hosting in VPS server in amazon cloud. Worked involve setting up postfix mailserver with Thawate certificates , experimenting  with Apache and Nginix for better performance. setting up mysql server with databse models using both Innodb and MyIsam with trigger support for automatic rows backup. Taking regular backup using cron scripts. 
+
+
+\end {itemize}
+
+
+\item[]
+\begin{itemize}
+\item {\textbf{ Member Technical Staff ,Oracle, Bangalore    (July 2009- June 2010)}}\\
+%\end{itemize}
+
+\item Designed a cloud based patching environment using open source tools like eucalyptus cloud on KVM and xen Vitual machine images(VMs). Cloud based patching framework was used for patching oracle updates to customer boxes.
+
+
+
+%\begin{itemize}
+\item The use of cloud was to utilize the computing environment effectively and the VMs are used to apply patches on backup copy rather than on running system. Work involved experimenting with different network mode like V-lan mode etc, bridge mode and NAT rules. 
+
+%\end {itemize}
+
+
+%\begin{itemize}
+\item  I designed a tool through which the network bandwidth between different VMs can be controlled using iptables and ebtables and HTB(hierarchical token buffer)for effective bandwidth utilization. Patching mechanism was similar to Rsync.  
+
+%\end {itemize}
+
+
+%\begin{itemize}
+\resitem{ Worked on a restore and recovery datacentre project. The aim was to fragment the  large system image files into m smaller size files and recreate the original system images from  $l \leq{ n} \leq{ m}$ splited files. This was done using famous Jerasure encoder and decoder library. I even make it multi threaded for better performance benefit.}   
+
+%\end {itemize}
+
+
+
+
+%\begin{itemize}
+\resitem{  I have also undergone the java j2ee training in oracle university. }   
+
+\end {itemize}
+
+\end{description}
+
+\resheading{Awards \& Summary}
+\vspace{-0.2in}
+\begin{description}
+
+\item[]
+\begin{itemize}
+\item
+Research publications on \href{http://adsabs.harvard.edu/abs/2008SPIE.6812E..20D}{\textbf{Probability density function estimation for video in the DCT domain}}  \textit{Proceedings SPIE Conference on Image Processing: Algorithms and Systems VI, San Jose, CA, Vol. 6812, January 2008, p. 68120L:1-9}.
+\end{itemize}
+
+\item[]
+\begin{itemize}
+\item
+ Has secured All India Rank \textbf{416 in Indian institute of technology Joint Enterance Exam }  in 2004  for selection in premier engineering and research colleges in India, Also secured the \textbf{Top 1\% in International Physics Olympiad }.
+\end{itemize}
+
+
+ \item[]
+ \begin{itemize}
+ \item Worked on \textbf{ruby on rails , cakephp ,node.js, maven jetty, node.js  based MVC framework for web development.}  Has experianced on php, java, javascript , bash , python and sql .
+\end{itemize}
+
+ \item[]
+ \begin{itemize}
+ \item Has worked with technologies like \textbf{solr, redis, mongodb, mysql, git , rabbitmq, amazon ec2 instances , rds , S3 and Gearman} .
+\end{itemize}
+
+
+
+\item[]
+\begin{itemize}
+ \item  Worked in Open Source \textbf{Cloud platform} Eucalyptus and Jerrasure encoder decoder \textbf{Multithreaded} library written in c . Worked in \textbf{C/C++} and \textbf{Unix Posix thread library}. Has related Experience in debugging large projects using \textbf{Doxygen} , raising tickets in community forum and IRC chat.
+ \end{itemize}
+ 
+
+\vspace{0.2in}
+
+
+
+
+\item[]
+\begin{itemize}
+\item {\textbf{Mtech Thesis     ,                                                                        (April2008-July2009) }\\
+	" \textbf{DTW based Online signature verification using adaptive global constraints} ".  Supervisor :- Dr Phalguni Gupta .
+Online signature has lot of dynamic features like velocity, acceleration etc. DTW based algorithms are usually good for matching time series but due to there O($n^2$) time complexity real time matching is not very responsive on very large timeseries. Using global constraints runtime of algorithm can be reduced significantly. Work involved biometric data and pattern recognition techniques.}
+\end{itemize}
+
+
+\item[]
+%\ressubheading{}
+\begin{itemize}
+	\item \textbf {Research Publication :-}\\
+	 \textbf{INSTITUTE NATIONAL DES TELECOMMUNICATIONS (INT),Paris, France  (may - July 2007)}.  
+	During summer internship in the 3rd year of college, I got the opportunity to work on robust Watermarking  Techniques on videos \& Study the different kind of attacks to compromise the watermarking. Work involved Signal theory, DCT and Wavelet Transform, X.264 codecs, and fast processing of video frames. \textbf{Achievement:-}Suggested blockwise DCT transformation \&  better data Structures result in improvement. Finally the paper was presented in the \textbf{"SPIE Conference on Image Processing: Algorithms and Systems VI January 2008"}  with the help of my supervisor Dr Mihai Metria. I received the appreciation and invitation for the conference in california. 
+\end{itemize}
+
+\item[]
+\begin{itemize}
+	\item  \textbf{Teaching Assistant(TA),Core JAVA Language, (Jan 2009-April2009)}\\
+	Responsibilities included designing lab assignment in JAVA for 1st year students. checking copies, updating marks in course website.
+\end{itemize}
+
+\item[]
+\begin{itemize}
+	\item \textbf{ Teaching Assistant(TA),Computer Organization course , (Aug 2008-Dec2008)} *\\
+	Responsibilities included advising weak students, designing assignments  and  helping the course students in implementation of ALU , Regfile, Ram , CPU in Spartan series 3 FPGA Board in Hardware lab using xilinix IDE and verilog language.
+\end{itemize}
+
+\end{description}
+
+
+%\resheading{Relevant Courses} 
+%\begin{description}
+%\item 
+%\begin{itemize}
+%\item
+%System related:-\\
+% Distributed Systems, Operating Systems, Computer Organization, Fundamental of electronics,
+% Principles Of Database Systems, Compiler Design, Indexing \& searching in Databases.\\
+% \item
+% Theoretical:-\\
+% Advance Algorithms, Data Structures, Parallel and semi Numerical Algorithm ,\\
+% Theory of Computation, Numerical Methods In Engineering, Linear Algebra, Discreet Mathematics .\\
+%\item
+% Network related:-\\
+% Mobile Computing, Computer Networks, Data Streaming . \\
+%\item
+% Software :-\\
+% Principles Of Programming Languages, Software Engineering, Internet technologies ,\\
+%  Programming Tools \&Techniques, Fundamentals Of Computing(JAVA) .\\
+% \end{itemize}	 
+% \item[other courses:]
+% rest are from grade sheet.
+% \end{description}
+% 
+
+
+
+
+
+
+
+
+\vspace{-0.2in}
+\resheading{Skills}
+\vspace{-0.2in}
+\begin{description}
+\item[Languages:]
+C/C++, \LaTeX, Java,C\#,Php,ruby,bash, perl, python shell scripting,UML, Verilog, IA32 Linux Assembly ,xml, Sql.
+\item[Operating Systems:]
+Linux (Redhat , Ubuntu ,Fedora), Solaris, Windows 95/98/NT/2000/XP
+\item[Applications and IDE:]
+Mathematica, MatLab, Visual Studio,Eclipse, Xilinix, Jedve, Netbeans, GCC debugger, OpenOffice, MS Office XP ,Ruby on Rails, LAMP, Apache Web Server, Mysql, Oracle, Lex , Yacc,Doxygen, Gnuplot.
+\item[Web framework and open source tools:]
+Cakephp, Django, J2ee, Git, SVN, HP loadrunner, QTP loadrunner, Buildbot .
+\end{description}
+
+\vspace{-0.2in}
+\resheading{Interests And Extra Curricular}
+\vspace{-0.2in}
+\begin{description}
+\item[Academic:]systems, os, network, databases, new web based technologies, micro controllers, Finance .
+\item[Sports:]  football ,swimming. was in Institute swimming team during 1st year at IITK.
+\item[Computers:]  Mozilla beta tester, enjoy using and learning Linux systems .
+\item[technology:] reading latest technology news using Zdnet, Code project.
+\item[Other:] IPO, Stocks and commodity trading, mountain tracking  .
+\end{description}
+ 
+ 
+
+
+ 
+
+\end{document}

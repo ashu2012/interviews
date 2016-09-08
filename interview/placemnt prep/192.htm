@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="js" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+
+  <title>How b-tree database indexes work and how to tell if they are efficient (100' level) | mattfleming.com</title>
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="copyright" content="Copyright © 2008 mattfleming.com, LLC. All rights reserved.">
+<meta name="description" content="b-tree iconA team member thought we should add an index on a 90 million row table to improve performance. The field on which he wanted to create this index had only four possible values. To which I replied that an index on a low cardinality field wasn't">
+<meta name="robots" content="index,follow">
+<meta name="DC.title" content="How b-tree database indexes work and how to tell if they are efficient (100' level)">
+<link rel="shortcut icon" href="http://mattfleming.com/misc/favicon.ico" type="image/x-icon">
+<link rel="openid.server" href="http://www.myopenid.com/server">
+<link rel="openid.delegate" href="http://matt.fleming.myopenid.com/">
+<meta http-equiv="X-XRDS-Location" content="http://www.myopenid.com/xrds?username=Matt.Fleming.myopenid.com">
+<link rel="openid2.provider" href="http://www.myopenid.com/server">
+<link rel="openid2.local_id" href="http://matt.fleming.myopenid.com/">
+  <style type="text/css" media="all">@import "/files/css/4653a278fdc674f5fd9a9a465058c8af.css";</style>
+  <script type="text/javascript" src="192_files/jquery.js"></script>
+<script type="text/javascript" src="192_files/drupal.js"></script>
+<script type="text/javascript">Drupal.extend({ settings: { "googleanalytics": { "trackDownload": "pdf|zip|mp3", "LegacyVersion": 0 } } });</script>
+</head><body bgcolor="#ffffff">
+
+<div class="hide"><a href="#content" title="Skip navigation." accesskey="2">Skip navigation</a>.</div>
+
+<table id="primary-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td id="home" width="10%">
+              <a href="http://mattfleming.com/" title="Home"><img src="192_files/logo.png" alt="Home" border="0"></a>
+          </td>
+
+    <td id="site-info" width="20%">
+              <div class="site-name"><a href="http://mattfleming.com/" title="Home">mattfleming.com</a></div>
+                </td>
+    <td class="primary-links" align="center" valign="middle" width="70%">
+          </td>
+  </tr>
+</tbody></table>
+
+<table id="secondary-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td class="secondary-links" align="center" valign="middle" width="75%">
+      <ul class="links" id="subnavlist"><li class="first menu-1-1-113"><a href="http://www.hostfamilyhandbook.com/" title="Au pair guide for host families" class="menu-1-1-113">Au pair Advice</a></li>
+<li class="menu-1-2-113"><a href="http://mattfleming.com/personal" title="Personal stories" class="menu-1-2-113">blog</a></li>
+<li class="menu-1-3-113"><a href="http://blogstamp.org/" title="Certified timestamps for everyone" class="menu-1-3-113">blogstamp.org</a></li>
+<li class="menu-1-4-113"><a href="http://mattfleming.com/forum" title="Get a login id and contribute!" class="menu-1-4-113">forums</a></li>
+<li class="last menu-1-5-113"><a href="http://mattfleming.com/resume" title="Work experience" class="menu-1-5-113">resume</a></li>
+</ul>    </td>
+    <td align="center" valign="middle" width="25%">
+      <form action="/search/node" accept-charset="UTF-8" method="post" id="search-theme-form">
+<div><div id="search" class="container-inline"><div class="form-item">
+ <input maxlength="128" name="search_theme_form_keys" id="edit-search-theme-form-keys" size="15" title="Enter the terms you wish to search for." class="form-text" type="text">
+</div>
+<input name="op" id="edit-submit" value="Search" class="form-submit" type="submit">
+<input name="form_id" id="edit-search-theme-form" value="search_theme_form" type="hidden">
+</div>
+</div></form>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2"><div></div></td>
+  </tr>
+</tbody></table>
+
+<table id="content" border="0" cellpadding="15" cellspacing="0" width="100%">
+  <tbody><tr>
+        <td id="sidebar-left">
+      <div class="block block-user" id="block-user-1">
+  <div class="title"><h3>Navigation</h3></div>
+  <div class="content">
+<ul class="menu">
+<li class="leaf"><a href="http://mattfleming.com/tracker" title="Shows all content which has been recently posted">recent posts</a></li>
+<li class="leaf"><a href="http://mattfleming.com/tagadelic" title="Navigate the site by weighted content tags">tagcloud</a></li>
+<li class="leaf"><a href="http://mattfleming.com/personal" title="Personal stories">personal blog</a></li>
+<li class="leaf"><a href="http://mattfleming.com/book" title="Objective, quasi-non fiction reference material">reference books</a></li>
+<li class="leaf"><a href="http://mattfleming.com/forum">forums</a></li>
+
+</ul>
+</div>
+</div><div class="block block-statistics" id="block-statistics-0">
+  <div class="title"><h3>Popular content</h3></div>
+  <div class="content"><div class="item-list"><h3>Today's:</h3><ul><li><a href="http://mattfleming.com/node/134">Dynamic list binding in Spring MVC</a></li><li><a href="http://mattfleming.com/node/192" class="active">How b-tree database indexes work and how to tell if they are efficient (100' level)</a></li><li><a href="http://mattfleming.com/node/269">How Spring Security hooks to Central Authentication Service (CAS)</a></li><li><a href="http://mattfleming.com/node/141">java.sql.Date vs java.sql.Timestamp</a></li><li><a href="http://mattfleming.com/node/190">Full Stack: Portable Home Directory over NFS on OSX authenticated via OpenLDAP on Debian Linux</a></li></ul></div><br><div class="item-list"><h3>All time:</h3><ul><li><a href="http://mattfleming.com/node/134">Dynamic list binding in Spring MVC</a></li><li><a href="http://mattfleming.com/node/192" class="active">How b-tree database indexes work and how to tell if they are efficient (100' level)</a></li><li><a href="http://mattfleming.com/node/67">The recovery: PRK vs LASIK</a></li><li><a href="http://mattfleming.com/node/141">java.sql.Date vs java.sql.Timestamp</a></li><li><a href="http://mattfleming.com/node/190">Full Stack: Portable Home Directory over NFS on OSX authenticated via OpenLDAP on Debian Linux</a></li><li><a href="http://mattfleming.com/node/93">Automount USB drives in Debian</a></li><li><a href="http://mattfleming.com/node/269">How Spring Security hooks to Central Authentication Service (CAS)</a></li><li><a href="http://mattfleming.com/node/130">Full Stack: MSN, AIM/ICQ, and Yahoo! in iChat via Jabber server on Debian</a></li><li><a href="http://mattfleming.com/node/37">PRK vs LASIK</a></li><li><a href="http://mattfleming.com/node/187">I needed some storage, went whole hog... the Ready NAS NV+</a></li></ul></div><br><div class="item-list"><h3>Last viewed:</h3><ul><li><a href="http://mattfleming.com/node/207">A.O. Smith ProMax GCVX-50</a></li><li><a href="http://mattfleming.com/node/274">After Tomcat Server Config</a></li><li><a href="http://mattfleming.com/node/71">Missing finale of Dungeons and Dragons 80's cartoon now being made.</a></li><li><a href="http://mattfleming.com/node/2">Getting closer...</a></li><li><a href="http://mattfleming.com/node/237">Problem with portable home directories</a></li></ul></div></div>
+</div><div class="block block-user" id="block-user-3">
+  <div class="title"><h3>Who's online</h3></div>
+  <div class="content">There are currently <em>1 user</em> and <em>5 guests</em> online.<div class="item-list"><h3>Online users</h3><ul><li><a href="http://mattfleming.com/user/539" title="View user profile.">xiaoxin</a></li></ul></div></div>
+</div>    </td>
+    
+    <td valign="top">
+      
+      <div id="main">
+                  <div class="breadcrumb"><a href="http://mattfleming.com/">Home</a></div>          <h1 class="title">How b-tree database indexes work and how to tell if they are efficient (100' level)</h1>
+
+          
+        
+        
+        
+      <!-- start main content -->
+      <div class="node">
+        <span class="submitted">Submitted by <a href="http://mattfleming.com/matt" title="View user profile.">Matt Fleming</a> on Thu, 2007-02-22 17:20.</span>
+    <span class="taxonomy"><ul class="links inline"><li class="first taxonomy_term_57"><a href="http://mattfleming.com/taxonomy/term/57" rel="tag" title="" class="taxonomy_term_57">database</a></li>
+<li class="taxonomy_term_52"><a href="http://mattfleming.com/taxonomy/term/52" rel="tag" title="" class="taxonomy_term_52">oracle</a></li>
+<li class="last taxonomy_term_3"><a href="http://mattfleming.com/taxonomy/term/3" rel="tag" title="" class="taxonomy_term_3">performance</a></li>
+</ul></span>
+    <div class="content"><!-- google_ad_section_start --><p>
+<a href="http://mattfleming.com/node/195"><img src="192_files/balanced_b-tree_icon.jpg" alt="b-tree icon" class="thumbnail" height="100" width="76"></a>A
+ team member thought we should add an index on a 90 million row table to
+ improve performance.  The field on which he wanted to create this index
+ had only four possible values.  To which I replied that an index on a 
+low cardinality field wasn't really going to help anything.  My boss 
+then asked me <em>why wouldn't it help?</em> I sputtered around for a response but ended up telling him that I'd get back to him with a reasonable explanation.
+</p>
+<p>
+Now I'm not a DBA by any stretch but I've learned about database 
+optimization and performance on the job from some really bright folks.  I
+ didn't have a very good grasp on how indexes worked though. So I did 
+some research on the topic.
+</p>
+<p>
+There are several kinds of indexes that databases use.  Sybase IQ has 
+like 20 different kinds, Oracle and DB2 appear to have two.  The main 
+type of index out there is a <a href="http://en.wikipedia.org/wiki/b-tree" title="reference on b-tree" target="_blank">b-tree</a>; this is the type that most people mean when they say database index.
+</p>
+<h3>
+What is a b-tree?
+</h3>
+<p>
+In a tree, records are stored in locations called leaves. The starting 
+point is called the root. The maximum number of children per node is 
+called the <strong>order</strong> of the tree. The maximum number of 
+access operations required to reach the desired leaf (data stored on the
+ leaf) is called the <strong>depth</strong> (level). Oracle indexes are balanced b-trees; the order is the same at every node and the depth is the same for every leaf.
+</p>
+<table border="2" cellpadding="2" cellspacing="1">
+<tbody><tr><td><strong>real tree (in nature)</strong></td><td><strong>b-tree</strong></td></tr>
+<tr><td>grows up</td><td>grows down</td></tr>
+<tr><td>main trunk</td><td>root</td></tr>
+<tr><td>branch</td><td>node</td></tr>
+<tr><td>leaf</td><td>leaf</td></tr>
+</tbody></table><br>
+<p>
+<a href="http://mattfleming.com/node/193"><img src="192_files/binary%2520tree.jpg" alt="Binary Tree" height="185" width="127"></a> --------- <a href="http://mattfleming.com/node/194"><img src="192_files/balanced%2520b-tree.jpg" alt="Balanced b-tree" height="184" width="140"></a>
+</p>
+<p>
+The bigger the order, the more leaves and nodes you can put at a certain
+ depth.  This means that there are fewer levels to traverse to get to 
+the leaf (which contains the data you want).  In the example above and 
+all balanced b-trees, the number of hops to a leaf == depth.
+</p>
+<h3>
+How does a b-tree help with database access?
+</h3>
+<p>
+Most indexes are too large to fit into memory, which means that they are
+ going to be stored on disk.  Since I/O is usually the most expensive 
+thing you can do in a computer system, these <strong>indexes need to be stored in an I/O efficient way</strong>.
+</p>
+<p>
+A b-tree is a good way to do this.  If we make the nodes the size of a 
+physical I/O block, it would take one I/O to move to a lower depth in 
+the tree.  In the example below, an index was created on a <em>first name</em> kind of field. 
+</p>
+<p>
+<a href="http://mattfleming.com/node/196"><img src="192_files/example.gif" alt="DB Index Example" height="328" width="592"></a>
+</p>
+<p>
+If every level were an I/O it would take 3 I/Os to find Mary (or any other leaf).
+</p>
+<h3>
+How good is the index?
+</h3>
+<p>
+Now back to the original point I was trying to make-- <em>low cardinality fields make bad indexes.</em>  Why is this the case?  The answer here is really about selectivity.
+</p>
+<pre>
+                unique index values
+selectivity = -----------------------
+                total number records
+</pre>
+<p>
+A primary key is highly selective. If there are 1000 rows, there will be
+ 1000 unique keys in the index.  Eacy unique key will return at most 1 
+row.  The index will be 100% selective (1000/1000).. the best you can 
+get.
+</p>
+<p>
+Now let's say we have an index on a low cardinality thing like gender. 
+If we had 1000 records, the selectivity is in the database is 2/1000 
+=.2%. Said in another way, 500 records come back per unique key (1000 
+records / 2 uniques).
+</p>
+<p>
+Note: this seems to assume an even distribution of data (e.g. 500 male, 
+500 female). Things might be different if you had 999 males, and 1 
+female.
+</p>
+<h3>
+Hand-wavy rule
+</h3>
+<p>
+<strong>10% selectivity is the minimum selectivity</strong> necessary for a b-tree index to be helpful.
+</p>
+<h3>
+What to do about low cardinality columns?
+</h3>
+<p>
+I'm not going to go into it in any detail.  You can either use a different kind of index (e.g. <a href="http://www.oracle.com/technology/pub/articles/sharma_indexes.html">Bitmap index</a>) or <strong>combine that column with another</strong> to make a highly selective composite index.
+</p>
+<h3>
+Oracle way to find low selectivity indexes
+</h3>
+<p>
+Run this query to get an idea of how your indexes are set up.
+</p>
+<pre>
+SELECT 
+  INDEX_NAME "NAME",
+  DISTINCT_KEYS / NUM_ROWS * 100 "SELECTIVITY %",
+  NUM_ROWS,
+  DISTINCT_KEYS "DISTINCT",
+  LEAF_BLOCKS,
+  CLUSTERING_FACTOR,
+  BLEVEL "LEVEL",
+  AVG_LEAF_BLOCKS_PER_KEY "ALFBPKEY"
+FROM 
+  DBA_INDEXES
+WHERE 
+  DISTINCT_KEYS / NUM_ROWS &lt; .1  AND
+  NUM_ROWS &gt; 0
+ORDER BY "SELECTIVITY %" DESC;
+</pre>
+<h3>
+Conclusion
+</h3>
+<p>
+B-tree indexes are created to decrease the amount of I/O required to 
+find and load a set of data.  A highly selective index uses least amount
+ of I/O necessary, poorly selective indices are not much better than a 
+table scan.
+</p>
+<h3>
+References
+</h3>
+<p>
+<a href="http://www.akadia.com/services/ora_index_selectivity.html">How to measure index selectivity</a><br>
+<a href="http://www.revealnet.com/newsletter-v5/0804_D.htm">Effective indexes for Data Warehouses</a><br>
+<a href="http://blog.transactsql.com/2005/01/what-is-difference-between-density-and.html">Density and selectivity in column indexes</a><br>
+<a href="http://saturn.uab.es/server.920/a96533/stats.htm#25115">Verifying index statistics</a><br>
+<a href="http://www.dbasupport.com/forums/archive/index.php/t-38893.html">Index clustering factors</a><br>
+<a href="http://www.dbazine.com/oracle/or-articles/burleson18">Inside Oracle Indexing</a><br>
+<a href="http://searchdatamanagement.techtarget.com/sDefinition/0,,sid91_gci509887,00.html">tree structure definition</a>
+</p>
+<!-- google_ad_section_end --></div>
+        <div class="links">» <ul class="links inline"><li class="first comment_forbidden"><span class="comment_forbidden"><a href="http://mattfleming.com/user/login?destination=node/192%2523comment-form">Login</a> or <a href="http://mattfleming.com/user/register?destination=node/192%2523comment-form">register</a> to post comments</span></li>
+<li class="statistics_counter"><span class="statistics_counter">65018 reads</span></li>
+<li class="last blogstamp_timestamp"><a href="http://mattfleming.com/blogstamp/192" title="Validate timestamp created by blogstamp.org" class="blogstamp_timestamp">timestamp certified</a></li>
+</ul></div>
+    </div>
+<div id="comments"><a id="comment-319"></a>
+<div class="comment">
+    <h3 class="title"><a href="http://mattfleming.com/node/192#comment-319" class="active">index performance</a></h3>
+  <div class="submitted">Submitted by <a href="http://mattfleming.com/user/9" title="View user profile.">AndyF</a> on Tue, 2007-03-06 15:29.</div>
+  <div class="content"><p><em>The field on which he wanted to create 
+this index had only four possible values. To which I replied that an 
+index on a low cardinality field wasn't really going to help anything.</em></p>
+<p>You're probably right, but in the general sense the answer would be 'It depends'.  The reason why I say that:</p>
+<p>a) If you don't have any index, you need to do an table scan.  
+Depending on the ratio between the column length and the total row 
+length, you may be better off building the index and scanning the 
+(smaller) index rather than the table.  </p>
+<p>b) However, if the table is updated all the time, the overhead of the
+ index management and re-orgs may lead you to not choose the index even 
+if it performs better (as in a)</p>
+</div>
+  <!-- BEGIN: links -->
+  <div class="links">» <ul class="links"><li class="first last comment_forbidden"><span class="comment_forbidden"><a href="http://mattfleming.com/user/login?destination=node/192%2523comment-form">Login</a> or <a href="http://mattfleming.com/user/register?destination=node/192%2523comment-form">register</a> to post comments</span></li>
+</ul></div>
+  <!-- END: links -->
+</div>
+</div>            <!-- end main content -->
+
+      </div><!-- main -->
+    </td>
+      </tr>
+</tbody></table>
+
+<table id="footer-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td align="center" valign="middle">
+              <ul class="links secondary-links"><li class="first menu-1-1-113"><a href="http://www.hostfamilyhandbook.com/" title="Au pair guide for host families" class="menu-1-1-113">Au pair Advice</a></li>
+<li class="menu-1-2-113"><a href="http://mattfleming.com/personal" title="Personal stories" class="menu-1-2-113">blog</a></li>
+<li class="menu-1-3-113"><a href="http://blogstamp.org/" title="Certified timestamps for everyone" class="menu-1-3-113">blogstamp.org</a></li>
+<li class="menu-1-4-113"><a href="http://mattfleming.com/forum" title="Get a login id and contribute!" class="menu-1-4-113">forums</a></li>
+<li class="last menu-1-5-113"><a href="http://mattfleming.com/resume" title="Work experience" class="menu-1-5-113">resume</a></li>
+</ul>        </td>
+  </tr>
+</tbody></table>
+
+<div id="footer-message">
+    <p>Copyright © 2010 mattfleming.com, LLC. All rights reserved.
+</p>
+</div>
+<script type="text/javascript" src="192_files/adsense_click.js"></script>
+<script type="text/javascript">document.write(unescape("%3Cscript src='/files/googleanalytics/ga.js' type='text/javascript'%3E%3C/script%3E"));</script><script src="192_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">var pageTracker = _gat._getTracker("UA-77631-1");pageTracker._initData();pageTracker._trackPageview();</script>
+<script type="text/javascript" src="192_files/downloadtracker.js"></script>
+</body></html>

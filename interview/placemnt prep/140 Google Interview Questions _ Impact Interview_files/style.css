@@ -1,0 +1,22 @@
+/*
+Theme Name: ImpactInterview
+*/
+.alignleft{
+	float:left;
+}
+.alignright{
+	float:right;
+}
+.wpcf7-response-output{
+	clear:both;
+}
+#nav .active a{
+	background-position:0 -38px;
+	color:#406091;
+	text-decoration:none;
+}
+#nav .active a span{background-position:100% -38px;}
+/* main elements */
+#content h1 {
+  margin: 10px 0 12px !important;
+}

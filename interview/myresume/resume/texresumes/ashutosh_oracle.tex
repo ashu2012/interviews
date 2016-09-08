@@ -1,0 +1,382 @@
+\documentclass[]{res}
+%-----------------------------------------------------------
+%Margin setup
+
+%\setlength{\voffset}{-0.4in}
+%\pdfpagewidth 8.5in
+%\pdfpageheight 11in
+%\setlength{\paperwidth}{8.5in}
+%\setlength{\paperheight}{11in}
+%\setlength\topmargin{-0.2in}
+%\setlength{\headheight}{0in}
+%\setlength{\headsep}{0in}
+%\setlength{\textheight}{11.0in}
+%\setlength{\textwidth}{8.0in}
+%\setlength{\topskip}{0in}
+%\setlength{\footskip}{0.2in}
+%\setlength{\oddsidemargin}{-2.25in}
+%\setlength{\evensidemargin}{-2.25in}
+%-----------------------------------------------------------
+%\usepackage{fullpage}
+\usepackage{tex4ht}
+\usepackage{hyperref}
+%\usepackage[a4paper]{geometry}
+\usepackage[a4paper, top=1cm, bottom=1cm, left= -0.5cm, right=2cm]{geometry} 
+\usepackage{shading}
+%\textheight=9.0in
+%\pagestyle{empty}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+%-----------------------------------------------------------
+%Custom commands
+\newcommand{\resitem}[1]{\item #1 \vspace{-2pt}}
+\newcommand{\resheading}[1]{{\large \parashade[.9]{sharpcorners}{\textbf{#1 \vphantom{p\^{E}}}}}}
+\newcommand{\ressubheading}[4]{
+\begin{tabular*}{6.5in}{l@{\extracolsep{\fill}}r}
+		\textbf{#1} & #2 \\
+		\textit{#3} & \textit{#4} \\
+\end{tabular*}\vspace{-6pt}}
+\rmfamily
+%\usefont{T1}{tnr}{m}{sl} 
+\sffamily
+%-----------------------------------------------------------
+\begin{document}
+\begin{tabular*}{7in}{l@{\extracolsep{\fill}}r}
+\textbf{\Large Ashutosh Pathak} \\ Btech -Mtech,Dual degree, Computer Science Engineering & 07552689515 ,9873600772\\
+Indian Institute of Technology Kanpur & atp.iitk@gmail.com\\
+\end{tabular*}
+\\
+\vspace{-0.1in}
+
+\resheading{Awards}
+\vspace{-0.2in}
+\begin{description}
+
+\item[]
+\begin{itemize}
+\item
+Research publications on \href{http://adsabs.harvard.edu/abs/2008SPIE.6812E..20D}{\textbf{Probability density function estimation for video in the DCT domain}}  \textit{Proceedings SPIE Conference on Image Processing: Algorithms and Systems VI, San Jose, CA, Vol. 6812, January 2008, p. 68120L:1-9}.
+\end{itemize}
+
+\item[]
+\begin{itemize}
+\item
+ All India Rank \textbf{416 in IIT-JEE} exam in 2004 in general category.
+\end{itemize}
+
+\item[]
+\begin{itemize}
+ \item  All India Rank 1200 in the AIEEE 2004 with state rank 12.
+ \end{itemize}
+ 
+ \item[]
+ \begin{itemize}
+ \item Cleared the first phase and secured the \textbf{Top 1\% in National Physics Olympiad }.\\
+ 
+\end{itemize}
+
+\item[]
+\begin{itemize}
+\item Secured All India Rank 2 in the ICFAI engineering exam 2004. 
+\end{itemize}
+
+\end{description}
+\rmfamily
+\vspace{-0.2in}
+\resheading{Work Experiance}
+\vspace{-0.2in}
+\begin{description}
+
+\item[]
+\begin{itemize}
+\item{ \textbf{ Current \textbf{Literaturebay.com }  (Nov 2010- ongoing)}\\
+\item{Currently  developing an E-commerce website using Cakephp framework for the online selling of secondhand books. The work involved the full database designing, userlevel access control list. Cakephp is a fully supported MVC framework using php. Ongoing work includes debuging of site ,android app and payment gateway integration.}
+ 
+ 
+\item{ Designed  website fully supported latest facebook app frame work such as OAuth2.0, CSRF protection.}
+ 
+\item{ Designed website has advanced search feature using natural language and LRU  caching facility which was developed mannualy. Future work involving automatic string correction using lipschitz  or edit distance algorithm }
+ 
+\item{ Designed website support dynamic multi level categories modification and retrieval O(1) algorithm using custom modified preorder traversal. }
+
+\item{ Designed website support custom spam protection framework for user information. }
+ 
+\item{ Designed website support 3 level taging support with weight handeling which fulfill Folksonomy and web 2.0 standards.  }
+  
+}
+\end{itemize}
+
+
+
+\item[]
+\begin{itemize}
+\item{ \textbf{Knowlarity communications (startup)    (July 2010- Octuber 2010)}\\
+Knowlarity communication is a telecom startup founded by IIT-kanpur 2000 batch passout.
+There main product is a cloud based telephony network for telemarketing and call centre companies. 
+
+
+\item Designed from scratch a web based IVR(interactive voice response) modeling solution. It was made using jQuerry and has UML like capabilites through which a person who doesn't even  have a knowledge of programing language can make a complex IVR for mobile services. On the frontend by user drag and drop of web objects a json tree is generated which is executed by backend written interpreter. It has features like that of goto and case statements.
+
+\item  Provided strong database design using simple mysql with performance like that of Facebook without the need of costly and distributed database. Learned lot of
+database tuning techniques from developers of mysql and facebook in IRC channel.
+
+\item Worked on design, implementation of cloud based telephony system using opensource tools like rabbitmq, astrix, freeswitch.
+
+}
+\end {itemize}
+
+
+\item[]
+\begin{itemize}
+\item \textbf{ Oracle, Bangalore    (July 2009- June 2010)}\\
+%\end{itemize}
+
+%\begin{itemize}
+\item Implemented a cloud based patching environment using open source tools like eucalyptus cloud and xen Vitual machine images(VMs). Cloud based patching framework was used for patching oracle updates to customer boxes.
+%\end {itemize}
+
+
+%\begin{itemize}
+\item The use of cloud was to utilize the computing environment effectively and the VMs are used to apply pacthes on backup copy rather than on running system. Work involved experimenting with different network mode like V-lan mode etc. 
+
+%\end {itemize}
+
+
+%\begin{itemize}
+\item  I designed a tool through which the network bandwidth between different VMs can be controlled using iptables and ebtables and HTB(hierarchical token buffer)for effective bandwidth utilization. Patching mechism was similar to Rsync.  
+
+%\end {itemize}
+
+
+%\begin{itemize}
+\resitem{ Worked on a restore and recovery datacentre project. The aim was to fragment the  large system image files into m smaller size files and recreate the original system images from  $l \leq{ n} \leq{ m}$ splited files. This was done using famous Jerasure encoder and decoder library. I even make it multithreaded for better performance benefit.}   
+
+%\end {itemize}
+
+
+
+
+%\begin{itemize}
+\resitem{  I have also undergone the java j2ee training in oracle university. Worked with QA team to provide a flex plugin for HP loadrunner whose lot of features are not there.}   
+
+\end {itemize}
+
+
+
+
+
+\item[]
+\begin{itemize}
+	\item \textbf{Mtech Thesis     ,                                                                        (April2008-July2009) }\\
+	" \textbf{DTW based Online signature verification using adaptive global constraints} ".  Supervisor :- Dr Phalguni Gupta .
+Online signature has lot of dynamic features like velocity, acceleration etc. DTW based algorithms are usually good for matching time series but due to there O($n^2$) time complexity realtime matching is not very responsive on very large timeseries. Using global constarints runtime of algorithm can be reduced significantly. Work involved biometric data and pattern recognition techniques.
+\end{itemize}
+
+
+\item[]
+%\ressubheading{}
+\begin{itemize}
+	\item \textbf {Research Publication :-}\\
+	 \textbf{INSTITUTE NATIONAL DES TELECOMMUNICATIONS (INT),Paris, France  (may - July 2007)}.  
+	During summer internship in the 3rd year of college, I got the opportunity to work on robust Watermarking  Techniques on videos \& Study the different kind of attacks to compromise the watermarking. Work involved Signal theory, DCT and Wavelet Transform, X.264 codecs, and fast processing of video frames. \textbf{Achievement:-}Suggested blockwise DCT transformation \&  better data Structures result in improvement. Finally the paper was presented in the \textbf{"SPIE Conference on Image Processing: Algorithms and Systems VI January 2008"}  with the help of my supervisor Dr Mihai Metria. I received the appreciation and invitation for the conference in california. 
+\end{itemize}
+
+\item[]
+\begin{itemize}
+	\item  \textbf{Teaching Assistant(TA),Core JAVA Language, (Jan 2009-April2009)}\\
+	Responsibilities included designing lab assignment in JAVA for 1st year students. checking copies, updating marks in course website.
+\end{itemize}
+
+\item[]
+\begin{itemize}
+	\item \textbf{ Teaching Assistant(TA),Computer Organization course , (Aug 2008-Dec2008)} *\\
+	Responsibilities included advising weak students, designing assignments  and  helping the course students in implementation of ALU , Regfile, Ram , CPU in Spartan series 3 FPGA Board in Hardware lab using xilinix IDE and verilog language.
+\end{itemize}
+
+\end{description}
+
+
+\resheading{Education}
+\vspace{-0.3in}
+
+\begin{tabular}{|c|c|c|}
+\hline
+\bf Degree/Certificate&\bf Institute/School,City&\bf CGPA/\%\\
+\hline
+ Mtech &Indian Institute of Technology, Kanpur(2008-2009) & 7.2/10.0\\
+ \hline
+ Btech &Indian Institute of Technology, Kanpur(2004-2008) & 6.1/10.0\\
+\hline
+AISSCE-XII,CBSE&Senior Secondary School Sector -X ,Bhilai & 73\%\\
+\hline
+AISSE-X,CBSE , school topper& Kendriya Vidyalaya Sarni,MP  & 83.6\%\\
+\hline
+
+\end{tabular}
+
+
+%\resheading{Relevant Courses} 
+%\begin{description}
+%\item 
+%\begin{itemize}
+%\item
+%System related:-\\
+% Distributed Systems, Operating Systems, Computer Organization, Fundamental of electronics,
+% Principles Of Database Systems, Compiler Design, Indexing \& searching in Databases.\\
+% \item
+% Theoretical:-\\
+% Advance Algorithms, Data Structures, Parallel and semi Numerical Algorithm ,\\
+% Theory of Computation, Numerical Methods In Engineering, Linear Algebra, Discreet Mathematics .\\
+%\item
+% Network related:-\\
+% Mobile Computing, Computer Networks, Data Streaming . \\
+%\item
+% Software :-\\
+% Principles Of Programming Languages, Software Engineering, Internet technologies ,\\
+%  Programming Tools \&Techniques, Fundamentals Of Computing(JAVA) .\\
+% \end{itemize}	 
+% \item[other courses:]
+% rest are from grade sheet.
+% \end{description}
+% 
+
+
+
+\resheading{Major Projects  }
+\vspace{-0.2in}
+\begin{itemize}
+	
+\vspace{-0.1in}
+			\item \textbf{User level Thread Library with mutual exclusion support }	
+		%\ressubheading{Concurent vi}{Spring 2008}
+		\vspace{-0.1in}	
+		\begin{itemize}
+		\resitem{
+		Implemented user level thread library taking care of issues like scheduling, starvation and fairness using  Linux system calls provided in ucontext.h, signal.h, sched.h, \& setjmp.h like makecontext, swapcontext etc. Studied various distributed mutual exclusion algorithms (non-token and token based) and measured throughput and synchronization delays for  them.
+		 }
+		\end{itemize}	
+%%%%%%%%%%%%%%%%%%%%%%		
+		\vspace{-0.1in}
+			\item \textbf{Concurrent Vi }	
+		%\ressubheading{Concurent vi}{Spring 2008}
+		\vspace{-0.1in}	
+		\begin{itemize}
+		\resitem{Aim was to make \textbf{Vi} a concurrent editor of Linux to be  able to edit same file by more than one process. Implemented user defined locks in the data section for concurrency. Code was submitted on sourceforg.net and get much appreciation from open source community as it was totally new feature in the Vi. Project involved going into the vim source code of more that 6000 lines. }
+		\end{itemize}	
+%%%%%%%%%%%%%%%%%%%%%%
+\vspace{-0.1in}		
+			\item \textbf{Parallel Solver for Very Large System of Equations }
+	%\ressubheading{Solver for Very Large System of Equations}{Spring 2008}	
+		\vspace{-0.1in}
+		\begin{itemize}
+		\resitem{ Successfully developed a solver for a large system of equations of order 50000x50000 using MPI and openMP. It is for clusters and mesh connected computers, with inputs in, GF2  and  real field . }
+		
+		\end{itemize}			
+%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+	\vspace{-0.1in}
+	\item \textbf{Oberon Compiler }
+	%\ressubheading{Oberon Compiler}{Spring 2007}	
+		\vspace{-0.1in}
+		\begin{itemize}
+		\resitem{ Developed a bare minimal compiler for Oberon language in java with almost all  features having  lexical, Syntax Analyzer and Semantic analyzer phase. It can compile programs involving recursion and simple case statements. 4000 lines of  java code was written and use of tools like lex and yacc}
+		\end{itemize}		
+		
+%%%%%%%%%%%%%%%%%%%%%%%%%			
+		\vspace{-0.1in}
+			\item \textbf{Dual Stapler }	
+		%	\ressubheading{Dual Stepler}{Spring 2007}	
+		\vspace{-0.1in}
+		\begin{itemize}
+		\resitem{As a part of ART course project we made a single stapler able to use two kind of pins having different sizes. We designed a innovative multipurpose stapler which received exceptional appreciation and  \textbf{A grade}.}
+		\end{itemize}	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%		
+		
+%%%%%%%%%%%%%%%%%%%%%				
+		%\vspace{-0.1in}
+%\item \textbf{Extension of Nachos }
+%%	\ressubheading{Extension of Nachos}{Fall 2006}	
+%		\vspace{-0.1in}
+%		\begin{itemize}
+%		\resitem{Implemented some features like System Calls, Scheduling Algorithms, Multiprogramming and Virtual Memory on Nachos  operating system in C++.}
+%		\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%				
+		\vspace{-0.1in}	
+		\item \textbf{Similarity Search in Time Series Database }
+	%\ressubheading{Similarity Search in time series database}{Fall 2008}	
+	\vspace{-0.1in}
+		\begin{itemize}
+		\resitem{Aim was to implement the technique for fast retrieval and search similar time series  in large video \& audio database .  Dynamic Time Warping(DTW ) method is studied for searching  KNN($K^{th }$ nearest neighbor) quarries on original multidimensional data and dimensionality reduction was done using PCA .}
+		
+		\end{itemize}		
+%%%%%%%%%%%%%%%%%%%%%%
+%\vspace{-0.1in}	
+%\item \textbf{UDP-Chat System }	
+%	%\ressubheading{UDP-Chat system}{Fall 2006}	
+%		\vspace{-0.1in}
+%		\begin{itemize}
+%		%{UDP-Chat system}{Fall 2006}	
+%		\resitem{ Developed a chat system with functionalities of conferencing and file sending. We have implemented reliability, flow control and congestion control over transport layer in User Datagram Protocol (UDP) using socket programming. We also checked the performance of our chatting protocol using The \textbf{Network Simulator - ns2}.}
+%		\end{itemize}
+
+
+%%%%%%%%%%%%%		
+\vspace{-0.1in}
+			\item	 \textbf{Offline Biometric Signature Verification }
+	%\ressubheading{Offline biometric signature Verification}{Fall 2008}
+	\vspace{-0.1in}	
+		\begin{itemize}
+		\resitem{ Developed a signature verification system using SVM(Support Vector Machines )  which can be used for scanned images of signature of person. Maximum Accuracy achieved was 80\% in skilled forgery and 83\% in random forgery. Code was written in matlab.		
+		 }
+		\end{itemize}	
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+\vspace{-0.1in}
+\item	\textbf{Implementation of Mips Processor }
+		\begin{itemize}
+		\vspace{-0.1in}
+		\resitem{Implementation of MIPS processor having Instruction-fetch \& Register-decode unit,ALU, Register file and MEM unit using SRam and Block Ram .Work was done on Spartan-3(FPGA board)in Verilog with help of Xilinix IDE.}
+	
+		\end{itemize}
+
+		
+
+\end{itemize}
+
+
+
+
+
+\vspace{-0.2in}
+\resheading{Skills}
+\vspace{-0.2in}
+\begin{description}
+\item[Languages:]
+C/C++, \LaTeX, Java,C\#,Php,ruby,bash, perl, python shell scripting,UML, Verilog, IA32 Linux Assembly ,xml, Sql.
+\item[Operating Systems:]
+Linux (Redhat , Ubuntu ,Fedora), Solaris, Windows 95/98/NT/2000/XP
+\item[Applications and IDE:]
+Mathematica, MatLab, Visual Studio,Eclipse, Xilinix, Jedve, Netbeans, GCC debugger, OpenOffice, MS Office XP ,Ruby on Rails, LAMP, Apache Web Server, Mysql, Oracle, Lex , Yacc,Doxygen, Gnuplot.
+\item[Web framework and open source tools:]
+Cakephp, Django, J2ee, Git, SVN, HP loadrunner, QTP loadrunner, Buildbot .
+\end{description}
+
+\vspace{-0.2in}
+\resheading{Interests And Extra Curricular}
+\vspace{-0.2in}
+\begin{description}
+\item[Academic:]systems, os, network, databases, new web based technologies, micro controllers, Finance .
+\item[Sports:]  football ,swimming. was in Institute swimming team during 1st year at IITK.
+\item[Computers:]  Mozilla beta tester, enjoy using and learning Linux systems .
+\item[technology:] reading latest technology news using Zdnet, Code project.
+\item[Other:] IPO, Stocks and commodity trading, mountain tracking  .
+\end{description}
+ 
+ 
+
+
+ 
+
+\end{document}

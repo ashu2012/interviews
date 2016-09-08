@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+
+
+<!-- base href="http://bluerwhite.org/btree/" -->
+
+<title>B-Trees</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+</head><body bgcolor="white">
+<center><h1>B-Trees:  Balanced Tree Data Structures</h1></center>
+
+<br>
+<table width="100%"><tbody><tr><td>
+<img src="B-Trees_files/tree-picture.gif" align="left">
+
+<h2>Table of Contents:</h2>
+<ol type="I">
+<li><a href="#introduction">Introduction</a>
+</li><li><a href="#structure">Structure of B-Trees</a>
+</li><li><a href="#operations">Operations on B-Trees</a>
+</li><li><a href="#examples">Examples</a>
+</li><li><a href="#applications">Applications</a>
+</li><li><a href="#cited">Works Cited</a>
+</li><li><a href="#links">Useful Links</a>
+</li></ol>
+</td></tr></tbody></table>
+<br>
+
+
+<hr> 
+<a name="introduction"><h2>Introduction</h2></a>
+<p>Tree structures support various basic dynamic set operations including <i>Search</i>, <i>Predecessor</i>, <i>Successor</i>, <i>Minimum</i>, <i>Maximum</i>, <i>Insert</i>, and <i>Delete</i> in time proportional to the height of the tree.  Ideally, a tree will be balanced and the height will be <i>log n</i> where <i>n</i>
+ is the number of nodes in the tree.  To ensure that the height of the 
+tree is as small as possible and therefore provide the best running 
+time, a balanced tree structure like a red-black tree, AVL tree, or 
+b-tree must be used.</p>
+
+<p> When working with large sets of data, it is often not possible or 
+desirable to maintain the entire structure in primary storage (RAM).  
+Instead, a relatively small portion of the data structure is maintained 
+in primary storage, and additional data is read from secondary storage 
+as needed.  Unfortunately, a magnetic disk, the most common form of 
+secondary storage, is significantly slower than random access memory 
+(RAM).  In fact, the system often spends more time retrieving data than 
+actually processing data.</p>
+
+<p>B-trees are balanced trees that are optimized for situations when 
+part or all of the tree must be maintained in secondary storage such as a
+ magnetic disk.  Since disk accesses are expensive (time consuming) 
+operations, a b-tree tries to minimize the number of disk accesses.  For
+ example, a b-tree with a height of 2 and a branching factor of 1001 can
+ store over one billion keys but requires at most two disk accesses to 
+search for any node (Cormen 384).</p>    
+<p></p>
+
+<hr>
+
+<a name="structure"><h2>The Structure of B-Trees</h2></a>
+<p>Unlike a binary-tree, each node of a b-tree may have a variable 
+number of keys and children.  The keys are stored in non-decreasing 
+order.  Each key has an associated child that is the root of a subtree 
+containing all nodes with keys less than or equal to the key but greater
+ than the preceeding key.  A node also has an additional rightmost child
+ that is the root for a subtree containing all keys greater than any 
+keys in the node.</p>
+
+<p>A b-tree has a minumum number of allowable children for each node known as the <i>minimization factor</i>.  If <i>t</i> is this <i>minimization factor</i>, every node must have at least <i>t - 1</i> keys.  Under certain circumstances, the root node is allowed to violate this property by having fewer than <i>t - 1</i> keys.  Every node may have at most <i>2t - 1</i> keys or, equivalently, <i>2t</i> children.</p>
+
+<p>Since each node tends to have a large branching factor (a large 
+number of children), it is typically neccessary to traverse relatively 
+few nodes before locating the desired key.  If access to each node 
+requires a disk access, then a b-tree will minimize the number of disk 
+accesses required.  The minimzation factor is usually chosen so that the
+ total size of each node corresponds to a multiple of the block size of 
+the underlying storage device.  This choice simplifies and optimizes 
+disk access.  Consequently, a b-tree is an ideal data structure for 
+situations where all data cannot reside in primary storage and accesses 
+to secondary storage are comparatively expensive (or time consuming).</p>
+
+<h3>Height of B-Trees</h3>
+<p>For <i>n</i> greater than or equal to one, the height of an <i>n</i>-key b-tree T of height <i>h</i> with a minimum degree <i>t</i> greater than or equal to 2, 
+<br></p><center><img src="B-Trees_files/height.png"></center><br>
+For a proof of the above inequality, refer to Cormen, Leiserson, and Rivest pages 383-384.<p></p>
+
+<p>The worst case height is <i>O(log n)</i>.  Since the "branchiness" of
+ a b-tree can be large compared to many other balanced tree structures, 
+the base of the logarithm tends to be large; therefore, the number of 
+nodes visited during a search tends to be smaller than required by other
+ tree structures.  Although this does not affect the asymptotic worst 
+case height, b-trees tend to have smaller heights than other trees with 
+the same asymptotic height.</p>
+
+
+<hr>
+
+<a name="operations"><h2>Operations on B-Trees</h2></a>
+
+<p>The algorithms for the <i>search</i>, <i>create</i>, and <i>insert</i>
+ operations are shown below.  Note that these algorithms are single 
+pass; in other words, they do not traverse back up the tree.  Since 
+b-trees strive to minimize disk accesses and the nodes are usually 
+stored on disk, this single-pass approach will reduce the number of node
+ visits and thus the number of disk accesses.  Simpler double-pass 
+approaches that move back up the tree to fix violations are possible.</p>  
+<p>Since all nodes are assumed to be stored in secondary storage (disk) 
+rather than primary storage (memory), all references to a given node be 
+be preceeded by a read operation denoted by <i>Disk-Read</i>.  
+Similarly, once a node is modified and it is no longer needed, it must 
+be written out to secondary storage with a write operation denoted by <i>Disk-Write</i>.  The algorithms below assume that all nodes referenced in parameters have already had a corresponding <i>Disk-Read</i> operation.  New nodes are created and assigned storage with the <i>Allocate-Node</i> call.   The implementation details of the <i>Disk-Read</i>, <i>Disk-Write</i>, and <i>Allocate-Node</i> functions are operating system and implementation dependent.</p><br>
+
+<p>
+</p><h3>B-Tree-Search(x, k)</h3>
+<blockquote><code></code><pre>i &lt;- 1
+while i &lt;= n[x] and k &gt; key<sub>i</sub>[x]
+     do i &lt;- i + 1
+if i &lt;= n[x] and k = key<sub>i</sub>[x]
+     then return (x, i)
+if leaf[x]
+     then return NIL
+     else Disk-Read(c<sub>i</sub>[x])
+          return B-Tree-Search(c<sub>i</sub>[x], k) 
+</pre></blockquote>
+<p></p>
+<p>The search operation on a b-tree is analogous to a search on a binary
+ tree.  Instead of choosing between a left and a right child as in a 
+binary tree, a b-tree search must make an n-way choice.  The correct 
+child is chosen by performing a linear search of the values in the node.
+  After finding the value greater than or equal to the desired value, 
+the child pointer to the immediate left of that value is followed.  If 
+all values are less than the desired value, the rightmost child pointer 
+is followed.  Of course, the search can be terminated as soon as the 
+desired node is found.  Since the running time of the search operation 
+depends upon the height of the tree, <i>B-Tree-Search</i> is <i>O(log<sub>t</sub> n)</i>.</p>
+
+<p>
+</p><h3>B-Tree-Create(T)</h3>
+<blockquote><code></code><pre>x &lt;- Allocate-Node()
+leaf[x] &lt;- TRUE
+n[x] &lt;- 0
+Disk-Write(x)
+root[T] &lt;- x
+</pre></blockquote>
+<p></p>
+<p>The <i>B-Tree-Create</i> operation creates an empty b-tree by 
+allocating a new root node that has no keys and is a leaf node.  Only 
+the root node is permitted to have these properties; all other nodes 
+must meet the criteria outlined previously.  The <i>B-Tree-Create</i> operation runs in time <i>O(1)</i>.</p>
+
+<p>
+</p><h3>B-Tree-Split-Child(x, i, y)</h3>
+<blockquote><code></code><pre>z &lt;- Allocate-Node()
+leaf[z] &lt;- leaf[y]
+n[z] &lt;- t - 1
+for j &lt;- 1 to t - 1
+     do key<sub>j</sub>[z] &lt;- key<sub>j+t</sub>[y]
+if not leaf[y]
+     then for j &lt;- 1 to t
+          do c<sub>j</sub>[z] &lt;- c<sub>j+t</sub>[y]
+n[y] &lt;- t - 1
+for j &lt;- n[x] + 1 downto i + 1
+     do c<sub>j+1</sub>[x] &lt;- c<sub>j</sub>[x]
+c<sub>i+1</sub> &lt;- z
+for j &lt;- n[x] downto i
+     do key<sub>j+1</sub>[x] &lt;- key<sub>j</sub>[x]
+key<sub>i</sub>[x] &lt;- key<sub>t</sub>[y]
+n[x] &lt;- n[x] + 1
+Disk-Write(y)
+Disk-Write(z)
+Disk-Write(x)
+</pre></blockquote>
+<p></p>
+<p>If is node becomes "too full," it is necessary to perform a split operation.  The split operation moves the median key of node <i>x</i> into its parent <i>y</i> where <i>x</i> is the <i>i<sup>th</sup></i> child of <i>y</i>.  A new node, <i>z</i>, is allocated, and all keys in <i>x</i> right of the median key are moved to <i>z</i>.  The keys left of the median key remain in the original node <i>x</i>.  The new node, <i>z</i>, becomes the child immediately to the right of the median key that was moved to the parent <i>y</i>, and the original node, <i>x</i>, becomes the child immediately to the left of the median key that was moved into the parent <i>y</i>.</p>
+<p>The split operation transforms a full node with <i>2t - 1</i> keys into two nodes with <i>t - 1</i> keys each.  Note that one key is moved into the parent node.  The <i>B-Tree-Split-Child</i> algorithm will run in time <i>O(t)</i> where <i>t</i> is constant.</p><p>
+</p><h3>B-Tree-Insert(T, k)</h3>
+<blockquote><code></code><pre>r &lt;- root[T]
+if n[r] = 2t - 1
+     then s &lt;- Allocate-Node()
+          root[T] &lt;- s
+	  leaf[s] &lt;- FALSE
+	  n[s] &lt;- 0
+	  c<sub>1</sub> &lt;- r
+	  B-Tree-Split-Child(s, 1, r)
+	  B-Tree-Insert-Nonfull(s, k)
+     else B-Tree-Insert-Nonfull(r, k)
+</pre></blockquote>
+<p></p>
+
+
+<p>
+</p><h3>B-Tree-Insert-Nonfull(x, k)</h3>
+<blockquote><code></code><pre>i &lt;- n[x]
+if leaf[x]
+     then while i &gt;= 1 and k &lt; key<sub>i</sub>[x]
+            do key<sub>i+1</sub>[x] &lt;- key<sub>i</sub>[x]
+	       i &lt;- i - 1
+          key<sub>i+1</sub>[x] &lt;- k
+	  n[x] &lt;- n[x] + 1
+	  Disk-Write(x)
+     else while i &gt;= and k &lt; key<sub>i</sub>[x]
+            do i &lt;- i - 1
+	  i &lt;- i + 1
+	  Disk-Read(c<sub>i</sub>[x])
+	  if n[c<sub>i</sub>[x]] = 2t - 1
+	       then B-Tree-Split-Child(x, i, c<sub>i</sub>[x])
+	            if k &gt; key<sub>i</sub>[x]
+		         then i &lt;- i + 1
+          B-Tree-Insert-Nonfull(c<sub>i</sub>[x], k)  
+</pre></blockquote>
+<p></p>
+<p>To perform an insertion on a b-tree, the appropriate node for the key must be located using an algorithm similiar to <i>B-Tree-Search</i>.
+  Next, the key must be inserted into the node.  If the node is not full
+ prior to the insertion, no special action is required; however, if the 
+node is full, the node must be split to make room for the new key.  
+Since splitting the node results in moving one key to the parent node, 
+the parent node must not be full or another split operation is required.
+  This process may repeat all the way up to the root and may require 
+splitting the root node.  This approach requires two passes.  The first 
+pass locates the node where the key should be inserted; the second pass 
+performs any required splits on the ancestor nodes.</p>
+<p>Since each access to a node may correspond to a costly disk access, 
+it is desirable to avoid the second pass by ensuring that the parent 
+node is never full.  To accomplish this, the presented algorithm splits 
+any full nodes encountered while descending the tree.  Although this 
+approach may result in unecessary split operations, it guarantees that 
+the parent never needs to be split and eliminates the need for a second 
+pass up the tree.  Since a split runs in linear time, it has little 
+effect on the <i>O(t log<sub>t</sub> n)</i> running time of <i>B-Tree-Insert</i>.</p>
+<p>Splitting the root node is handled as a special case since a new root
+ must be created to contain the median key of the old root.  Observe 
+that a b-tree will grow from the top.</p>      
+
+<h3>B-Tree-Delete</h3>
+<p>Deletion of a key from a b-tree is possible; however, special care 
+must be taken to ensure that the properties of a b-tree are maintained. 
+ Several cases must be considered.  If the deletion reduces the number 
+of keys in a node below the minimum degree of the tree, this violation 
+must be corrected by combining several nodes and possibly reducing the 
+height of the tree.  If the key has children, the children must be 
+rearranged.  For a detailed discussion of deleting from a b-tree, refer 
+to Section 19.3, pages 395-397, of Cormen, Leiserson, and Rivest or to 
+another reference listed below.</p>
+
+<hr>
+<a name="examples"><h2>Examples</h2></a>
+<h3>Sample B-Tree</h3>
+<img src="B-Trees_files/tree1.png"><br>
+<h3>Searching a B-Tree for Key 21</h3> 
+<img src="B-Trees_files/tree-search.gif">
+<h3>Inserting Key 33 into a B-Tree (w/ Split)</h3> 
+<img src="B-Trees_files/tree-insert2.gif">
+
+<hr>
+
+<a name="applications"><h2>Applications</h2></a>
+<h3>Databases</h3>
+<p>A <a href="http://www.whatis.com/database.htm">database</a> is a 
+collection of data organized in a fashion that facilitates updating, 
+retrieving, and managing the data.  The data can consist of anything, 
+including, but not limited to names, addresses, pictures, and numbers.  
+Databases are commonplace and are used everyday.  For example, an 
+airline reservation system might maintain a database of available 
+flights, customers, and tickets issued.  A teacher might maintain a 
+database of student names and grades.</p>
+
+<p>Because computers excel at quickly and accurately manipulating, 
+storing, and retrieving data, databases are often maintained 
+electronically using a <i>database management system</i>.  Database management systems are essential components of many everyday business operations.  Database products like <a href="http://www.microsoft.com/sql"><i>Microsoft SQL Server</i></a>, <a href="http://www.sybase.com/products/databaseservers"><i>Sybase Adaptive Server</i></a>, <a href="http://www.ibm.com/db2"><i>IBM DB2</i></a>, and <a href="http://www.oracle.com/database"><i>Oracle</i></a>
+ serve as a foundation for accounting systems, inventory systems, 
+medical recordkeeping sytems, airline reservation systems, and countless
+ other important aspects of modern businesses.</p>
+
+<p>It is not uncommon for a database to contain millions of records 
+requiring many gigabytes of storage.  For examples, TELSTRA, an 
+Australian telecommunications company, maintains a customer billing 
+database with 51 billion rows (yes, billion) and 4.2 terabytes of data. 
+ In order for a database to be useful and usable, it must support the 
+desired operations, such as retrieval and storage, quickly.  Because 
+databases cannot typically be maintained entirely in memory, b-trees are
+ often used to index the data and to provide fast access.  For example, 
+searching an unindexed and unsorted database containing <i>n</i> key values will have a worst case running time of <i>O(n)</i>; if the same data is indexed with a b-tree, the same search operation will run in <i>O(log n)</i>.
+  To perform a search for a single key on a set of one million keys 
+(1,000,000), a linear search will require at most 1,000,000 comparisons.
+  If the same data is indexed with a b-tree of minimum degree 10, 114 
+comparisons will be required in the worst case.  Clearly, indexing large
+ amounts of data can significantly improve search performance.  Although
+ other balanced tree structures can be used, a b-tree also optimizes 
+costly disk accesses that are of concern when dealing with large data 
+sets.</p>
+
+<h3>Concurrent Access to B-Trees</h3>
+<p>Databases typically run in multiuser environments where many users 
+can concurrently perform operations on the database.  Unfortunately, 
+this common scenario introduces complications.  For example, imagine a 
+database storing bank account balances.  Now assume that someone 
+attempts to withdraw $40 from an account containing $60.  First, the 
+current balance is checked to ensure sufficent funds.  After funds are 
+disbursed, the balance of the account is reduced.  This approach works 
+flawlessly until concurrent transactions are considered.  Suppose that 
+another person simultaneously attempts to withdraw $30 from the same 
+account.  At the same time the account balance is checked by the first 
+person, the account balance is also retrieved for the second person.  
+Since neither person is requesting more funds than are currently 
+available, both requests are satisfied for a total of $70.  After the 
+first person's transaction, $20 should remain ($60 - $40), so the new 
+balance is recorded as $20.  Next, the account balance after the second 
+person's transaction, $30 ($60 - $30), is recorded overwriting the $20 
+balance.  Unfortunately, $70 have been disbursed, but the account 
+balance has only been decreased by $30.  Clearly, this behavior is 
+undesirable, and special precautions must be taken.</p>
+
+<p>A b-tree suffers from similar problems in a multiuser environment.  
+If two or more processes are manipulating the same tree, it is possible 
+for the tree to become corrupt and result in data loss or errors.</p>
+
+<p>The simplest solution is to serialize access to the data structure.  
+In other words, if another process is using the tree, all other 
+processes must wait.  Although this is feasible in many cases, it can 
+place an unecessary and costly limit on performance because many 
+operations actually can be performed concurrently without risk.  <i>Locking</i>,
+ introduced by Gray and refined by many others, provides a mechanism for
+ controlling concurrent operations on data structures in order to 
+prevent undesirable side effects and to ensure consistency.  For a 
+detailed discussion of this and other concurrency control mechanisms, 
+please refer to the references below.</p> 
+
+<hr>
+<a name="cited"><h2>Works Cited</h2></a>
+<ul>
+<li>Bayer, R., M. Schkolnick. Concurrency of Operations on B-Trees. In <i>Readings in Database Systems</i> (ed. Michael Stonebraker), pages 216-226, 1994.
+</li><li>Cormen, Thomas H., Charles E. Leiserson, Ronald L. Rivest, <i>Introduction to Algorithms</i>, MIT Press, Massachusetts: 1998.
+</li><li>Gray, J. N., R. A. Lorie, G. R. Putzolu, I. L. Traiger.  
+Granularity of Locks and Degrees of Consistency in a Shared Data Base. 
+In <i>Readings in Database Systems</i> (ed. Michael Stonebraker), pages 181-208, 1994.
+</li><li>Kung, H. T., John T. Robinson.  On Optimistic Methods of Concurrency Control.  In <i>Readings in Database Systems</i> (ed. Michael Stonebraker), pages 209-215, 1994.
+</li></ul>
+
+<hr>
+<a name="links"><h1>Useful Links</h1></a><br>
+
+<h4>General B-Tree Information</h4>
+<ul>
+<li><a href="http://www.fit.qut.edu.au/%7Emaire/baobab/baobab.html">B-Tree Demonstration (Java Applet)</a>
+</li><li><a href="http://feast.ucsd.edu/CSE232W99/Indexing/index.htm">Lecture Notes on Indexing from UCSD</a>
+</li><li><a href="http://www.fit.qut.edu.au/%7Emaire/baobab/lecture/">Introduction to B-Trees from Queensland University of Technology</a>
+</li><li><a href="http://www.geocities.com/SiliconValley/Program/2864/File/btree.html">Java B-Tree Demonstration</a>
+</li><li><a href="http://www.saraswati.com/dev/indxpaper58/">Indexes: Btree, bitmap, hash partitioned, prefixed when, where, and why</a>
+</li><li><a href="http://www.dcss.mcmaster.ca/%7Eea97e1/B-TREES/B-Tree.html">ADT: B-Trees</a>
+</li><li><a href="http://www.informatik.uni-trier.de/%7Eley/db/access/btree.html">B-Tree Bibliography</a>
+</li></ul>
+
+<h4>Databases</h4>
+<ul>
+<li><a href="http://www.postgresql.org/docs/user/sql-createindex.htm">CREATE INDEX User Guide for PostgreSQL</a>
+</li><li><a href="http://www.wintercorp.com/VLDB/1998_VLDB_Winners/grand_prize1998.html">1998 VLDB Grand Prize Winners</a>
+</li></ul>
+
+<h4>Graph and Tree Drawing Tools</h4>
+<ul>
+<li><a href="http://www.stud.enst.fr/%7Eazavant/graphs.html">Graph Drawing Resources</a>
+</li><li><a href="http://www.research.att.com/sw/tools/graphviz/">AT&amp;T Graphviz</a>
+</li><li><a href="http://epb1.lbl.gov/BVSmith/xfig/">XFig Vector Drawing Tool</a>
+</li><li><a href="http://www.cis.upenn.edu/%7Ejosephr/Treefig/">TreeFig Tree Drawing Utility</a>
+</li><li><a href="http://duke.usask.ca/%7Emacphed/soft/fig/">XFig, Fig, and Associated Software </a>
+</li></ul>
+
+<h4>Miscellaneous Links</h4>
+<ul>
+<li><a href="http://www.dcc.uchile.cl/%7Erbaeza/handbook/hbook.html">Handbook of Algorithms and Data Structures</a>
+</li><li><a href="http://arianna.dei.unipd.it/books/java/cgc/jdsl/">Data Structures Library for Java</a>
+</li><li><a href="http://www.geocities.com/SiliconValley/Program/2864/File/Merge1/mergesort.html">Java Mergesort Simulation</a>
+</li><li><a href="http://spidey.ecst.csuchico.edu/%7Ejcalvin/javaprogs/fjava.htm">Algorithms and Data Structures in Java</a>
+</li></ul>
+
+<br>
+<hr>
+<small>©Copyright 1999 - <a href="mailto:pneubauer@bluerwhite.org">Peter Neubauer</a></small>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="B-Trees_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-10189510-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body></html>

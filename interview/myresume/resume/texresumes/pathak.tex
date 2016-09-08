@@ -1,0 +1,317 @@
+\documentclass[letterpaper,11pt]{article}
+%-----------------------------------------------------------
+%Margin setup
+
+\setlength{\voffset}{0.0in}
+\setlength{\paperwidth}{8.5in}
+\setlength{\paperheight}{11in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{11in}
+\setlength{\textheight}{9.5in}
+\setlength{\topmargin}{-0.25in}
+\setlength{\textwidth}{7in}
+\setlength{\topskip}{0in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\evensidemargin}{-0.25in}
+%-----------------------------------------------------------
+%\usepackage{fullpage}
+\usepackage{shading}
+%\textheight=9.0in
+\pagestyle{empty}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+%-----------------------------------------------------------
+%Custom commands
+\newcommand{\resitem}[1]{\item #1 \vspace{-2pt}}
+\newcommand{\resheading}[1]{{\large \parashade[.9]{sharpcorners}{\textbf{#1 \vphantom{p\^{E}}}}}}
+\newcommand{\ressubheading}[4]{
+\begin{tabular*}{6.5in}{l@{\extracolsep{\fill}}r}
+		\textbf{#1} & #2 \\
+		\textit{#3} & \textit{#4} \\
+\end{tabular*}\vspace{-6pt}}
+%-----------------------------------------------------------
+\begin{document}
+\begin{tabular*}{7in}{l@{\extracolsep{\fill}}r}
+\textbf{\Large Ashutosh Pathak}  & +91-9415540881\\
+E-306,Hall-8 &  apathak@iitk.ac.in \\
+Indian Institute of technology Kanpur  & http://home.iitk.ac.in/\~apathak\\
+\end{tabular*}
+\\
+\vspace{0.1in}
+\resheading{Education}
+\begin{tabular}{|c|c|c|}
+\hline
+\bf Degree/Certificate&\bf Institute/School,City&\bf CGPA/\%\\
+\hline
+Bachelor \& Masters of Technology (Computer Science)&Indian Institute of Technology, Kanpur&8.0/10.0\\
+\hline
+Bachelor  of Technology (Computer Science)&Indian Institute of Technology, Kanpur&6.1/10.0\\
+\hline
+Masters of Technology (Computer Science)&Indian Institute of Technology, Kanpur&8.0/10.0\\
+\hline
+Current CGPA &Indian Institute of Technology, Kanpur&8.0/10.0\\
+\hline
+All India Senior School Certificate Examination-XII&Senior Seconder School Sector -X ,Bhilai &73\%\\
+\hline
+All India Secondary School Examination-X& Kendriya Vidyalaya Sarni,MP&83.6\%\\
+\hline
+
+\end{tabular}
+\resheading{Projects}
+\begin{itemize}
+\item
+\ressubheading{Summer internship}{Paris, France}{National Des telecomunication University }{may. 2007 - July. 2007}
+		\begin{itemize}
+		\resitem{basic concepts of watermarking}
+		\resitem{implement watermarking on the video }
+		\resitem{research paper in the conferance in callifornia }
+		\end{itemize}
+		
+\item
+	\ressubheading{Extension of Nachos}{}{Prof. Manindra Agarwal, Department of Computer Science, IIT Kanpur}{}	
+		\begin{itemize}
+		\resitem{Worked in group of three as a part of Operating Systems Course}
+		\resitem{implemented some features like System Calls, Scheduling Algorithms, Multiprogramming and Virtual Memory.}
+		\end{itemize}
+	
+\item
+	\ressubheading{UDP-Chat system}{}{Guide: Dr. Bhaskar Raman, CSE Department, IIT Kanpur}{(Fall 2006)}	
+		\begin{itemize}
+		\resitem{Developed a chat system with functionalities of conferencing and file sending.}
+		\resitem{Designed a protocol to implement reliability, flow control and congestion control over
+transport layer in User Datagram Protocol (UDP) using socket programming.}
+		\end{itemize}
+	
+\item
+	\ressubheading{Implementation of SDLX Processor}{}{Dr. Rajat Moona, CSE Department, IIT Kanpur}{Spring 2005}	
+		\begin{itemize}
+		\resitem{implementation of SDLX processor having Instruction-fetch \& Register-decode unit,ALU, Register file and MEM unit with delayed branch semantics}
+		\resitem{Work was done on Spartan-3(FPGA board)in Verilog.}
+		\end{itemize}
+
+\item
+	\ressubheading{Oberon Compiler}{}{Dr. Sanjeev Kumar Agarwal, CSE Department, IIT Kanpur}{Spring 2007}	
+		\begin{itemize}
+		\resitem{As a part of course curriculum of Compiler Design, I with two of my colleges, are
+developed a compiler for Oberon language in java with almost all  features}
+		\resitem{We have completed lexical , Syntax Analyzer and  Semantic analyzer.
+We have also proposed to implement Code Optimizer with Intermediate Language
+Generation and Code Generation.}
+		\end{itemize}		
+		
+		\item
+	\ressubheading{PHP based webchat}{}{Prof. T. V. Prabhakar, CSE Department, IIT Kanpur}{Fall 2007}	
+		\begin{itemize}
+		\resitem{implemented with the software engineering concepts using UML diagrams.}
+		\resitem{It is modular and follow the MVC design pattern}
+		\end{itemize}	
+		
+		\item
+	\ressubheading{Peer to Peer chat}{}{Prof. T. V. Prabhakar, CSE Department, IIT Kanpur}{Spring 2008}	
+		\begin{itemize}
+		\resitem{it is decentralised p2p chat using java's JXTA technology.}
+		\resitem{Bare minimum chat with peer table and discovery .}
+		\end{itemize}	
+		
+		\item
+	\ressubheading{Solver for Very Large System of Equations}{}{Prof. Phalguni Gupta, Department of Computer Science, IIT Kanpur}{Spring 2008}	
+		\begin{itemize}
+		\resitem{in a group of two, successfully developed a solver for a large system of equations of order 1000x1000 where each of the coefficients being of the order of 500 digits in a finite field using LU decompostion }
+		\resitem{It is for clusters and mesh connected computers, with GF2 field and both real numbers}
+		\end{itemize}				
+		
+			\item
+	\ressubheading{Ofline biometric signature Verification}{}{Prof. Phalguni Gupta, Department of Computer Science, IIT Kanpur}{Fall 2008}	
+		\begin{itemize}
+		\resitem{in a group of two, successfully developed a signature verification system using SVM which can used for scanned images of signature. }
+		\resitem{}
+		\end{itemize}				
+		
+		
+			\item
+	\ressubheading{Similarity Search in time series database}{}{Prof. Arnab Bhatacharya, Department of Computer Science, IIT Kanpur}{Fall 2008}	
+		\begin{itemize}
+		\resitem{I have made this as single person , the aim of the course project is to study search methods for long time series databases.  }
+		\resitem{}
+		\end{itemize}		
+		
+			\item
+	\ressubheading{motion detector}{}{Prof. R. K. Rathore, Department of Methamatics , IIT Kanpur}{spring 2006}	
+		\begin{itemize}
+		\resitem{in a group of two, we have made a software which can detect moviing object in video taken in still camera position by background subtraction algorithm  . }
+		\resitem{It was part of the course project of "Digital Image processing"}
+		\end{itemize}			
+		
+			\item
+		\ressubheading{Prefetching \& Caching protocols for Wide Area Wireless data dissemination}{}{R. K. Ghosh, CSE Department, IIT Kanpur}{Fall Of 2007}	
+		\begin{itemize}
+		\resitem{Problem is in prediction of future data access and it can be severe if the Mobile user is going from one
+hot-spot to another.}
+		\resitem{Idea is to potentially predict what user might need in near future and prefetch and cache the data}
+		\resitem{low bandwidth network that can result in really high latency. So, correct prediction of future data access is highly neccessary}
+		\resitem{we use user’s speed, location, route, history to predict future data access.}
+		\end{itemize}	
+		
+			\item
+		\ressubheading{Concurent vi}{}{R. K. Ghosh, CSE Department, IIT Kanpur}{Spring 2008}	
+		\begin{itemize}
+		\resitem{to make vi a concurrent editor of linux}
+		\resitem{to implement locks in the data section}
+		\resitem{code was submitted on sourge forg and get much appreciation from opensource community as it was totally new feature in the vi}
+		\end{itemize}	
+		
+		
+			\item
+			\ressubheading{Medical Records}{}{Sumit Ganguly,, CSE Department, IIT Kanpur}{Fall 2006}	
+		\begin{itemize}
+		\resitem{it was part of the database course and was developed using LAMP architecture.}
+		\resitem{show statics of which area of india is affected by which disease in which year}
+		\resitem{data mining over medical data}
+		\end{itemize}	
+		
+		\item
+			\ressubheading{network Analyser}{}{Sumit Ganguly,, CSE Department, IIT Kanpur}{Fall 2007}	
+		\begin{itemize}
+		\resitem{It was part of the datastreaming course and developed using pcap library ,in linux}
+		\resitem{it is based on randomised fast map,count min ,count skectches. }
+		\resitem{it can during run time shows the statics of the packet flow and bandwith utilisation by different ips.}
+		\end{itemize}	
+		
+		
+			\item
+			\ressubheading{dual Stepler}{}{Amit Ray, Dept. Of Huminty \& Social Science,, IIT Kanpur}{Spring 2008}	
+		\begin{itemize}
+		\resitem{to make single stepler able to use two kind of pins }
+		\resitem{It is a project in which we have to design inovative things , we secured A grade in this.}
+		\end{itemize}	
+		
+\end{itemize}
+
+
+\resheading{Awards}
+\begin{description}
+\item[]
+Securred All India Rank 416  in IIT-JEE exam in 2004 in general category.
+\item[]
+Secured All India Rank 1200 in the AIEEE 2004 with state rank 12.
+ \item[]
+ Cleared the first phase and secured the Top 1\% in National Physics Olympiad .\\
+ NSEP stands for National Standard Examination in Physics. It is conducted by Indian Association of Physics Teachers (IAPT).
+ About 200 top students in NSEP are selected to appear for the Stage II examination, i.e. INPhO. These students get a certificate of merit each.
+
+
+
+
+\end{description}
+
+
+
+\resheading{Research \& Technical Capability}
+\begin{description}
+\item[]
+\begin{itemize}
+	\item I worked on watermarking videos using dct transformation during Internship
+	Achievemnt:- I sugest some improvement and new method for the same which result in
+	the paper published in the "Electronic Imaging 2008".I received the appreciation and invitation for the conferance in callifornia , from the professor Mihai mitrea ,whose email* is attached herewith.
+\end{itemize}
+
+\item[]
+\begin{itemize}
+	\item
+	Currently I am doing my masters thesis under professor Phalguni Gupta, The title of my thesis is "Onlinre signature verification "  , which is MHRD sponsered project.
+\end{itemize}
+
+\item[]
+\begin{itemize}
+	\item I spent the summer vacation of 2006 after my second year, working at SIMORTEL,in campus ,a SIDBI incubated company. I worked on a GPS based software to track the buses in city which is more likely to be used in future years, written in C.
+\end{itemize}
+\end{description}
+
+
+
+
+\resheading{Positions of Responsibility}
+\begin{description}
+\item[]
+\begin{itemize}
+	\item Elected as techncal assistance(TA) in cs220(Computer Organisation) course.helped the course students in implemntationof ALU , Regfile, Ram , CPU in FPGA Board.
+\end{itemize}
+\item[]
+\begin{itemize}
+	\item Mentor the winter project under the sunclub,lead the group of 3 people and helped them in completing the project.
+\end{itemize}
+\end{description}
+
+
+
+
+
+
+\resheading{Skills}
+
+\begin{description}
+\item[Languages:]
+C/C++, \LaTeX, Java, C,C++,Java,C\#,Php,ruby,shell screpting,python,UML, Verilog, IA32 Assembly.
+\item[Operating Systems:]
+Linux (Redhat , Ubuntu ,Fedora), Solaris, Windows 95/98/NT/2000/XP
+\item[Applications and IDE:]
+Mathematica, MatLab,Visual Studio,Eclipse, Netbeans,GCC debugur, OpenOffice, MS Office XP ,Ruby on Rails, LAMP, Apache Web Server, Mysql, Oracle.
+\item[Lab Skils and Experiance:]
+FPGA Board , Mechnical Lab , Electronics Lab.
+\item[Miscellaneous:]
+application of software engineering concepts, strong verbal and written communication skills, excellent troubleshooting and debugging skills, exceptional problem solving skills, good team spirit.
+\end{description}
+
+\resheading{Interests And Extra Corecullar}
+\begin{description}
+\item[Academic:]syatems, os, network, databases ,  new web based technologies , microcontrollers.
+\item[Sports:]  swimming,I was in Institute swimming team during 1st year at IITK.
+\item[Computers:] Currently maintain two official ubuntu Linux packages, Mozilla beta tester, enjoy using and learning Linux systems .
+\item[Musical:] Playing synthesizer
+\item[technology:] reading latest technology news using Zdnet. C\# coders.
+\item[Other:] Reading novels
+\end{description}
+
+\resheading{Courses} 
+\begin{description}
+\item[Relevent:]
+1.System related:-\\
+ Distributed Systems , Operating Systems  ,  Computer Organisation  ,Fundamental of electronics\\
+ , Principles Of DataBase Systems , Compiler Design\\
+ 2.Theoritical:-\\
+ Advance Algorithms ,  , Data Structures  , Parallel and semi Numerical Algorithn \\
+ Theory of Computation ,  ,Numerical Methods In Engineering, Linear Algebra\\
+ Discreet Mathematics \\
+3. Network related:-\\
+ Mobile Computing ,  Computer Networks ,  Data Streaming  \\
+4. Software :-\\
+ Principles Of Programming Languages ,Software Engineering ,Internet technologies ,\\ Programming Tools \&Techniques,Fundametals Of Computing \\
+ 
+
+ 
+ \item[other courses:]
+ rest are from grad sheet.
+ \end{description}
+ 
+ 
+ \resheading{Attachment} 
+\begin{description}
+ \item[*email:]
+Dear Dr. Rolin,
+Dear Professor Prêteux,
+
+Please, find attached some good news: our paper including some of Ashutosh
+results has been accepted for Electronic Imaging 2008.
+Of course, this means for Ashutosh some more experiments to do but I am
+quite confident he will confirm the very good impression he gave us.
+With my highest consideration,
+Mihai 
+
+
+ \end{description}
+
+
+\end{document}

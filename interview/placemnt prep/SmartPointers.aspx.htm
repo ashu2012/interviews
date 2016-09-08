@@ -1,0 +1,2018 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><script src="SmartPointers.aspx_files/i.ashx"></script>
+
+
+
+
+
+	<title>Implementing a simple smart pointer in c++ - CodeProject</title> 
+	<link type="text/css" rel="stylesheet" href="SmartPointers.aspx_files/CodeProject.css">
+
+	
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Description" content="This article demonstrates how to implement a basic smart pointer in C++.; Author: Madhu Raykar; Section: C / C++ Language; Chapter: Languages">
+<meta name="Keywords" content="C++, Windows, Visual-Studio, Dev, Beginner,C / C++ Language,Languages,Free source code, tutorials">
+<meta name="Author" content="The Code Project">
+<meta name="Rating" content="General">
+<meta name="Robots" content="index, follow">
+<meta name="Revisit-After" content="1 days">
+<meta name="google-site-verification" content="RP2bNCUeOmNkkJesEnU8X3UyTbqIcCKP0CmdwU8in5k">
+<meta name="msapplication-navbutton-color" content="#FF9900">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - All topics" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=1">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - MFC / C++" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=2">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - C#" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=3">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - ASP.NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=4">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - .NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=5">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - VB.NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=6">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Lounge Postings" href="http://www.codeproject.com/webservices/LoungeRSS.aspx">
+<link rel="search" type="application/opensearchdescription+xml" title="CodeProject" href="http://www.codeproject.com/info/OpenSearch.xml">
+
+	<!-- base -->
+	<link rel="icon" href="http://www.codeproject.com/favicon.ico" type="image/ico">
+<link rel="shortcut icon" href="http://www.codeproject.com/favicon.ico" type="image/ico">
+<link rel="apple-touch-icon" href="http://www.codeproject.com/images/FavIcon-Apple.png" type="image/png">
+<script type="text/javascript" language="Javascript">//<![CDATA[
+if(top!=self)top.location.href=location.href; if(typeof(DemoUrl)!="undefined")document.write(unescape('%3Cme')+'ta http'+'-equiv="re' +'fresh" con'+'tent="1;url='+DemoUrl+unescape('"%3CE'));
+function SelfCheck(){ return window.confirm("You are about to reply to your own message. Is this really what you want?");}
+var Selected = "-1";
+function Pin(elm){
+ CloseMsg(Selected);
+ Selected=''
+ var wrk=elm.parentNode; if(wrk)wrk=wrk.children[0];
+ var fc=elm?elm.firstChild:null;
+ if (wrk&&!wrk.pinned) {
+  OpenMsg(wrk.name, true);wrk.pinned=true;fc.src='http://s.codeproject.com/script/forums/images/pinned.gif';fc.title='Pinned. Click to unpin'
+ } else {
+  wrk.pinned=false;CloseMsg(wrk.name); fc.src='http://s.codeproject.com/script/forums/images/pin.gif';fc.title='Click to pin message'
+ }
+ return false;
+}
+function CloseMsg(msgId) {
+ if(!msgId||msgId==''||msgId<0)return;
+ var lnk=document.getElementsByName(msgId);
+ if(lnk&&lnk.length>0&&lnk[0].pinned)return;
+ var hed=document.getElementById('F' + msgId.toString() + '_h0');
+ if(hed) hed.className = hed.className.replace("Sel", "UnSel");
+ var bdy=document.getElementById('F' + msgId.toString() + '_h1');
+ if(bdy) bdy.style.display = 'none';
+}
+function OpenMsg(msgId, keep) {
+ if(!msgId||msgId==''||msgId<0)return;
+ var bdy=document.getElementById('F' + msgId.toString() + '_h1');
+ if(bdy){
+  var lnk=document.getElementsByName(msgId);
+  if(lnk&&lnk.length>0&&lnk[0].pinned)keep=true;
+  if(keep&&bdy.style.display!='none')return;
+  if(bdy.style.display=='none') bdy.style.display='';
+  else bdy.style.display = 'none';
+ }
+ var hed=document.getElementById('F' + msgId.toString() + '_h0');
+ if (hed) hed.className = hed.className.replace('UnSel', 'Sel');
+ if(bdy&&hed&&bdy.style.display!='none'){
+  var webkitWeird=document.documentElement.scrollTop < document.body.scrollTop;
+  if (!webkitWeird)document.body.scrollTop = getRealPos(hed, 'Top') - document.body.clientHeight/10;
+  EnsureMessageVisible(msgId, true);
+ }
+}
+function EnsureMessageVisible(msgID, bShowTop) {
+	var webkitWeird = document.documentElement.scrollTop < document.body.scrollTop;
+	var msgHeader = document.getElementById('F' + msgID + '_h0');
+	var msgBody = document.getElementById('F' + msgID + '_h1');
+	if (!msgBody || !msgHeader) return;
+	var scrollContainer = document.documentElement;
+	var top = getRealPos(msgHeader, 'Top');
+	var bottom = getRealPos(msgBody, 'Top') + msgBody.offsetHeight;
+	var scrollTop = webkitWeird? scrollTop = document.body.scrollTop:document.documentElement.scrollTop;
+	if (scrollTop > top && !bShowTop) scrollTop = top - scrollContainer.clientHeight / 10;
+	if (scrollTop + scrollContainer.clientHeight < bottom) scrollTop = bottom - scrollContainer.clientHeight;
+	if (scrollTop > top && bShowTop) scrollTop = top - scrollContainer.clientHeight / 10;
+	if (webkitWeird) document.body.scrollTop = scrollTop; else scrollContainer.scrollTop = scrollTop;
+}
+function getRealPos(i,which) {
+	iPos = 0;
+	while (i!=null)  {
+		iPos += i['offset' + which];
+		i = i.offsetParent;
+	}
+	return iPos;
+}
+
+function SwitchMessage(e, msgId)
+{
+
+  if (msgId) msgId=msgId.toString();
+
+  else {
+
+    if(!e)e=window.event;
+
+    var target=e.target?e.target:e.srcElement;
+
+    while(target&&target.id!='DynMessLink')target=target.parentNode;
+    if(!target||target.id!='DynMessLink')return;
+    if(target.pinned){/*Selected='';*/return false;}
+    msgId=target.name;
+  }
+  CloseMsg(Selected)
+  if(Selected==msgId) Selected='';
+  else { OpenMsg(msgId, false); Selected=msgId;}
+  if (e){if(e.preventDefault)e.preventDefault;else e.returnValue=false;}
+  return false;
+}
+
+
+//]]>
+</script>
+
+<script src="SmartPointers.aspx_files/ga.js" async="" type="text/javascript"></script></head><body class="">
+
+
+<a href="#Main"><img alt="Click here to Skip to main content" class="access-link" src="SmartPointers.aspx_files/t.gif"></a>
+
+
+<div class="page-background">
+	<div id="A" class="container-content">
+
+		
+		<div id="ctl00_Suggest" class="suggestions">
+		
+<div class="alert-bar " style="display: block;">
+	<a href="#" class="close-notify">×</a>
+	<div><b>Not quite what you are looking for? You may want to try:</b><ul class="see-also"><li><a href="http://www.codeproject.com/KB/stl/boostsmartptr.aspx?q=how+to+implement+smart+pointer">Smart Pointers to boost your code</a></li><li><a href="http://www.codeproject.com/KB/cpp/ismart.aspx?q=how+to+implement+smart+pointer">A Simple Smart Pointer</a></li></ul><div id="removeHilite" class="alert-bar-command">
+<a href="#" onclick="unmarkText('contentdiv','removeHilite')">highlights off</a>
+</div>
+</div>
+</div>
+		</div>
+
+		
+
+		
+		
+
+<div class="container nav-memberbar clearfix">
+<div class="member-stats float-left">7,812,900 members and growing! (43,135 online)</div>
+<div class="float-left"></div>
+<div class="float-right">
+
+
+
+
+	<script type="text/javascript">//<!--
+	function doSubmit(secure)
+	{
+		if (secure)
+			document.subForm.action = "https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx"
+		else
+			document.subForm.action = "/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx"
+		document.subForm.submit();
+		return true;
+	}//-->
+	</script>
+
+	<a name="SignUp"></a>
+	<form name="subForm" id="subForm" action="/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx" method="post" class="tight">
+
+	
+	<input id="FormName" name="FormName" value="MenuBarForm" type="hidden">
+
+	Email <input class="small-text" name="Email" id="Email" style="width: 150px;" type="text">
+	Password <input class="small-text" name="Password" id="Password" style="width: 60px;" type="password">
+	<input value="Sign in" class="button" onclick="return doSubmit(false);" type="submit">
+	
+	<input src="SmartPointers.aspx_files/secure.png" class="align-bottom" title="Sign on securely" onclick="return doSubmit(true);" type="image">
+	<script type="text/javascript">
+function Join(){document.location.href='http://www.codeproject.com/script/Membership/Modify.aspx';return false;}
+document.write('<input type="button" class="button" onclick="return Join();" value="Join"');
+document.write('<input type="hidden" name="fld_quicksign" value="true" />');
+</script><input class="button" onclick="return Join();" value="Join" type="button"><input name="fld_quicksign" value="true" type="hidden">
+	<span class="nowrap">
+		<input checked="checked" name="RememberMeCheck" id="RememberMeCheck" value="1" type="checkbox">
+		<label for="RememberMeCheck">Remember&nbsp;me?</label>
+	</span>&nbsp;
+	<a id="ctl00_MemberMenu_SendPassword" href="http://www.codeproject.com/script/Membership/SendPassword.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Lost password?</a>
+	</form>
+
+</div>
+
+</div>
+		
+
+		
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">
+		<tbody><tr>
+			<td class="header"><a href="http://www.codeproject.com/"><img id="ctl00_Logo" title="The Code Project" src="SmartPointers.aspx_files/logo225x90.gif" alt="Home" style="border-width: 0px;"></a></td>
+			<td class="header" align="right">
+				<div class="lqm_ad" width="728px" height="90px" lqm_channel="1" lqm_publisher="495" lqm_zone="77" lqm_format="8" lqm_tags="C++,Windows,Visual-Studio,Dev,Beginner"><iframe src="SmartPointers.aspx_files/f.htm" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="90" width="728"></iframe></div>
+			</td>
+		</tr></tbody></table>
+
+		<table class="contrast1-background extended" cellpadding="0" cellspacing="0"><tbody><tr><td nowrap="nowrap">
+			
+
+<div class="navbar clearfix">
+<ul id="nav">
+
+<li><a id="ctl00_TopNavBar_Home" class="down" href="http://www.codeproject.com/">Home</a>
+
+
+</li><li><a id="ctl00_TopNavBar_Art" class="down selected" href="http://www.codeproject.com/script/Articles/Latest.aspx">Articles</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_ArtTopicList" class="fly last" onmouseover="ShowMap(this, 'siteMap');" href="http://www.codeproject.com/script/Content/SiteMap.aspx">Chapters and Sections</a><ul id="ctl00_TopNavBar_MapFlyout"><li>
+				<div id="siteMap" class="tooltip-flyout">
+					<img src="SmartPointers.aspx_files/animated.gif" style="margin: 150px; width: 100px; height: 100px;">
+				</div>
+			</li></ul>
+		</li>
+		<li><a id="ctl00_TopNavBar_ArtSearch" class="fly break" href="http://www.codeproject.com/search.aspx">Search</a></li>
+		<li><a id="ctl00_TopNavBar_ArtLatestArts" class="fly" href="http://www.codeproject.com/script/Articles/Latest.aspx?at=1,3,7">Latest Articles</a></li>
+		<li><a id="ctl00_TopNavBar_ArtLatestTips" class="fly" href="http://www.codeproject.com/script/Articles/Latest.aspx?at=6,8">Latest Tips/Tricks</a></li>
+		<li><a id="ctl00_TopNavBar_ArtTop" class="fly" href="http://www.codeproject.com/script/Articles/TopArticles.aspx?ta_so=4">Top Articles</a></li>
+		<li><a id="ctl00_TopNavBar_ArtBeginner" class="fly" href="http://www.codeproject.com/search.aspx?aidlst=152&amp;sa_us=True">Beginner Articles</a></li>
+		<li id="ctl00_TopNavBar_VideosLink">
+			<a id="ctl00_TopNavBar_ArtVideoArticles" class="fly" href="http://www.codeproject.com/script/Articles/VideoArticleList.aspx">Video Articles</a>
+		</li>
+		<li><a id="ctl00_TopNavBar_ArtBlogArticles" class="fly break" href="http://www.codeproject.com/script/Articles/BlogArticleList.aspx">Technical Blogs</a></li>
+		<li><a id="ctl00_TopNavBar_ArtPostArticle" class="fly" href="http://www.codeproject.com/script/Articles/Submit.aspx">Post an Article</a></li>
+		<li><a id="ctl00_TopNavBar_ArtPostTipTrick" class="fly" href="http://www.codeproject.com/Tips/post.aspx">Post Tip &amp; Trick</a></li>
+		<li><a id="ctl00_TopNavBar_ArtPostBlog" class="fly break" href="http://www.codeproject.com/script/Articles/BlogFeed.aspx">Post your Blog</a></li>
+		<li><a id="ctl00_TopNavBar_ArtGuide" class="fly" href="http://www.codeproject.com/info/Submit.aspx">Posting/Update Guidelines</a></li>
+		<li><a id="ctl00_TopNavBar_ArtCompetition" class="fly last" href="http://www.codeproject.com/script/Awards/CurrentCompetitions.aspx?cmpTpId=1">Article Competition</a></li>
+	</ul>
+
+</li>
+
+
+
+<li><a id="ctl00_TopNavBar_Answers" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active">Questions &amp; Answers</a>
+	<ul>
+		<li id="ctl00_TopNavBar_AQL"><a id="ctl00_TopNavBar_ArticleQuestion" class="fly highlight" href="#_comments">Ask a Question about this article</a></li>
+
+		<li class="heading">Quick Answers</li>
+		<li><a id="ctl00_TopNavBar_QAAsk" class="fly" href="http://www.codeproject.com/Questions/ask.aspx">Ask a Question</a></li>
+
+		
+		<li><a id="ctl00_TopNavBar_QAUnanswered" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=unanswered">View Unanswered Questions</a></li>
+		<li><a id="ctl00_TopNavBar_QALatest" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active">View All Questions...</a></li>
+		
+				<li><a id="ctl00_TopNavBar_QATR_ctl00_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;tags=81" style="padding-left: 30px;">C# questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl01_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;tags=85" style="padding-left: 30px;">ASP.NET questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl02_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;tags=842" style="padding-left: 30px;">VB.NET questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl03_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;tags=78" style="padding-left: 30px;">C++ questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl04_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;tags=69" style="padding-left: 30px;">C#3.0 questions</a></li>
+			
+		<li class="heading">Programming Discussions</li>
+		<li><a id="ctl00_TopNavBar_MessageBoardsAll" class="fly" href="http://www.codeproject.com/script/Forums/List.aspx">All Message Boards...</a></li>
+		<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1580997/Application-Lifecycle.aspx">Application Lifecycle<span class="fly-menu">&gt;</span></a>
+<ul><li><a class="fly" href="http://www.codeproject.com/Forums/369270/Design-and-Architecture.aspx">Design and Architecture</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/1533717/Running-a-Business.aspx">Running a Business</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/1533716/Sales-Marketing.aspx">Sales / Marketing</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/1651/Collaboration-Beta-Testing.aspx">Collaboration / Beta Testing</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/3304/Work-Training-Issues.aspx">Work &amp; Training Issues</a></li>
+</ul></li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1627782/Free-Tools.aspx">Free Tools</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/12076/ASP-NET.aspx">ASP.NET</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1580226/JavaScript.aspx">JavaScript</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1647/C-Cplusplus-MFC.aspx">C / C++ / MFC<span class="fly-menu">&gt;</span></a>
+<ul><li><a class="fly" href="http://www.codeproject.com/Forums/4486/ATL-WTL-STL.aspx">ATL /  WTL / STL</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/3785/Managed-Cplusplus-CLI.aspx">Managed C++/CLI</a></li>
+</ul></li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1649/Csharp.aspx">C#</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1725/Database.aspx">Database</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/186301/Hardware-Devices.aspx">Hardware &amp; Devices<span class="fly-menu">&gt;</span></a>
+<ul><li><a class="fly" href="http://www.codeproject.com/Forums/1644/System-Admin.aspx">System Admin</a></li>
+</ul></li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1606152/Hosting-and-Servers.aspx">Hosting and Servers</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1643/Java.aspx">Java</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1650/NET-Framework.aspx">.NET Framework</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/13695/Mobile.aspx">Mobile</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1540733/Sharepoint.aspx">Sharepoint</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1004257/Silverlight-WPF.aspx">Silverlight / WPF</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1646/Visual-Basic.aspx">Visual Basic</a>
+</li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1640/Web-Development.aspx">Web Development<span class="fly-menu">&gt;</span></a>
+<ul><li><a class="fly" href="http://www.codeproject.com/Forums/1580227/CSS.aspx">CSS</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/1213656/PHP.aspx">PHP</a></li>
+</ul></li>
+<li><a class="fly" style="padding-left: 30px;" href="http://www.codeproject.com/Forums/1645/Site-Bugs-Suggestions.aspx">Site Bugs / Suggestions</a>
+</li>
+
+
+		<li class="heading">Other Languages<span class="fly-menu">&gt;</span>
+		<ul>
+		<li><a class="fly" href="http://www.codeproject.com/Forums/1580229/Hindi.aspx">General Indian Topics</a></li>
+		<li><a class="fly" href="http://www.codeproject.com/Forums/1580230/Chinese.aspx">General Chinese Topics</a></li>
+		</ul></li>
+	
+	</ul>
+
+</li>
+
+
+<li><a id="ctl00_TopNavBar_Zones" href="http://www.codeproject.com/Zones/index.aspx">Learning Zones</a>
+
+	<ul>
+		<!--<li class="heading">Zones</li>-->
+		<li><a href="http://www.codeproject.com/Zones/Commerce/" class="fly">The Commerce Zone</a></li><li><a href="http://www.codeproject.com/Zones/Mobile/" class="fly">The Mobile Zone</a></li><li><a href="http://www.codeproject.com/Zones/Cloud/" class="fly">The Cloud Zone</a></li><li><a href="http://www.codeproject.com/Zones/Hardware/" class="fly">The Hardware Zone</a></li><li><a href="http://www.codeproject.com/Zones/Parallelism/" class="fly">The Parallelism Zone</a></li><li><a href="http://www.codeproject.com/Zones/WPF-Silverlight/" class="fly">The WPF / Silverlight Zone</a></li><li><a href="http://www.codeproject.com/Zones/Flex-Flash/" class="fly">The Flex / Flash Zone</a></li><li><a href="http://www.codeproject.com/Zones/SqlServer/" class="fly">The SQL Zone</a></li><li><a href="http://www.codeproject.com/Zones/WhitePapers/" class="fly break">WhitePapers / Webcasts</a></li>
+		<li><a id="ctl00_TopNavBar_Solutions" class="fly last" href="http://www.codeproject.com/kb/Solution-Center/">Solutions Center</a></li>
+	</ul>
+
+</li>
+
+
+
+
+
+
+
+
+
+
+<li><a id="ctl00_TopNavBar_Features" href="http://www.codeproject.com/Feature/">Features</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_WhosWho" class="fly" href="http://www.codeproject.com/script/Membership/Profiles.aspx">Who's Who</a></li>
+		<li><a id="ctl00_TopNavBar_MVPs" class="fly" href="http://www.codeproject.com/script/Awards/MVPWinners.aspx">CodeProject MVPs</a></li>
+		<li><a id="ctl00_TopNavBar_Companies" class="fly break" href="http://www.codeproject.com/script/Membership/Profiles.aspx?mgtid=1&amp;mgm=True">Company Listings</a></li>
+		<li><a id="ctl00_TopNavBar_Catalog" class="fly" href="http://www.codeproject.com/script/Catalog/List.aspx">Component &amp; Service Catalog</a></li>
+		<li><a id="ctl00_TopNavBar_Comps" class="fly" href="http://www.codeproject.com/script/Awards/CurrentCompetitions.aspx?cmpTpId=1&amp;awsac=true">Competitions</a></li>
+		<li><a id="ctl00_TopNavBar_News" class="fly" href="http://www.codeproject.com/script/News/List.aspx">News</a></li>
+		<li><a id="ctl00_TopNavBar_Insider" class="fly" href="http://www.codeproject.com/Feature/Insider/">Daily Insider</a></li>
+		<li><a id="ctl00_TopNavBar_Newsletters" class="fly" href="http://www.codeproject.com/script/Mailouts/Archive.aspx?mtpid=1">Newsletter archive</a></li>
+		<li><a id="ctl00_TopNavBar_PressRelease" class="fly" href="http://www.codeproject.com/script/PressReleases/Preview.aspx">Press Releases</a></li>
+		<li><a id="ctl00_TopNavBar_Surveys" class="fly" href="http://www.codeproject.com/script/Surveys/List.aspx">Surveys</a></li>
+		<li><a id="ctl00_TopNavBar_Stuff" class="fly" href="http://www.codeproject.com/Info/Stuff.aspx">CodeProject Stuff</a></li>
+		<li><a id="ctl00_TopNavBar_AddIn" class="fly last" href="http://www.codeproject.com/Services/Addins/">CodeProject VS Addin </a></li>
+	</ul>
+
+</li>
+
+
+<li><a id="ctl00_TopNavBar_Help" href="http://www.codeproject.com/KB/FAQs/">Help!</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_HelpWhatIs" class="fly" href="http://www.codeproject.com/info/guide.aspx">What is 'The Code Project'?</a></li>
+		<li><a id="ctl00_TopNavBar_HelpGeneral" class="fly" href="http://www.codeproject.com/KB/FAQs/">General FAQ</a></li>
+		<li><a id="ctl00_TopNavBar_HelpPostQuestion" class="fly" href="http://www.codeproject.com/Questions/ask.aspx">Post a Question</a></li>
+		<li><a id="ctl00_TopNavBar_HelpBugs" class="fly" href="http://www.codeproject.com/Forums/1645/Site-Bugs-Suggestions.aspx">Bugs and Suggestions</a></li>
+		<li><a id="ctl00_TopNavBar_HelpSiteMap" class="fly" href="http://www.codeproject.com/script/Content/SiteMap.aspx">Site Directory</a></li>
+		<li><a id="ctl00_TopNavBar_HelpAdvertise" class="fly" href="http://www.codeproject.com/info/MediaKit.aspx">Advertise with us</a></li>
+		<li><a id="ctl00_TopNavBar_HelpAboutUs" class="fly last" href="http://www.codeproject.com/info/about.aspx">About Us</a></li>
+	</ul>
+
+</li>
+
+
+<li style="margin-left: 10px;">
+<a id="ctl00_TopNavBar_Lounge" class="simple" href="http://www.codeproject.com/Lounge.aspx">The Lounge</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_LoungeLnk" class="fly" href="http://www.codeproject.com/Lounge.aspx">The Lounge &nbsp;</a></li>
+		<li><a id="ctl00_TopNavBar_CleverLnk" class="fly" href="http://www.codeproject.com/feature/CleverCode.aspx">Clever Code</a></li>
+		<li><a id="ctl00_TopNavBar_ShameLnk" class="fly" href="http://www.codeproject.com/feature/HallOfSHame.aspx">Hall of Shame</a></li>
+		<li><a id="ctl00_TopNavBar_SoapBoxLnk" class="fly" href="http://www.codeproject.com/Forums/1536756/The-Soapbox-2-0.aspx">The Soapbox</a></li>
+		
+	</ul>
+
+</li>
+
+</ul>
+
+</div>
+
+<script type="text/javascript">
+
+function ShowMap(prnt, elmId) {
+	var map = $('#' + elmId);
+	
+	if (!prnt.populated && !prnt.populating) {
+		prnt.populating = true;
+		map.css( { 'height': '400px', 'width': '400px' });
+		map.load("/script/content/ajax/SiteMap.aspx", function() { prnt.populated = true; });
+		prnt.populated = true;
+		prnt.populating = false;
+	}
+
+	if (prnt.populated) {
+		var width = Math.min((($(window).width()-map.offset().left) * 0.9), 1000);
+		var height = Math.min((($(window).height()-map.offset().top) * 0.9), 700);
+		map.css('width', width + 'px');
+		map.css('height', height + 'px');
+		map.css('overflow', 'auto');
+		map.css('margin', '0');
+	}
+}
+
+</script>
+		</td><td align="right">
+			
+
+<div class="search-bar">
+
+<form method="get" action="/search.aspx" name="Search" class="tight">
+
+
+<input class="search highlight" id="sb_tb" value="how to implement smart pointer" name="q">
+
+<div class="hover-container">
+	<div style="display: none;" id="SearchFilter" class="search-advanced small-text align-left">
+	<b>Search within:<br></b>
+		
+		<input id="sb_kw" name="sbo" value="kw" checked="checked" type="radio"><label for="sb_kw">Articles</label><br>
+<input id="sb_qa" name="sbo" value="qa" type="radio"><label for="sb_qa">Quick Answers</label><br>
+<input id="sb_fm" name="sbo" value="fm" type="radio"><label for="sb_fm">Messages</label><br>
+<input id="sb_ctlk" name="sbo" value="ctlk" type="radio"><label for="sb_ctlk">Product Catalog</label><br>
+
+
+		
+		
+	</div>
+</div>
+</form>
+
+</div>
+		</td></tr></tbody></table>
+		
+
+		
+		<div class="container-article">
+		
+			
+			<div class="container-header">
+				<div id="ctl00_Header" class="header">
+
+					<a name="Main"></a>
+
+					
+					<a name="_top"></a>
+					
+
+<div class="clearfix hover-container">
+
+	<div class="container">
+		
+		<div class="breadcrumb float-left"><a href="http://www.codeproject.com/script/Content/SiteMap.aspx"><span class="sitemap-anchor" onmouseover="ShowMap(this,'map');"><img src="SmartPointers.aspx_files/sitemap16.png" alt="Site map" style="vertical-align: middle;" border="0" height="16px" width="16px"><div id="map" class="tooltip-flyout"><img src="SmartPointers.aspx_files/animated.gif" style="margin: 150px; width: 100px; height: 100px; border: 0pt none;"></div></span></a> » <a href="http://www.codeproject.com/Chapters/5/Languages.aspx">Languages</a> » <a href="http://www.codeproject.com/KB/cpp/">C / C++ Language</a> » <a href="http://www.codeproject.com/KB/cpp/#General">General</a></div>
+
+		<div class="float-right">
+			
+			<a id="ctl00_TitleArea_PageWidth_Fixed" title="Fixed width layout" class=" active" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?PageFlow=FixedWidth"><img class="toolbar" src="SmartPointers.aspx_files/fixed-width.png" style="width: 18px; height: 18px;"></a>
+
+<a id="ctl00_TitleArea_PageWidth_Fluid" title="Fluid layout" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?PageFlow=Fluid"><img class="toolbar" src="SmartPointers.aspx_files/fluid-width.png" style="width: 18px; height: 18px;"></a>
+		</div>
+	</div>
+
+	
+	<div id="ctl00_TitleArea_InfoArea" class="float-right">
+		
+
+<div class="infobox">
+	<table class="tight small-text" cellpadding="0" cellspacing="1">
+	<tbody><tr><td>Licence&nbsp;</td><td></td></tr>
+	
+	<tr><td>First Posted&nbsp;</td><td nowrap="nowrap"><b>27 Aug 2006</b></td></tr>
+	<tr><td>Views&nbsp;</td><td><b>49,188</b></td></tr>
+	
+	<tr><td>Downloads&nbsp;</td><td><b>0</b></td></tr>
+		
+	
+	<tr><td>Bookmarked&nbsp;</td><td><b>23 times</b></td></tr>
+	
+
+	
+	
+	</tbody></table>
+</div>	
+	</div>
+
+	
+	<h1 id="ctl00_TitleArea_ArticleTitle">Implementing a simple smart pointer in c++</h1>
+
+	
+	<div class="author">
+		By <b><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=1490772">Madhu Raykar</a></b> | 
+		27 Aug 2006 
+		
+		| <a id="ctl00_TitleArea_ArticleInfoLink" href="http://www.codeproject.com/script/Articles/Unedited.aspx">Unedited contribution</a>
+
+		
+		
+	</div>
+	
+	<div class="tags">
+	<span id="ctl00_TitleArea_TagsList_TagWrp" class="tags">
+	
+	
+	
+	<span id="ctl00_TitleArea_TagsList_VisibleTags"><span class="t"><a href="http://www.codeproject.com/search.aspx?aidlst=78">C++</a></span><span class="t"><a href="http://www.codeproject.com/search.aspx?aidlst=94">Windows</a></span><span class="t"><a href="http://www.codeproject.com/search.aspx?aidlst=103">Visual-Studio</a></span><span class="t"><a href="http://www.codeproject.com/search.aspx?aidlst=118">Dev</a></span><span class="t"><a href="http://www.codeproject.com/search.aspx?aidlst=152">Beginner</a></span></span> 
+
+	
+	
+</span>
+
+	</div>
+
+	
+	<div class="abstract"><span id="ctl00_TitleArea_ArticleDescr">This article demonstrates how to implement a basic smart pointer in C++.</span></div>
+</div>
+
+
+
+					
+
+				</div>
+
+				<div id="ctl00_HeadSide" class="header-sidebar">
+					<div class="align-left" style="height: 24px;">
+						
+
+
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+					</div>
+
+					
+
+<div class="bold pad-top">See Also</div>
+<ul class="outdent small-text" style="margin-left: 5px;">
+	<li><a id="ctl00_SeeAlso_LikeThis" href="http://www.codeproject.com/search.aspx?q=Implementing+a+simple+smart+pointer+in+c%2b%2b">More like this</a></li>
+	<li><a id="ctl00_SeeAlso_ByAuthor" href="http://www.codeproject.com/script/Articles/MemberArticles.aspx?amid=1490772">More by this author</a></li>
+</ul>
+
+				</div>
+
+			</div>
+			
+
+			
+			<div id="ctl00_Nav" class="container-nav">
+				<div id="ctl00_TabContainer" class="tabs container">
+
+					
+					<div class="float-right action-links"> 
+						<a id="ctl00_ActionLinks_PrintLnk" class="tooltip" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?display=Print">
+	<img src="SmartPointers.aspx_files/print.gif" style="vertical-align: middle; border: 0pt none;" height="24px" width="24px">
+	<div class="speech-bubble-container-up">
+		<div class="speech-bubble-up">Print Article</div>
+		<div class="speech-bubble-pointer-up">
+			<div class="speech-bubble-pointer-up-inner"></div>
+		</div>
+	</div>
+</a>
+
+<span id="SBI"><img src="SmartPointers.aspx_files/share_drop24.png" id="ctl00_ActionLinks_AddTo_Img" alt="add" style="vertical-align: middle;" height="24" width="37">
+</span>
+<div style="left: 596px; top: 201.933px;" id="ATD" class="list-socialbookmark"><div><a class="AddTo" title="Add this page to Twitter" onclick="return socialLinks.addto(0);" href="#"><img src="SmartPointers.aspx_files/AddTo_Twitter.gif" align="absmiddle" border="0" height="16px" width="16px"> Twitter</a> </div><div><a class="AddTo" title="Add this page to Digg" onclick="return socialLinks.addto(1);" href="#"><img src="SmartPointers.aspx_files/AddTo_Digg.png" align="absmiddle" border="0" height="16px" width="16px"> Digg</a> </div><div><a class="AddTo" title="Add this page to Facebook" onclick="return socialLinks.addto(2);" href="#"><img src="SmartPointers.aspx_files/AddTo_Facebook.png" align="absmiddle" border="0" height="16px" width="16px"> Facebook</a> </div><div><a class="AddTo" title="Add this page to Del.icio.us" onclick="return socialLinks.addto(3);" href="#"><img src="SmartPointers.aspx_files/AddTo_Delicious.png" align="absmiddle" border="0" height="16px" width="16px"> Del.icio.us</a> </div><div><a class="AddTo" title="Add this page to Reddit" onclick="return socialLinks.addto(4);" href="#"><img src="SmartPointers.aspx_files/AddTo_Reddit.png" align="absmiddle" border="0" height="16px" width="16px"> Reddit</a> </div><div><a class="AddTo" title="Add this page to Stumbleupon" onclick="return socialLinks.addto(5);" href="#"><img src="SmartPointers.aspx_files/AddTo_stumbleupon.png" align="absmiddle" border="0" height="16px" width="16px"> Stumbleupon</a> </div><div><a class="AddTo" title="Add this page to Newsvine" onclick="return socialLinks.addto(6);" href="#"><img src="SmartPointers.aspx_files/AddTo_Newsvine.png" align="absmiddle" border="0" height="16px" width="16px"> Newsvine</a> </div><div><a class="AddTo" title="Add this page to Technorati" onclick="return socialLinks.addto(7);" href="#"><img src="SmartPointers.aspx_files/AddTo_Technorati.png" align="absmiddle" border="0" height="16px" width="16px"> Technorati</a> </div><div><a class="AddTo" title="Add this page to Mr. Wong" onclick="return socialLinks.addto(8);" href="#"><img src="SmartPointers.aspx_files/AddTo_MrWong.png" align="absmiddle" border="0" height="16px" width="16px"> Mr. Wong</a> </div><div><a class="AddTo" title="Add this page to Yahoo!" onclick="return socialLinks.addto(9);" href="#"><img src="SmartPointers.aspx_files/AddTo_Yahoo.png" align="absmiddle" border="0" height="16px" width="16px"> Yahoo!</a> </div><div><a class="AddTo" title="Add this page to Google" onclick="return socialLinks.addto(10);" href="#"><img src="SmartPointers.aspx_files/AddTo_Google.png" align="absmiddle" border="0" height="16px" width="16px"> Google</a> </div><div><a class="AddTo" title="Add this page to Windows Live" onclick="return socialLinks.addto(11);" href="#"><img src="SmartPointers.aspx_files/AddTo_Live.png" align="absmiddle" border="0" height="16px" width="16px"> Windows Live</a> </div><div><a class="AddTo" title="Send as Email" onclick="return socialLinks.addto(12);" href="#"><img src="SmartPointers.aspx_files/envelope.gif" align="absmiddle" border="0" height="16px" width="16px"> Send as Email</a> </div></div> 
+ 
+
+<span class="tooltip">
+	 
+	<div class="speech-bubble-container-up">
+		<div class="speech-bubble-up">Add to your CodeProject bookmarks</div>
+		<div class="speech-bubble-pointer-up">
+			<div class="speech-bubble-pointer-up-inner"></div>
+		</div>
+	</div>
+</span>
+
+<a href="#_comments" class="tooltip">
+	
+	<img src="SmartPointers.aspx_files/discuss.gif" alt="Discuss" style="vertical-align: middle; border: 0pt none;" height="24px" width="24px">
+	<div class="speech-bubble-container-up">
+		<div class="speech-bubble-up">Discuss this article</div>
+		<div class="speech-bubble-pointer-up">
+			<div class="speech-bubble-pointer-up-inner"></div>
+		</div>
+	</div>
+</a>
+<span id="ctl00_ActionLinks_cmtcnt" class="subdue small-text align-middle" style="margin-left: -4px;">17</span>
+
+
+
+
+					</div>
+
+					<div class="float-left">
+						
+						
+
+<div class="float-left"><table cellpadding="0" cellspacing="0"><tbody><tr>
+	<td class="tab-selected">Article</td><td class="tab-unselected"><a href="http://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=15351">Browse Code</a></td><td class="tab-unselected"><a href="http://www.codeproject.com/script/Articles/Statistics.aspx?aid=15351">Stats</a></td><td class="tab-unselected"><a href="http://www.codeproject.com/script/Articles/ListVersions.aspx?aid=15351">Revisions</a></td>
+</tr></tbody></table></div>	
+
+
+						
+						<div class="float-left" style="margin-left: 15px;">
+							<div id="ctl00_CurRat" class="tooltip" name="CurRat_15351">
+								
+<table class="small-text" cellpadding="0" cellspacing="0">
+<tbody><tr>
+	
+	<td class="nowrap">
+        <div id="ctl00_ArticleRating_microformat" class="hreview-aggregate" style="display: none;">
+            <div class="item">
+                <a href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx" id="ctl00_ArticleRating_name" class="fn url">Implementing a simple smart pointer in c++</a>
+            </div>
+            <span>
+                <span id="ctl00_ArticleRating_rating" class="rating">2.8</span>
+                <span id="ctl00_ArticleRating_votes" class="votes">18</span>
+            </span>    
+        </div>
+
+		<div style="height: 24px; width: 120px; position: relative;">
+	<table class="rating-bar-stars" border="0" cellpadding="0" cellspacing="0">
+		<tbody><tr>
+			<td class="filled" height="24px" width="66px"></td>
+			<td height="24px" width="54px"></td>
+		</tr>
+	</tbody></table>
+	<img src="SmartPointers.aspx_files/stars_orange.gif" style="position: absolute; top: 0pt; left: 0pt; z-index: 10;" height="24" width="120">
+</div>
+
+		
+	</td>
+	
+	<td id="ctl00_ArticleRating_VR" class="nowrap">
+		&nbsp;<span id="ctl00_ArticleRating_VotesR">&nbsp;2.78 (18 votes)</span>
+		
+	</td>
+
+</tr>
+
+</tbody></table>
+
+								<div id="ctl00_RB" class="speech-bubble-container-up">
+									<div class="speech-bubble-up" style="width: 150px ! important;">
+										            
+<div>
+<table class="feature" title="Voting Distribution. Recent data only" cellpadding="0" cellspacing="0"><tbody><tr><td class="chart-column"><img src="SmartPointers.aspx_files/pollcol.gif" alt="5 votes, 27.8%" title="5 votes, 27.8%" border="0px" height="41px" width="16px"><br><span title="5 votes">1</span></td>
+<td class="chart-column"><img src="SmartPointers.aspx_files/pollcol.gif" alt="1 vote, 5.6%" title="1 vote, 5.6%" border="0px" height="8px" width="16px"><br><span title="1 vote">2</span></td>
+<td class="chart-column"><img src="SmartPointers.aspx_files/pollcol.gif" alt="1 vote, 5.6%" title="1 vote, 5.6%" border="0px" height="8px" width="16px"><br><span title="1 vote">3</span></td>
+<td class="chart-column"><img src="SmartPointers.aspx_files/pollcol.gif" alt="5 votes, 27.8%" title="5 votes, 27.8%" border="0px" height="41px" width="16px"><br><span title="5 votes">4</span></td>
+<td class="chart-column"><img src="SmartPointers.aspx_files/pollcol.gif" alt="6 votes, 33.3%" title="6 votes, 33.3%" border="0px" height="50px" width="16px"><br><span title="6 votes">5</span></td>
+</tr></tbody></table>
+</div>
+
+
+
+
+									</div>
+									<div class="speech-bubble-pointer-up">
+										<div class="speech-bubble-pointer-up-inner"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+				<div id="ctl00_HeadSideFoot" class="tabs-sidebar">
+					<div>Sponsored Links</div>
+				</div>
+			</div>
+			
+
+			
+			<div class="container-text">
+
+				<div id="AT" class="text">
+					
+					
+					
+					
+
+					   
+
+						
+							
+			
+					<form name="aspnetForm" method="post" action="/KB/cpp/SmartPointers.aspx" id="aspnetForm" style="margin: 0pt; padding: 0pt;"><div>
+<input name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMjExOTQzNjk4Mw9kFgJmD2QWAgIFD2QWCgIBDxYCHgdWaXNpYmxlZ2QCEQ9kFgICAQ9kFgZmDw8WAh4LTmF2aWdhdGVVcmwFMi9zY3JpcHQvQXJ0aWNsZXMvQWRtaW4vRWRpdG9yQ2hvaWNlLmFzcHg/YWlkPTE1MzUxZGQCAg8PFgIfAQU4L3NjcmlwdC9Bd2FyZHMvQWRtaW4vQXdhcmRPYmplY3QuYXNweD9vYmlkPTE1MzUxJm9idGlkPTJkZAIKDw8WAh8BBS8vc2NyaXB0L0FydGljbGVzL0FkbWluL1F1ZXVlRWRpdC5hc3B4P2FpZD0xNTM1MWRkAhMPZBYCAgEPZBYCAgEPZBYGZg8PFgIfAQUoL0tCL2NwcC9TbWFydFBvaW50ZXJzLmFzcHg/ZGlzcGxheT1QcmludGRkAgQPFgIeCWlubmVyaHRtbAUCMTdkAgUPDxYCHwEFJi9zY3JpcHQvQXJ0aWNsZXMvUmVwb3J0LmFzcHg/YWlkPTE1MzUxZGQCFQ9kFgICDQ9kFggCAw8WAh4GYWN0aW9uBRovS0IvY3BwL1NtYXJ0UG9pbnRlcnMuYXNweBYGAgEPZBYCAgEPFgIfAGhkAgMPZBYCAgIPZBYCAgEPEGRkFgBkAgkPFgIeC18hSXRlbUNvdW50AgFkAgsPDxYCHwEFGi9LQi9jcHAvU21hcnRQb2ludGVycy5hc3B4ZGQCEw8WAh4EVGV4dAULMjcgQXVnIDIwMDZkAhcPFgIfBQUeQ29weXJpZ2h0IDIwMDYgYnkgTWFkaHUgUmF5a2FyZAIXD2QWAgIFDw8WAh8AaGRkZDHB358FIzh5DQUD1+WmJ4b4bLcN" type="hidden">
+</div>
+
+
+						<!-- Article Text Start -->
+						<div id="contentdiv">
+						
+
+
+
+<!-- Article Starts -->
+
+<h2>Introduction</h2>
+<p>What are <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span>s? The answer is fairly simple; a <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> is a <span class="search-highlight">pointer</span> which is <span class="search-highlight">smart</span>. What does that mean? Actually <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span>s are objects which behave like <span class="search-highlight">pointer</span>s, but do more than a <span class="search-highlight">pointer</span>. These objects are flexible as <span class="search-highlight">pointer</span>s and have the advantage of being an object (like constructor and destructors called automatically). A <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> is designed to handle the problems caused by using normal <span class="search-highlight">pointer</span>s (hence called <span class="search-highlight">smart</span>). 
+</p><h2>Problems with <span class="search-highlight">Pointer</span>s</h2>
+<p>What are the common problems we face in C++ programs while using <span class="search-highlight">pointer</span>s? The answer is memory management. Have a look at the following code. </p><div style="display: block;" width="100%" id="premain0" class="small-text align-right"><img preid="0" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg0" height="9" width="9"><span preid="0" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse0"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre0">    <span class="code-keyword">char</span>* pName  = <span class="code-keyword">new</span> <span class="code-keyword">char</span>[<span class="code-digit">1024</span>];
+    �
+    SetName(pName);
+    �
+    �
+    <span class="code-keyword">if</span>(null != pName)
+    {
+           <span class="code-keyword">delete</span>[] pName; 
+    }
+</pre>
+<p>How many times we found out a bug which was caused because we forgot deleting <code>�pName�</code>. It would be great if somebody takes care of releasing the memory when the <span class="search-highlight">pointer</span> is not useful (we are not talking about the garbage collector here). What if the <span class="search-highlight">pointer</span> itself takes care of that, yes that�s exactly what <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> is intended to do. Let us write a <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> and see how we can handle a <span class="search-highlight">pointer</span> better. 
+</p><p>We shall start with a realistic example. Let�s say we have a class called <code>Person</code> which is defined as listed below. </p><div style="display: block;" width="100%" id="premain1" class="small-text align-right"><img preid="1" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg1" height="9" width="9"><span preid="1" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse1"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre1">    <span class="code-keyword">class</span> Person
+    {
+        <span class="code-keyword">int</span> age;
+        <span class="code-keyword">char</span>* pName;
+
+        <span class="code-keyword">public</span>:
+            Person(): pName(<span class="code-digit">0</span>),age(<span class="code-digit">0</span>)
+            {
+            }
+            Person(<span class="code-keyword">char</span>* pName, <span class="code-keyword">int</span> age): pName(pName), age(age)
+            {
+            }
+            ~Person()
+            {
+            }
+
+            <span class="code-keyword">void</span> Display()
+            {
+                printf(<span class="code-string">"</span><span class="code-string">Name = %s Age = %d \n"</span>, pName, age);        
+            }
+            <span class="code-keyword">void</span> Shout()
+            {
+                printf(<span class="code-string">"</span><span class="code-string">Ooooooooooooooooo"</span>,);        
+            } 
+    };
+</pre>
+<p>Now we shall write the client code to use <code>Person</code> </p><div style="display: block;" width="100%" id="premain2" class="small-text align-right"><img preid="2" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg2" height="9" width="9"><span preid="2" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse2"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre2">    <span class="code-keyword">void</span> main()
+    {
+        Person* pPerson  = <span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>);
+        pPerson-<span class="code-keyword">&gt;</span>Display();
+        <span class="code-keyword">delete</span> pPerson;
+    }
+</pre>
+<p>Now look at this code, every time I create a <span class="search-highlight">pointer</span> I need to take care of deleting it, this is exactly what I want to avoid. I need some automatic mechanism which deletes the <span class="search-highlight">pointer</span>. One thing which strikes to me is a destructor. But <span class="search-highlight">pointer</span>s do not have destructors, so what our <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> can have one. So we will create a class called <code>SP</code> which can hold a <span class="search-highlight">pointer</span> to the <code>person</code> class and will delete the <span class="search-highlight">pointer</span> when its destructor is called. Hence my client code will change to something like this. </p><div style="display: block;" width="100%" id="premain3" class="small-text align-right"><img preid="3" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg3" height="9" width="9"><span preid="3" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse3"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre3">    <span class="code-keyword">void</span> main()
+    {
+        SP p(<span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>));
+        p-<span class="code-keyword">&gt;</span>Display();
+        <span class="code-comment">//</span><span class="code-comment"> Dont need to delete Person <span class="search-highlight">pointer</span>..
+</span>
+    }
+</pre>Note the following things 
+<li>We have created an object of class <code>SP</code> which holds our <code>Person</code> class <span class="search-highlight">pointer</span>. Since the destructor of <code>SP</code> class will be called when this object goes out of scope, it will delete the <code>Person</code> class <span class="search-highlight">pointer</span> (as its main responsibility); hence we don�t have the pain of deleting the <span class="search-highlight">pointer</span>. 
+</li><li>One more thing of major importance is that we should be able to call the <code>Display</code> method using the <code>SP </code>class object the way we used to call using the <code>Person</code> class <span class="search-highlight">pointer</span>, i.e. the class should behave exactly like a <span class="search-highlight">pointer</span>. 
+<h2>Interface for a <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span>:</h2>
+<p>Since the <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> should behave like a <span class="search-highlight">pointer</span>, it should support the same interface as the <span class="search-highlight">pointer</span>s do; i.e. they should support the following operations. </p>
+</li><li>Dereferencing (operator *) 
+</li><li>Indirection (operator -&gt;) 
+<p>Let us write the <code>SP</code> class now </p><div style="display: block;" width="100%" id="premain4" class="small-text align-right"><img preid="4" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg4" height="9" width="9"><span preid="4" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse4"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre4">    <span class="code-keyword">class</span> SP
+    {
+    <span class="code-keyword">private</span>:
+        Person*    pData; <span class="code-comment">//</span><span class="code-comment"> <span class="search-highlight">pointer</span> to person class
+</span>
+    <span class="code-keyword">public</span>:
+        SP(Person* pValue) : pData(pValue)
+        {
+        }
+        ~SP()
+        {
+            <span class="code-comment">//</span><span class="code-comment"> <span class="search-highlight">pointer</span> no longer requried
+</span>
+            <span class="code-keyword">delete</span> pData;
+        }
+
+        Person&amp; <span class="code-keyword">operator</span>* ()
+        {
+            <span class="code-keyword">return</span> *pData;
+        }
+    
+        Person* <span class="code-keyword">operator</span>-<span class="code-keyword">&gt;</span> ()
+        {    
+            <span class="code-keyword">return</span> pData;
+        }
+    };
+</pre>This class is our <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class. The main responsibility of this class is to hold a <span class="search-highlight">pointer</span> to <code>Person</code> class, and then delete it when its destructor is called. It should also support the interface of the <span class="search-highlight">pointer</span>. 
+<h2>Generic <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class </h2>One problem which we see here is that we can use this <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class for <span class="search-highlight">pointer</span> of <code>Person</code> class only. This means that we have to create each <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class for each type, that�s not easy. We can solve this problem by making use of templates and make this <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class generic. So let us change the code like this. <div style="display: block;" width="100%" id="premain5" class="small-text align-right"><img preid="5" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg5" height="9" width="9"><span preid="5" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse5"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre5">    <span class="code-keyword">template</span> <span class="code-keyword">&lt;</span> <span class="code-keyword">typename</span> T <span class="code-keyword">&gt;</span> <span class="code-keyword">class</span> SP
+    {
+        <span class="code-keyword">private</span>:
+        T*    pData; <span class="code-comment">//</span><span class="code-comment"> Generic <span class="search-highlight">pointer</span> to be stored
+</span>
+        <span class="code-keyword">public</span>:
+        SP(T* pValue) : pData(pValue)
+        {
+        }
+        ~SP()
+        {
+            <span class="code-keyword">delete</span> pData;
+        }
+
+        T&amp; <span class="code-keyword">operator</span>* ()
+        {
+            <span class="code-keyword">return</span> *pData;
+        }
+    
+        T* <span class="code-keyword">operator</span>-<span class="code-keyword">&gt;</span> ()
+        {
+            <span class="code-keyword">return</span> pData;
+        }
+    };
+
+    <span class="code-keyword">void</span> main()
+    {
+        SP<person> p(<span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>));
+        p-<span class="code-keyword">&gt;</span>Display();
+        <span class="code-comment">//</span><span class="code-comment"> Dont need to delete Person <span class="search-highlight">pointer</span>..
+</span>
+    }
+</person></pre>
+<p>Now we can use our <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class for any type of <span class="search-highlight">pointer</span>s. So is our <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> really <span class="search-highlight">smart</span>? Check the following code segment. </p><div style="display: block;" width="100%" id="premain6" class="small-text align-right"><img preid="6" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg6" height="9" width="9"><span preid="6" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse6"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre6">    <span class="code-keyword">void</span> main()
+    {
+        SP<person> p(<span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>));
+        p-<span class="code-keyword">&gt;</span>Display();
+        {
+            SP<person> q = p;
+            q-<span class="code-keyword">&gt;</span>Display();
+            <span class="code-comment">//</span><span class="code-comment"> Destructor of Q will be called here..
+</span>
+        }
+        p-<span class="code-keyword">&gt;</span>Display();
+    }
+</person></person></pre>Look what happens here <code>p</code> and <code>q</code> are referring to the same <code>Person</code> class <span class="search-highlight">pointer</span>, now when <code>q</code> goes out of scope the destructor of <code>q</code> will be called which deletes the <code>Person</code> class <span class="search-highlight">pointer</span>. Now we cannot call <code>p-<span class="code-keyword">&gt;</span>Display();</code> since <code>p</code> will be left with a dangling <span class="search-highlight">pointer</span> and this call will fail. (Note that this problem would have existed even if we were using normal <span class="search-highlight">pointer</span>s instead of <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span>s) We should not delete the <code>Person</code> class <span class="search-highlight">pointer</span> unless no body is using it. How do we do that? <span class="search-highlight">Implement</span>ing reference counting mechanism in our <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class will solve this problem. 
+<h2>Reference counting</h2>What we are going to do is we will have a reference counting class <code>RC</code>.
+ This class will maintain an integer value which represents the 
+reference count. We will have methods to increment and decrement the 
+reference count. <div style="display: block;" width="100%" id="premain7" class="small-text align-right"><img preid="7" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg7" height="9" width="9"><span preid="7" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse7"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre7">    <span class="code-keyword">class</span> RC
+    {
+        <span class="code-keyword">private</span>:
+        <span class="code-keyword">int</span> count; <span class="code-comment">//</span><span class="code-comment"> Reference count
+</span>
+
+        <span class="code-keyword">public</span>:
+        <span class="code-keyword">void</span> AddRef()
+        {
+            <span class="code-comment">//</span><span class="code-comment"> Increment the reference count
+</span>
+            count++;
+        }
+
+        <span class="code-keyword">int</span> Release()
+        {
+            <span class="code-comment">//</span><span class="code-comment"> Decrement the reference count and
+</span>
+            <span class="code-comment">//</span><span class="code-comment"> return the reference count.
+</span>
+            <span class="code-keyword">return</span> --count;
+        }
+    };
+</pre>
+<p>Now we have a reference counting class, we will introduce this to our <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> class. We will maintain a <span class="search-highlight">pointer</span> to class <code>RC</code> in our <code>SP</code> class and this <span class="search-highlight">pointer</span> will be shared for all instance of the <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> which refers to the same <span class="search-highlight">pointer</span>. For this to happen we need to have an assignment operator and copy constructor in our <code>SP</code> class. </p><div style="display: block;" width="100%" id="premain8" class="small-text align-right"><img preid="8" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg8" height="9" width="9"><span preid="8" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse8"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre8">    <span class="code-keyword">template</span> <span class="code-keyword">&lt;</span> <span class="code-keyword">typename</span> T <span class="code-keyword">&gt;</span> <span class="code-keyword">class</span> SP
+    {
+    <span class="code-keyword">private</span>:
+        T*    pData;       <span class="code-comment">//</span><span class="code-comment"> <span class="search-highlight">pointer</span>
+</span>
+        RC* reference; <span class="code-comment">//</span><span class="code-comment"> Reference count
+</span>
+
+    <span class="code-keyword">public</span>:
+        SP() : pData(<span class="code-digit">0</span>), reference(<span class="code-digit">0</span>) 
+        {
+            <span class="code-comment">//</span><span class="code-comment"> Create a new reference 
+</span>
+            reference = <span class="code-keyword">new</span> RC();
+            <span class="code-comment">//</span><span class="code-comment"> Increment the reference count
+</span>
+            reference-<span class="code-keyword">&gt;</span>AddRef();
+        }
+    
+        SP(T* pValue) : pData(pValue), reference(<span class="code-digit">0</span>)
+        {
+            <span class="code-comment">//</span><span class="code-comment"> Create a new reference 
+</span>
+            reference = <span class="code-keyword">new</span> RC();
+            <span class="code-comment">//</span><span class="code-comment"> Increment the reference count
+</span>
+            reference-<span class="code-keyword">&gt;</span>AddRef();
+        }
+
+        SP(<span class="code-keyword">const</span> SP<span class="code-keyword">&lt;</span>T<span class="code-keyword">&gt;</span>&amp; sp) : pData(sp.pData), reference(sp.reference)
+        {
+            <span class="code-comment">//</span><span class="code-comment"> Copy constructor
+</span>
+            <span class="code-comment">//</span><span class="code-comment"> Copy the data and reference <span class="search-highlight">pointer</span>
+</span>
+            <span class="code-comment">//</span><span class="code-comment"> and increment the reference count
+</span>
+            reference-<span class="code-keyword">&gt;</span>AddRef();
+        }
+
+        ~SP()
+        {
+            <span class="code-comment">//</span><span class="code-comment"> Destructor
+</span>
+            <span class="code-comment">//</span><span class="code-comment"> Decrement the reference count
+</span>
+            <span class="code-comment">//</span><span class="code-comment"> if reference become zero delete the data
+</span>
+            <span class="code-keyword">if</span>(reference-<span class="code-keyword">&gt;</span>Release() == <span class="code-digit">0</span>)
+            {
+                <span class="code-keyword">delete</span> pData;
+                <span class="code-keyword">delete</span> reference;
+            }
+        }
+
+        T&amp; <span class="code-keyword">operator</span>* ()
+        {
+            <span class="code-keyword">return</span> *pData;
+        }
+    
+        T* <span class="code-keyword">operator</span>-<span class="code-keyword">&gt;</span> ()
+        {
+            <span class="code-keyword">return</span> pData;
+        }
+    
+        SP<span class="code-keyword">&lt;</span>T<span class="code-keyword">&gt;</span>&amp; <span class="code-keyword">operator</span> = (<span class="code-keyword">const</span> SP<span class="code-keyword">&lt;</span>T<span class="code-keyword">&gt;</span>&amp; sp)
+        {
+            <span class="code-comment">//</span><span class="code-comment"> Assignment operator
+</span>
+            <span class="code-keyword">if</span> (<span class="code-keyword">this</span> != &amp;sp) <span class="code-comment">//</span><span class="code-comment"> Avoid self assignment
+</span>
+            {
+                <span class="code-comment">//</span><span class="code-comment"> Decrement the old reference count
+</span>
+                <span class="code-comment">//</span><span class="code-comment"> if reference become zero delete the old data
+</span>
+                <span class="code-keyword">if</span>(reference-<span class="code-keyword">&gt;</span>Release() == <span class="code-digit">0</span>)
+                {
+                    <span class="code-keyword">delete</span> pData;
+                    <span class="code-keyword">delete</span> reference;
+                }
+
+                <span class="code-comment">//</span><span class="code-comment"> Copy the data and reference <span class="search-highlight">pointer</span>
+</span>
+                <span class="code-comment">//</span><span class="code-comment"> and increment the reference count
+</span>
+                pData = sp.pData;
+                reference = sp.reference;
+                reference-<span class="code-keyword">&gt;</span>AddRef();
+            }
+            <span class="code-keyword">return</span> *<span class="code-keyword">this</span>;
+        }
+    };
+</pre>Let us have a look at the client code. <div style="display: block;" width="100%" id="premain9" class="small-text align-right"><img preid="9" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg9" height="9" width="9"><span preid="9" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse9"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre9">    <span class="code-keyword">void</span> main()
+    {
+        SP<person> p(<span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>));
+        p-<span class="code-keyword">&gt;</span>Display();
+        {
+            SP<person> q = p;
+            q-<span class="code-keyword">&gt;</span>Display();
+            <span class="code-comment">//</span><span class="code-comment"> Destructor of q will be called here..
+</span>
+
+            SP<person> r;
+            r = p;
+            r-<span class="code-keyword">&gt;</span>Display();
+            <span class="code-comment">//</span><span class="code-comment"> Destructor of r will be called here..
+</span>
+        }
+        p-<span class="code-keyword">&gt;</span>Display();
+        <span class="code-comment">//</span><span class="code-comment"> Destructor of p will be called here 
+</span>
+        <span class="code-comment">//</span><span class="code-comment"> and person <span class="search-highlight">pointer</span> will be deleted
+</span>
+    }
+</person></person></person></pre>When we create a <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> <code>p</code> of type <code>person</code>, the constructor of <code>SP</code> will be called, the data will be stored and a new <code>RC</code> <span class="search-highlight">pointer</span> will be created. The <code>AddRef</code> method of <code>RC</code> is called to increment the reference count to 1. Now <code>SP<person> q = p;</person></code> will create a new <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> <code>q</code> using the copy constructor, here the data will be copied and reference will again incremented to 2. Now <code>r = p; </code>will call the assignment operator to assign the value of <code>p</code> to <code>q</code>, here also we copy the data and increment the reference count, thus making the count 3. When <code>r</code> and <code>q</code>
+ goes out of scope the destructors of respective objects will be called,
+ here the reference count will be decremented, but data will not be 
+deleted unless the reference count becomes zero, this happens only when 
+destructor of <code>p</code> is called. Hence our data will be deleted only when no body is referring to it. 
+<h2>Applications </h2>Memory leaks: Using <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span>s reduces work of managing <span class="search-highlight">pointer</span>s for memory leaks. Now you could create a <span class="search-highlight">pointer</span> and forget about deleting it, the <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> will do that for you. This is the simplest garbage collector we could think off. 
+<p>Exceptions: <span class="search-highlight">Smart</span> <span class="search-highlight">pointer</span>s are very useful where exceptions are used. For example look at the following code. </p><div style="display: block;" width="100%" id="premain10" class="small-text align-right"><img preid="10" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg10" height="9" width="9"><span preid="10" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse10"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre10">    <span class="code-keyword">void</span> MakeNoise()
+    {
+        Person* p = <span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>);
+        p-<span class="code-keyword">&gt;</span>Shout();
+        <span class="code-keyword">delete</span> p;
+    }
+</pre>We are using a normal <span class="search-highlight">pointer</span> here and deleting it after using, so every thing looks okay here. But what if our <code>Shout</code> function thows some exception <code><span class="code-keyword">delete</span> p;</code> will never be called. So we have a memory leak, let us handle that. <div style="display: block;" width="100%" id="premain11" class="small-text align-right"><img preid="11" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg11" height="9" width="9"><span preid="11" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse11"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre11">    <span class="code-keyword">void</span> MakeNoise()
+    {
+        Person* p = <span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>);
+        <span class="code-keyword">try</span>
+        {
+            p-<span class="code-keyword">&gt;</span>Shout();
+        }
+        <span class="code-keyword">catch</span>(...)
+        {
+            <span class="code-keyword">delete</span> p;
+            <span class="code-keyword">throw</span>;
+        }
+        <span class="code-keyword">delete</span> p;
+    }
+</pre>Don't you think this is a over head of catching an exception and 
+rethrowing it? This code becomes cumbersome if you have many pointes 
+created. How will a <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> help here, lets have a look at the same code if <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> is used. <div style="display: block;" width="100%" id="premain12" class="small-text align-right"><img preid="12" style="cursor: pointer;" src="SmartPointers.aspx_files/minus.gif" id="preimg12" height="9" width="9"><span preid="12" style="cursor: pointer; margin-bottom: 0pt;" id="precollapse12"> Collapse</span></div><pre style="margin-top: 0pt;" id="pre12">    <span class="code-keyword">void</span> MakeNoise()
+    {
+        SP<span class="code-keyword">&lt;</span>Person<span class="code-keyword">&gt;</span><person> p(<span class="code-keyword">new</span> Person(<span class="code-string">"</span><span class="code-string">Scott"</span>, <span class="code-digit">25</span>));
+        p-<span class="code-keyword">&gt;</span>Shout();
+    }
+</person></pre>We are making use of a <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span> here; yes we don�t need to catch exception here. If the <code>Shout</code>
+ method throws an exception stack unwinding will happen for the function
+ and during this the destructor of all local object will be called, 
+hence destructor of <code>p</code> will be called which will release the memory hence we are safe. So this makes it very useful to use <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span>s here. 
+<h2>Conclusion</h2><span class="search-highlight">Smart</span> <span class="search-highlight">pointer</span>s are useful for writing safe and efficient code in C++. Make use of <span class="search-highlight">smart</span> <span class="search-highlight">pointer</span>s and take the advantage of garbage collection. Take a look at Scott Meyers' auto_ptr <span class="search-highlight">implement</span>ation in STL. </li>
+
+
+
+
+
+
+						</div>
+						<!-- Article Text End -->
+
+						
+						
+						<h2>License</h2>
+						<div id="LicenseTerms"><p>This article has no explicit license 
+attached to it but may contain usage terms in the article text or the 
+download files themselves. If in doubt please contact the author via the
+ discussion board below.</p><p>A list of licenses authors might use can be found <a href="http://www.codeproject.com/info/Licenses.aspx">here</a></p></div>
+						
+
+						
+						<h2 id="ctl00_AboutHeading">About the Author</h2>
+
+						<div class="float-right">
+						<div class="lqm_ad" width="300px" height="250px" lqm_channel="1" lqm_publisher="495" lqm_zone="77" lqm_format="6" lqm_tags="C++,Windows,Visual-Studio,Dev,Beginner"><a href="http://a.lakequincy.com/c.ashx?channel=1&amp;format=6&amp;pageid=36717D9F-75C4-0ED1-12CA-22CF39EE3F52&amp;publisher=495&amp;tags=C++%2cWindows%2cVisual-Studio%2cDev%2cBeginner%2chow%2c+to%2c+implement%2c+smart%2c+pointer&amp;target=_blank&amp;ypos=7119.93310546875&amp;zone=77&amp;renderhtml=true&amp;callback=jsonp1306173229682&amp;url=http%253A%252F%252Fwww.codeproject.com%252FKB%252Fcpp%252FSmartPointers.aspx&amp;country=IN&amp;userguid=00000000-0000-0000-0000-000000000000&amp;placement=9236&amp;creative=3212" target="_blank"><img src="SmartPointers.aspx_files/633945221437993305.gif" alt="Click here" border="0" height="250" width="300"></a></div>
+						</div>
+
+						
+						
+   
+<table border="0" cellpadding="0" cellspacing="5">
+<tbody><tr valign="top">
+<td id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberPhotoTable" style="width: 155px;" valign="top">
+	<b><a id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberProfileLink" href="http://www.codeproject.com/Members/Madhu-Raykar">Madhu Raykar</a></b><br><br>
+	<center></center>
+
+	<div class="small-text">
+		<span id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberJobTitle">Web Developer</span><br>
+		<span id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberCompany"></span><br>
+		<span id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberLocation"><img src="SmartPointers.aspx_files/IN.gif" alt="India" height="11px" width="16px"> India</span><br>
+		<br>
+		<span id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberType">Member</span><br>
+		
+
+		
+	</div>
+</td>
+
+<td>
+	I have been working in software industry for the past 5 years now. 
+Enjoy working on complex and new technologies. Worked on Microsoft 
+technologies Like VC++, COM, XML, SQL. Currently working on .Net, C#.<br>	
+</td>
+</tr>
+</tbody></table><br>
+						
+						
+
+						<div class="clearfix"></div>
+
+						
+						<div id="ctl00_RateArticleRow" class="clearfix voting-bar">
+						<div class="column8_1" style="padding-top: 8px;"> <a href="#_top">Article Top</a></div>
+						<div class="column8_7 align-right"><div id="ctl00_RateArticle_RateItemWrapper" class="small-text" name="RateItem_15351">
+
+	<table small-text="" cellpadding="0" cellspacing="0" width="100%">
+	<tbody><tr>
+		
+	
+		<td class="voteTbl" style="white-space: nowrap;" align="right">
+			<table class="small-text">
+			<tbody><tr valign="middle">
+				<td id="ctl00_RateArticle_SignIn" nowrap="nowrap">
+					<a href="#SignUp">Sign Up</a> to vote for this article
+				</td>
+
+				
+				
+				
+				
+				
+			</tr>
+			</tbody></table>
+			<span id="ctl00_RateArticle_ErrorMessage" class="error"></span>
+		</td>
+	</tr>
+	</tbody></table>
+	<div class="hover-container">
+		<div id="ctl00_RateArticle_RCD" class="rating-comment align-left float-right">
+			Add a reason or comment to your vote: <a href="#" id="clear-rate_ctl00_RateArticle_RCD" title="close">x</a><br>
+			<textarea class="RateComment" rows="5" cols="60" style="width: 98%;"></textarea>
+		</div>
+	</div>
+</div>
+</div>
+						</div>
+						
+
+					</form>
+
+					
+					<div style="margin: auto; padding: 0px 10px; white-space: nowrap; overflow: hidden; width: 460px; height: 60px;">		  
+						<div class="lqm_ad" width="468px" height="60px" lqm_channel="1" lqm_publisher="495" lqm_zone="77" lqm_format="1" lqm_tags="C++,Windows,Visual-Studio,Dev,Beginner"><a href="http://a.lakequincy.com/c.ashx?channel=1&amp;format=1&amp;pageid=36717D9F-75C4-0ED1-12CA-22CF39EE3F52&amp;publisher=495&amp;tags=C++%2cWindows%2cVisual-Studio%2cDev%2cBeginner%2chow%2c+to%2c+implement%2c+smart%2c+pointer&amp;target=_blank&amp;ypos=7283.93310546875&amp;zone=77&amp;renderhtml=true&amp;callback=jsonp1306173229683&amp;url=http%253A%252F%252Fwww.codeproject.com%252FKB%252Fcpp%252FSmartPointers.aspx&amp;country=IN&amp;userguid=00000000-0000-0000-0000-000000000000&amp;placement=9486&amp;creative=9528" target="_blank"><img src="SmartPointers.aspx_files/634364861554743208.gif" alt="Click Here" border="0" height="60" width="468"></a></div>
+					</div>
+					
+
+					
+					
+					<h2>Comments and Discussions</h2>
+					<a name="_comments"></a><!-- Forum Start -->
+<div id="_MessageBoard" onclick="return SwitchMessage(event, null)">
+<table id="ForumTable" class="box forum" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td class="forum-header1 highlight"><b>You must <a href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx%3ffid%3d335858%26df%3d90%26mpp%3d25%26noise%3d3%26prof%3dFalse%26sort%3dPosition%26view%3dQuick">Sign In</a> to use this message board.</b> (<a href="https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx%3ffid%3d335858%26df%3d90%26mpp%3d25%26noise%3d3%26prof%3dFalse%26sort%3dPosition%26view%3dQuick">secure sign-in</a>)</td>
+</tr><tr>
+<td><table border="0" cellpadding="3px" cellspacing="0" width="100%">
+<tbody><tr class="forum-header1">
+<td style="white-space: nowrap;"><img src="SmartPointers.aspx_files/info-16.gif" alt="FAQ" style="border-width: 0pt; width: 16px; height: 16px; vertical-align: middle;">&nbsp;<a href="http://www.codeproject.com/KB/FAQs/MessageBoardsFAQ.aspx"><b>FAQ</b></a>&nbsp;</td><td colspan="2" style="white-space: nowrap; text-align: right;"><form action="/Search.aspx?fid=0" method="get" style="margin: 0pt; padding: 0pt;">
+<input name="fid" value="335858" type="hidden"><input class="Frm_Input" name="qf" type="text">&nbsp;<input value="Search" class="button" type="submit">
+</form></td>
+</tr><tr class="forum-header2">
+<td colspan="3" style="width: 100%;"><div style="text-align: right;">
+<form action="/script/Forums/SetOptions.aspx?floc=%2fKB%2fcpp%2fSmartPointers.aspx&amp;fid=335858&amp;df=90&amp;mpp=25&amp;noise=3&amp;prof=False&amp;sort=Position&amp;view=Quick" method="get" style="margin: 0pt; padding: 0pt;">
+<input name="fid" value="335858" type="hidden"><input name="currentQS" value="?floc=%2fKB%2fcpp%2fSmartPointers.aspx&amp;fid=335858&amp;df=90&amp;mpp=25&amp;noise=3&amp;prof=False&amp;sort=Position&amp;view=Quick" type="hidden"><input name="floc" value="/KB/cpp/SmartPointers.aspx" type="hidden"><input name="prof" id="prof" style="vertical-align: middle;" type="checkbox"><label for="prof">Profile popups</label>&nbsp;&nbsp;&nbsp;&nbsp;Noise level<select size="1" class="Frm_DropDown" name="noise">
+<option value="1">Very High</option><option value="2">High</option><option selected="selected" value="3">Medium</option><option value="4">Low</option><option value="5">Very Low</option>
+</select>&nbsp;&nbsp;Layout<select size="1" class="Frm_DropDown" name="view">
+<option selected="selected" value="Quick">Normal</option><option value="Topic">Expand Posts only</option><option value="Expanded">Expand Posts &amp; Replies</option><option value="Thread">Thread View</option><option value="Normal">No Javascript</option><option value="Preview">No JS + Preview</option>
+</select>&nbsp;&nbsp;Per page<select size="1" class="Frm_DropDown" name="mpp">
+<option value="10">10</option><option selected="selected" value="25">25</option><option value="50">50</option>
+</select>&nbsp;&nbsp;&nbsp;<input value="Update" name="SetOpt" class="button" type="submit">
+</form>
+</div></td>
+</tr>
+</tbody></table></td>
+</tr><tr>
+<td><a name="xx0xx"></a><table border="0" cellpadding="2px" cellspacing="0" width="100%">
+<tbody><tr class="forum-navbar">
+<td>&nbsp;</td><td>Msgs 1 to 17 of 17 (Total in Forum: 17) (<a href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;noise=3&amp;prof=False&amp;sort=Position&amp;view=Quick">Refresh</a>)</td><td style="text-align: right; white-space: nowrap;"><span class="subdue">First</span> <span class="subdue">Prev</span><span class="subdue">Next</span></td>
+</tr>
+</tbody></table></td>
+</tr><tr>
+<td><table class="fixed-layout blank-background" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="5px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F3724617_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx3724617xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="3724617" href="http://www.codeproject.com/Messages/3724617/My-vote-of-5.aspx">My vote of 5</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=5551295">naresh_pallam</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">1:07 7 Jan '11 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F3724617_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Nice explanation with appropriate examples.<br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=3724617" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/3724617/My-vote-of-5.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF3724617" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F3618787_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx3618787xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="3618787" href="http://www.codeproject.com/Messages/3618787/My-vote-of-4.aspx">My vote of 4</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=5936430">Karukuri</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">10:54 3 Oct '10 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F3618787_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Good step by step intro to Smart pointers.<br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=3618787" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/3618787/My-vote-of-4.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF3618787" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F2707908_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx2707908xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="2707908" href="http://www.codeproject.com/Messages/2707908/auto_ptr.aspx">auto_ptr</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=5314933">mynameisdave</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">2:00 4 Sep '08 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F2707908_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Since it is clear from the reference at the end of the 
+article that an implementation already exists in the STL, which is part 
+of every C++ implementation( if it is standard) why not use auto_ptr as 
+the example of the discussion. <br>
+I don't think a novice to smart pointers is well served by yet another 
+implementation with only a passing reference to STL at the end of the 
+article.<br>
+Otherwise a very good discussion of why and how smart pointers should be used.<br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=2707908" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/2707908/auto_ptr.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF2707908" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F2165649_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx2165649xx"></a><img src="SmartPointers.aspx_files/msg_question.gif" alt="Question" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="2165649" href="http://www.codeproject.com/Messages/2165649/Missing-RC-constructor.aspx">Missing RC constructor?</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=845425">l00p1n6</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">23:10 2 Aug '07 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F2165649_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">I think that RC constructor should put "count" to "0" <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=2165649" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/2165649/Missing-RC-constructor.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF2165649" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd HdUnSel " id="F2165677_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="34px"><a name="xx2165677xx"></a><img src="SmartPointers.aspx_files/msg_answer.gif" alt="Answer" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="2165677" href="http://www.codeproject.com/Messages/2165677/Missplaced-comments.aspx">Missplaced comments?</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=845425">l00p1n6</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">23:28 2 Aug '07 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F2165677_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 34px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="34px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">{<br>
+    SP q = p;<br>
+    q-&gt;Display();<br>
+    // Destructor of q will be called here..<br>
+&nbsp;<br>
+    SP r;<br>
+    r = p;<br>
+    r-&gt;Display();<br>
+    // Destructor of r will be called here..<br>
+}<br>
+&nbsp;<br>
+Are u sure? I think it will be like this:<br>
+&nbsp;<br>
+{<br>
+    SP q = p;<br>
+    q-&gt;Display();<br>
+&nbsp;<br>
+    SP r;<br>
+    r = p;<br>
+    r-&gt;Display();<br>
+&nbsp;<br>
+    // Destructor of q will be called here..<br>
+    // Destructor of r will be called here..<br>
+} <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=2165649" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/2165677/Missplaced-comments.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF2165677" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F1651652_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx1651652xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1651652" href="http://www.codeproject.com/Messages/1651652/Bug.aspx">Bug</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=2399737">Anonymuos</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">0:53 1 Sep '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1651652_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2"><pre>SP&lt;T&gt;&amp; <span class="code-keyword">operator</span> = (<span class="code-keyword">const</span> SP&lt;T&gt;&amp; sp)
+{
+  <span class="code-comment">//</span><span class="code-comment"> Assignment operator
+</span>  <span class="code-keyword">if</span> (<span class="code-keyword">this</span> != &amp;sp) <span class="code-comment">//</span><span class="code-comment"> Avoid self assignment
+</span>  {
+      <span class="code-comment">//</span><span class="code-comment"> Decrement the old reference count
+</span>      <span class="code-comment">//</span><span class="code-comment"> if reference become zero delete the old data
+</span>      <span class="code-keyword">if</span>(&lt;big&gt;<b>reference &amp;&amp;</b><span class="code-keyword">&lt;/</span><span class="code-leadattribute">big&gt;</span> <span class="code-attribute">reference-</span><span class="code-keyword">&gt;</span>Release() == 0) //!!
+      {
+          delete pData;
+          delete reference;
+      }
+// ...
+}
+</pre> <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1651652" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1651652/Bug.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1651652" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F1647060_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx1647060xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1647060" href="http://www.codeproject.com/Messages/1647060/Dynamic-Cast.aspx">Dynamic Cast</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=105233">Ed Deighton</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">6:50 29 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1647060_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Another handy thing is to support dynamic casts i.e.<br>&nbsp;<br>CSmartPtr&lt;CBase&gt; pBasePtr( new CDerived );<br>&nbsp;<br>if(CSmartPtr&lt;CDerived&gt; pDerivedPtr = <br>&nbsp;&nbsp; &nbsp;&nbsp; pBasePtr-&gt;dynamic_cast&lt;CDerived&gt;())<br>{<br>&nbsp;&nbsp;  pDerivedPtr-&gt;xyz()<br>&nbsp;&nbsp;  ...<br>}<br>&nbsp;<br>where
+ dynamic_cast is a template member function that internally actually 
+uses the c++ dynamic_cast and appropriately returns a smart pointer that
+ is either set or NULL and so on.<br>&nbsp;<br> <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1647060" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1647060/Dynamic-Cast.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1647060" style="white-space: nowrap;">4.00/5 (1 vote) </span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd HdUnSel " id="F1646130_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="34px"><a name="xx1646130xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1646130" href="http://www.codeproject.com/Messages/1646130/Re-not-so-smart.aspx">Re: not so smart ...</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=1490772">Madhu Raykar</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">18:59 28 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1646130_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 34px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="34px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Yeah, before using smart pointers i think we should know how smart pointers work (that why i wrote this article <img src="SmartPointers.aspx_files/smiley_wink.gif" alt="Wink | ;)" align="top"> ). And while using them we should be cautious enough to provide proper pointers to them. <img src="SmartPointers.aspx_files/smiley_biggrin.gif" alt="Big Grin | :-D" align="top"> <br>
+&nbsp;<br>
+BTW the main responisablity of smart pointer is to maintain the life 
+time of the pointer and not to validate the correctness of the pointer. 
+Hope this answers your concerns of not using smart pointers. <img src="SmartPointers.aspx_files/smiley_biggrin.gif" alt="Big Grin | :-D" align="top"> <br>
+ <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1645415" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1646130/Re-not-so-smart.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1646130" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F1645191_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx1645191xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1645191" href="http://www.codeproject.com/Messages/1645191/Pointer-comparisons-and-other-functionality.aspx">Pointer comparisons and other functionality</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=725677">AArnott</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">5:32 28 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1645191_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Again, great article.<br>&nbsp;<br>Your SP class would 
+benefit from some very useful operators (like == and !=).&nbsp;&nbsp; 
+There may also be room for an explicit cast operator and/or a 
+GetPointer() and ReleasePointer() method so that smart pointers can be 
+passed to functions that only accept dumb pointers.<br>&nbsp;<br>Here is the == and != operator code:<br>&nbsp;&nbsp;&nbsp;&nbsp; bool operator == (const SP&lt;T&gt;&amp; sp)<br>&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; return pData == sp.pData;<br>&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp;&nbsp; bool operator != (const SP&lt;T&gt;&amp; sp)<br>&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; return pData != sp.pData;<br>&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;<br><br>BTW,
+ your void Main() method doesn't use the SP class where you have it 
+using templates.&nbsp;&nbsp; The correct syntax would be:<br>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; SP&lt;Person&gt; p(new Person("Scott", 25)); <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1645191" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1645191/Pointer-comparisons-and-other-functionality.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1645191" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd HiVote HdUnSel " id="F1646126_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="34px"><a name="xx1646126xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1646126" href="http://www.codeproject.com/Messages/1646126/Re-Pointer-comparisons-and-other-functionality.aspx">Re: Pointer comparisons and other functionality</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=1490772">Madhu Raykar</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">18:49 28 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1646126_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 34px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="34px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Hi,<br>
+Thanks for the suggestion <img src="SmartPointers.aspx_files/smiley_smile.gif" alt="Smile | :)" align="top"> <br>
+I will add this code to the article, and about the syntax error in Main method is because of the HTML tag, it has taken <person> as tag, i shall modify the article.<br>
+&nbsp;<br>
+Thanks again<br>
+bye<br>
+ <br></person></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1645191" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1646126/Re-Pointer-comparisons-and-other-functionality.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1646126" style="white-space: nowrap;">5.00/5 (1 vote) </span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F1644213_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx1644213xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1644213" href="http://www.codeproject.com/Messages/1644213/Cool.aspx">Cool</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=1549540">waldermort</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">8:26 27 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1644213_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Hey that was a great article.  I have just one question 
+though, can we implement something like this with GDI objects?  My one 
+downfall is never cleaning up correctly the first time round after a 
+series of bitblts and selectObject's. <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1644213" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1644213/Cool.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1644213" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd HdUnSel " id="F1644623_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="34px"><a name="xx1644623xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1644623" href="http://www.codeproject.com/Messages/1644623/Re-Cool.aspx">Re: Cool</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=1490772">Madhu Raykar</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">20:01 27 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1644623_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 34px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="34px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Yes, you can use this for GDI objects also.<img src="SmartPointers.aspx_files/smiley_smile.gif" alt="Smile | :)" align="top">  <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1644213" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1644623/Re-Cool.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1644623" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="root msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd Rt HdUnSel " id="F1644153_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="16px"><a name="xx1644153xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1644153" href="http://www.codeproject.com/Messages/1644153/Circular-dependencies.aspx">Circular dependencies</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=725677">AArnott</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">6:22 27 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1644153_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 16px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="16px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Great article.  Thanks for giving us a great template for a smart pointer.  <br>
+&nbsp;<br>
+Just one addition to your article is in order as a warning: that these 
+smart pointers will not properly dispose of objects that are part of a 
+circular dependency.  You could end up with A pointing to B and vice 
+versa, and even when all pointers to A and B (outside these two) are 
+gone, they will never be deleted. <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1644153" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1644153/Circular-dependencies.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1644153" style="white-space: nowrap;">3.50/5 (2 votes) </span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd LoVote HdUnSel " id="F1644870_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="34px"><a name="xx1644870xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1644870" href="http://www.codeproject.com/Messages/1644870/Re-Circular-dependencies.aspx">Re: Circular dependencies</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=1490772">Madhu Raykar</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">1:09 28 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1644870_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 34px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="34px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">I think this is taken care.., <img src="SmartPointers.aspx_files/smiley_confused.gif" alt="Confused | :confused:" align="top">  can you explain with more realistic example.<br>
+Thanks in advance.. <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1644153" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1644870/Re-Circular-dependencies.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1644870" style="white-space: nowrap;">2.00/5 (2 votes) </span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd HdUnSel " id="F1645147_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="52px"><a name="xx1645147xx"></a><img src="SmartPointers.aspx_files/msg_answer.gif" alt="Answer" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1645147" href="http://www.codeproject.com/Messages/1645147/Re-Circular-dependencies-modified.aspx">Re: Circular dependencies [modified]</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=725677">AArnott</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">5:06 28 Aug '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1645147_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 52px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="52px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Suppose you modified your Person class slightly to include a pointer to a friend person:<br>class Person<br>{<br>/// ...<br>SP&lt;Person&gt; friendPerson;<br>}<br>&nbsp;<br>Then
+ by creating two people and making them friends, you end up with a 
+circular reference that keeps that reference counter from ever going 
+back to zero.&nbsp;&nbsp; As a result, the memory is never freed.<br>&nbsp;<br>void circularReferenceExample()<br>{<br>&nbsp;&nbsp;&nbsp;&nbsp; SP&lt;Person&gt; p(new Person("Scott", 25));<br>&nbsp;&nbsp;&nbsp;&nbsp; SP&lt;Person&gt; f(new Person("Bill", 23));<br>&nbsp;&nbsp;&nbsp;&nbsp; // These two people are friends. They point to each other,<br>&nbsp;&nbsp;&nbsp;&nbsp; // generating this circular reference.<br>&nbsp;&nbsp;&nbsp;&nbsp; p-&gt;SetFriend(f);<br>&nbsp;&nbsp;&nbsp;&nbsp; f-&gt;SetFriend(p);<br>&nbsp;&nbsp;&nbsp;&nbsp; p-&gt;Display(true);<br>&nbsp;&nbsp;&nbsp;&nbsp; f-&gt;Display(true);<br>&nbsp;&nbsp;&nbsp;&nbsp; // Destructors will never be called and memory only freed<br>&nbsp;&nbsp;&nbsp;&nbsp; // when the program exits and OS reclaims all memory.<br>}<br>&nbsp;<br><br> -- modified at 10:11 Monday 28th August, 2006 <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1644153" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1645147/Re-Circular-dependencies-modified.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1645147" style="white-space: nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd LoVote HdUnSel " id="F1738511_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="70px"><a name="xx1738511xx"></a><img src="SmartPointers.aspx_files/msg_answer.gif" alt="Answer" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1738511" href="http://www.codeproject.com/Messages/1738511/Re-Circular-dependencies.aspx">Re: Circular dependencies</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=3508972">kazsterator</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">6:51 2 Nov '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1738511_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 70px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="70px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Don't waste your breath. It's pretty clear that the 
+individual who wrote this article is just regurgitating information he 
+got from somewhere else without fully comprehending it himself.<br>
+&nbsp;<br>
+To deal with circular dependencies, you'll have to have either an 
+internal or a global tracker. The way I do it is by checking out how 
+many children point back to the parent recursively and compare that 
+against the reference count value. That way you'll know if something 
+else has a reference to what you're trying to delete, if not you can 
+recursively go thru all the children and break up links pointing back to
+ the object you're trying to delete, then delete everything without 
+worrying.<br>
+&nbsp;<br>
+I'm sure there are other ways to do it aswell.<br>
+&nbsp;<br>
+-- Kaz<br>
+&nbsp;<br>
+<blockquote class="FQ"><div class="FQA">AArnott wrote:</div>ForumImplementing a simple smart pointer in c++<br>
+Subject:Re: Circular dependencies<br>
+Sender:AArnott<br>
+Date:10:06 28 Aug '06<br>
+&nbsp;<br>
+Suppose you modified your Person class slightly to include a pointer to a friend person:<br>
+class Person<br>
+{<br>
+/// ...<br>
+SP<person> friendPerson;<br>
+}<br>
+&nbsp;<br>
+Then by creating two people and making them friends, you end up with a 
+circular reference that keeps that reference counter from ever going 
+back to zero.  As a result, the memory is never freed.<br>
+&nbsp;<br>
+void circularReferenceExample()<br>
+{<br>
+    SP<person> p(new Person("Scott", 25));<br>
+    SP<person> f(new Person("Bill", 23));<br>
+    // These two people are friends. They point to each other,<br>
+    // generating this circular reference.<br>
+    p-&gt;SetFriend(f);<br>
+    f-&gt;SetFriend(p);<br>
+    p-&gt;Display(true);<br>
+    f-&gt;Display(true);<br>
+    // Destructors will never be called and memory only freed<br>
+    // when the program exits and OS reclaims all memory.<br>
+}<br>
+&nbsp;<br>
+<br>
+-- modified at 10:11 Monday 28th August, 2006 </person></person></person></blockquote><br>
+&nbsp;<br>
+ <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1644153" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1738511/Re-Circular-dependencies.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1738511" style="white-space: nowrap;">1.33/5 (3 votes) </span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr class="quick">
+<td class="msg-divide"><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="1px" width="1px"></td>
+</tr>
+<!-- Start Message head -->
+
+<tr class="MsgHd LoVote HdUnSel " id="F1738719_h0">
+<td width="100%"><table class="quickHd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr class="hover-row">
+<td class="Frm_MsgIndent" width="88px"><a name="xx1738719xx"></a><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"></td><td class="Frm_MsgSubject hover-container"><a id="DynMessLink" name="1738719" href="http://www.codeproject.com/Messages/1738719/Re-Circular-dependencies.aspx">Re: Circular dependencies</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="SmartPointers.aspx_files/pin.gif" alt="Pin" align="top" border="0" height="12px" width="13px"></a></td><td style="width: 20px; white-space: nowrap;"><img src="SmartPointers.aspx_files/member_sm.gif" title="member" alt="member" border="0" height="16px"></td><td class="Frm_MsgAuthor"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=3509319">CrovazTheDestroyer</a></td><td class="Frm_MsgDate" style="vertical-align: top; white-space: nowrap;">8:36 2 Nov '06 &nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><!-- End Message head -->
+
+<tr id="F1738719_h1" style="display: none;">
+<td width="100%"><table class="quickBd" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td class="Frm_MsgIndent" style="width: 88px;"><img src="SmartPointers.aspx_files/t_002.gif" alt="" height="1px" width="88px"></td><td class="MsgBd BdSel "><table border="0" cellpadding="0" cellspacing="5px" width="100%">
+<tbody><tr>
+<td><table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">Uh Pay no attention to Kaz's Ramblings I have valid 
+sources that prove he has escaped from a mental institue, and has no 
+idea what he is talkign about. <br></td>
+</tr><tr style="vertical-align: middle;">
+<td class="msg-footer"><a class="toolbar" href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fKB%2fcpp%2fSmartPointers.aspx">Sign In</a>·<a class="toolbar" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;sort=Position&amp;tid=1644153" title="View&nbsp;Thread">View&nbsp;Thread</a>·<a class="toolbar" href="http://www.codeproject.com/Messages/1738719/Re-Circular-dependencies.aspx" title="Get permanent link">Link</a></td><td class="msg-footer" style="text-align: right;"><span id="MVF1738719" style="white-space: nowrap;">2.50/5 (6 votes) </span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr>
+<td><img src="SmartPointers.aspx_files/t_002.gif" alt="" border="0" height="5px" width="1px"></td>
+</tr>
+</tbody></table></td>
+</tr><tr>
+<td><table cellpadding="2px" cellspacing="0" width="100%">
+<tbody><tr class="forum-footer">
+<td>Last Visit: 19:00 31 Dec '99  &nbsp; &nbsp; Last Update: 8:52 23 May '11 </td><td style="text-align: right; white-space: nowrap;"><input id="_mbnUrl" value="/KB/cpp/SmartPointers.aspx?fid=335858&amp;df=90&amp;mpp=25&amp;noise=3&amp;prof=False&amp;sort=Position&amp;view=Quick&amp;fr=18" type="hidden"><b>1</b></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table>
+</div><p class="small-text"><img src="SmartPointers.aspx_files/msg_general.gif" alt="General" align="top" height="16px" width="16px"> General &nbsp;&nbsp; <img src="SmartPointers.aspx_files/msg_news.gif" alt="News" align="top" height="16px" width="16px"> News &nbsp;&nbsp; <img src="SmartPointers.aspx_files/msg_question.gif" alt="Question" align="top" height="16px" width="16px"> Question &nbsp;&nbsp; <img src="SmartPointers.aspx_files/msg_answer.gif" alt="Answer" align="top" height="16px" width="16px"> Answer &nbsp;&nbsp; <img src="SmartPointers.aspx_files/msg_joke.gif" alt="Joke" align="top" height="16px" width="16px"> Joke &nbsp;&nbsp; <img src="SmartPointers.aspx_files/msg_rant.gif" alt="Rant" align="top" height="16px" width="16px"> Rant &nbsp;&nbsp; <img src="SmartPointers.aspx_files/msg_admin.gif" alt="Admin" align="top" height="16px" width="16px"> Admin &nbsp;&nbsp; </p><p class="small-text">Use Ctrl+Left/Right to switch messages, Ctrl+Up/Down to switch threads, Ctrl+PgUp/PgDown to switch pages.</p>
+<!-- Forum End -->
+
+
+
+
+					
+					<div class="theme1-background" style="height: 2px;"></div>
+
+					<div class="extended tiny-text">
+						<div class="row">
+							<div class="float-left">
+								<a id="ctl00_PermaLink" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx">link</a> | 
+								<a id="ctl00_PrivacyLink" href="http://www.codeproject.com/info/privacy.aspx">Privacy</a> |
+								<a id="ctl00_TermsOfUseLink" href="http://www.codeproject.com/info/TermsOfUse.aspx">Terms of Use</a> |
+								<a id="ctl00_Mobile" href="http://www.codeproject.com/KB/cpp/SmartPointers.aspx?display=Mobile">Mobile</a>
+								<br>Last Updated: 27 Aug 2006<br>
+								<br>
+							</div>
+							<div class="float-right align-right">
+								Copyright 2006 by Madhu Raykar<br>Everything else
+								Copyright © <a href="mailto:webmaster@codeproject.com">CodeProject</a>, 1999-2011<br>
+								Web21 |
+								<a id="ctl00_AdvertiseLink" href="http://www.codeproject.com/info/MediaKit.aspx">Advertise on the Code Project </a>
+							</div>
+						</div>
+					</div>
+					
+
+				
+				</div>
+
+				<div id="ctl00_ContentSide" class="text-sidebar">
+                     
+                    <div class="lqm_ad container-adwords" lqm_channel="1" lqm_publisher="495" lqm_zone="77" lqm_format="30"></div>
+
+					<script type="text/javascript">document.write(unescape('%0d%0a%3cdiv class%3d%22announce%22%3e%0d%0a%0d%0a%3cdiv class%3d%22announce-content%22%3e%09%0d%0a%0d%0a%0d%0a%3cdiv class%3d%22container-adwords%22%3e%0d%0a%09%3ca id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl00_Link%22 href%3d%22%2fscript%2fCatalog%2fRedir.aspx%3fctid%3d2967%26amp%3bcttype%3d2%22 target%3d%22_blank%22%3e%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl00_Title%22 class%3d%22title%22%3eSpread for COM%2fActiveX%3c%2fspan%3e%3cbr %2f%3e%0d%0a%09%09%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl00_Teaser%22 title%3d%22FarPoint Spread for COM%2fActiveX by GrapeCity is an Award-winning%2c World%26%2339%3bs Best Selling Microsoft Excel Compatible SpreadSheet Component for COM%2fActiveX with powerful features and near unlimited customization with support for native Excel export%2fimport%2c event based coding and built-in calculation e%22 class%3d%22desc%22%3eFarPoint Spread for COM%2fActiveX by GrapeCity...%3c%2fspan%3e%3cbr %2f%3e%0d%0a%09%09%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl00_Url%22 class%3d%22link%22%3ewww.gcpowertools.com%3c%2fspan%3e%3c%2fa%3e%0d%0a%3c%2fdiv%3e%0d%0a%0d%0a%3cdiv class%3d%22container-adwords%22%3e%0d%0a%09%3ca id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl01_Link%22 href%3d%22%2fscript%2fCatalog%2fRedir.aspx%3fctid%3d3521%26amp%3bcttype%3d2%22 target%3d%22_blank%22%3e%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl01_Title%22 class%3d%22title%22%3eNew Team Foundation Server 2010 Hosting - Click Here!%3c%2fspan%3e%3cbr %2f%3e%0d%0a%09%09%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl01_Teaser%22 title%3d%22Get NEW Hosted Team Foundation Server (TFS) 2010 with Bug%2fIssue Tracking and Version Source Control for only %2420%2fmo with Monthly Billing %26amp%3b No Long Term Contracts. Get the First 30 Days Free Now!%22 class%3d%22desc%22%3eGet NEW Hosted Team Foundation Server (TFS)...%3c%2fspan%3e%3cbr %2f%3e%0d%0a%09%09%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl01_Url%22 class%3d%22link%22%3ewww.discountasp.net%3c%2fspan%3e%3c%2fa%3e%0d%0a%3c%2fdiv%3e%0d%0a%0d%0a%3cdiv class%3d%22container-adwords%22%3e%0d%0a%09%3ca id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl02_Link%22 href%3d%22%2fscript%2fCatalog%2fRedir.aspx%3fctid%3d2681%26amp%3bcttype%3d2%22 target%3d%22_blank%22%3e%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl02_Title%22 class%3d%22title%22%3eData Dynamics Reports for Windows Forms%2c ASP.NET%3c%2fspan%3e%3cbr %2f%3e%0d%0a%09%09%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl02_Teaser%22 title%3d%22Data Dynamics Reports for Business Reporting in .NET by GrapeCity%2c with business intelligence%2c business dashboards%2c and key performance indicators (KPI)%2c Microsoft Excel integration and uses Microsoft SQL Server Reporting (RDL) format%2c all integrated with Microsoft Visual Studio .NET.%22 class%3d%22desc%22%3eData Dynamics Reports for Business Reporting...%3c%2fspan%3e%3cbr %2f%3e%0d%0a%09%09%3cspan id%3d%22ctl00_CatalogItems_FeatureItemRptr_ctl02_Url%22 class%3d%22link%22%3ewww.gcpowertools.com%3c%2fspan%3e%3c%2fa%3e%0d%0a%3c%2fdiv%3e%0d%0a%0d%0a%0d%0a%3c%2fdiv%3e%0d%0a%3c%2fdiv%3e%0d%0a%0d%0a%0d%0a'));</script>
+<div class="announce">
+
+<div class="announce-content">	
+
+
+<div class="container-adwords">
+	<a id="ctl00_CatalogItems_FeatureItemRptr_ctl00_Link" href="http://www.codeproject.com/script/Catalog/Redir.aspx?ctid=2967&amp;cttype=2" target="_blank"><span id="ctl00_CatalogItems_FeatureItemRptr_ctl00_Title" class="title">Spread for COM/ActiveX</span><br>
+		<span id="ctl00_CatalogItems_FeatureItemRptr_ctl00_Teaser" title="FarPoint Spread for COM/ActiveX by GrapeCity is an Award-winning, World's Best Selling Microsoft Excel Compatible SpreadSheet Component for COM/ActiveX with powerful features and near unlimited customization with support for native Excel export/import, event based coding and built-in calculation e" class="desc">FarPoint Spread for COM/ActiveX by GrapeCity...</span><br>
+		<span id="ctl00_CatalogItems_FeatureItemRptr_ctl00_Url" class="link">www.gcpowertools.com</span></a>
+</div>
+
+<div class="container-adwords">
+	<a id="ctl00_CatalogItems_FeatureItemRptr_ctl01_Link" href="http://www.codeproject.com/script/Catalog/Redir.aspx?ctid=3521&amp;cttype=2" target="_blank"><span id="ctl00_CatalogItems_FeatureItemRptr_ctl01_Title" class="title">New Team Foundation Server 2010 Hosting - Click Here!</span><br>
+		<span id="ctl00_CatalogItems_FeatureItemRptr_ctl01_Teaser" title="Get NEW Hosted Team Foundation Server (TFS) 2010 with Bug/Issue Tracking and Version Source Control for only $20/mo with Monthly Billing &amp; No Long Term Contracts. Get the First 30 Days Free Now!" class="desc">Get NEW Hosted Team Foundation Server (TFS)...</span><br>
+		<span id="ctl00_CatalogItems_FeatureItemRptr_ctl01_Url" class="link">www.discountasp.net</span></a>
+</div>
+
+<div class="container-adwords">
+	<a id="ctl00_CatalogItems_FeatureItemRptr_ctl02_Link" href="http://www.codeproject.com/script/Catalog/Redir.aspx?ctid=2681&amp;cttype=2" target="_blank"><span id="ctl00_CatalogItems_FeatureItemRptr_ctl02_Title" class="title">Data Dynamics Reports for Windows Forms, ASP.NET</span><br>
+		<span id="ctl00_CatalogItems_FeatureItemRptr_ctl02_Teaser" title="Data Dynamics Reports for Business Reporting in .NET by GrapeCity, with business intelligence, business dashboards, and key performance indicators (KPI), Microsoft Excel integration and uses Microsoft SQL Server Reporting (RDL) format, all integrated with Microsoft Visual Studio .NET." class="desc">Data Dynamics Reports for Business Reporting...</span><br>
+		<span id="ctl00_CatalogItems_FeatureItemRptr_ctl02_Url" class="link">www.gcpowertools.com</span></a>
+</div>
+
+
+</div>
+</div>
+
+
+
+
+					
+
+					
+
+					
+<div class="announce">
+<div class="announce-header">See Also...</div>
+<div class="announce-content">	
+
+
+<div class="container-related-item">
+	<a id="ctl00_RelatedArticles_RelatedItemRptr_ctl00_TitleLink" class="title" href="http://www.codeproject.com/KB/cpp/ismart.aspx">A Simple Smart Pointer</a><br>
+	<span id="ctl00_RelatedArticles_RelatedItemRptr_ctl00_Teaser" class="desc">A template-based smart pointer implementation</span><br>
+</div>
+
+<div class="container-related-item">
+	<a id="ctl00_RelatedArticles_RelatedItemRptr_ctl01_TitleLink" class="title" href="http://www.codeproject.com/KB/cpp/auto_ref.aspx">The fastest smart pointer in the west</a><br>
+	<span id="ctl00_RelatedArticles_RelatedItemRptr_ctl01_Teaser" class="desc">Need a super quick implementation of a...</span><br>
+</div>
+
+<div class="container-related-item">
+	<a id="ctl00_RelatedArticles_RelatedItemRptr_ctl02_TitleLink" class="title" href="http://www.codeproject.com/KB/cpp/smart_pointer.aspx">The Safest Smart Pointer of the East</a><br>
+	<span id="ctl00_RelatedArticles_RelatedItemRptr_ctl02_Teaser" class="desc">Reference counting smart pointers with...</span><br>
+</div>
+
+<div class="container-related-item">
+	<a id="ctl00_RelatedArticles_RelatedItemRptr_ctl03_TitleLink" class="title" href="http://www.codeproject.com/KB/stl/boostsmartptr.aspx">Smart Pointers to boost your code</a><br>
+	<span id="ctl00_RelatedArticles_RelatedItemRptr_ctl03_Teaser" class="desc">A beginner's introduction to the smart...</span><br>
+</div>
+
+<div class="container-related-item">
+	<a id="ctl00_RelatedArticles_RelatedItemRptr_ctl04_TitleLink" class="title" href="http://www.codeproject.com/KB/cpp/smartpointer.aspx">Simple Smart Pointer Implemantation</a><br>
+	<span id="ctl00_RelatedArticles_RelatedItemRptr_ctl04_Teaser" class="desc">Implementaion of a simple smart pointer.</span><br>
+</div>
+
+</div>
+</div>
+
+
+
+
+					
+
+					
+<div class="announce">
+<div class="announce-header">The Daily Insider</div>
+<div class="announce-content">
+
+<div><a id="ctl00_News_News_ctl01_Link" href="http://citizen428.net/archives/434">30 free programming books</a></div>
+
+Daily News: <a id="ctl00_News_News_ctl02_Subscribe" href="http://www.codeproject.com/Feature/Insider/">Signup now</a>.
+</div>
+</div>
+		
+
+					<div style="margin: auto; width: 150px;"><div class="lqm_ad" width="150px" height="80px" lqm_channel="1" lqm_publisher="495" lqm_zone="77" lqm_format="21" lqm_tags="C++,Windows,Visual-Studio,Dev,Beginner"><a href="http://a.lakequincy.com/c.ashx?channel=1&amp;format=21&amp;pageid=36717D9F-75C4-0ED1-12CA-22CF39EE3F52&amp;publisher=495&amp;tags=C++%2cWindows%2cVisual-Studio%2cDev%2cBeginner%2chow%2c+to%2c+implement%2c+smart%2c+pointer&amp;target=_blank&amp;ypos=1080.8333282470703&amp;zone=77&amp;renderhtml=true&amp;callback=jsonp1306173229685&amp;url=http%253A%252F%252Fwww.codeproject.com%252FKB%252Fcpp%252FSmartPointers.aspx&amp;country=IN&amp;userguid=00000000-0000-0000-0000-000000000000&amp;placement=5270&amp;creative=7413" target="_blank"><img src="SmartPointers.aspx_files/634230138107349008.gif" alt="Click Here" border="0" height="80" width="150"></a></div>
+					</div>
+	
+					<div style="margin: 10px auto auto; width: 160px;"><div class="lqm_ad" width="160px" height="600px" lqm_channel="1" lqm_publisher="495" lqm_zone="77" lqm_format="18" lqm_tags="C++,Windows,Visual-Studio,Dev,Beginner"><a href="http://a.lakequincy.com/c.ashx?channel=1&amp;format=18&amp;pageid=36717D9F-75C4-0ED1-12CA-22CF39EE3F52&amp;publisher=495&amp;tags=C++%2cWindows%2cVisual-Studio%2cDev%2cBeginner%2chow%2c+to%2c+implement%2c+smart%2c+pointer&amp;target=_blank&amp;ypos=1090.8333282470703&amp;zone=77&amp;renderhtml=true&amp;callback=jsonp1306173229686&amp;url=http%253A%252F%252Fwww.codeproject.com%252FKB%252Fcpp%252FSmartPointers.aspx&amp;country=IN&amp;userguid=00000000-0000-0000-0000-000000000000&amp;placement=9545&amp;creative=9584" target="_blank"><img src="SmartPointers.aspx_files/634370893646413906.jpg" alt="Click Here" border="0" height="600" width="160"></a></div>
+					</div>
+				</div>
+
+			</div>
+			
+
+		</div>
+		
+
+	</div>
+</div>
+
+
+<script type="text/javascript" language="Javascript" src="SmartPointers.aspx_files/jquery-1.js"></script><script type="text/javascript">//<![CDATA[
+if (typeof jQuery == 'undefined') {
+    document.write(unescape("%3Cscript src='/script/JS/jquery-1.4.2.min.js' type='text/javascript' %3E%3C/script%3E"));
+}//]]></script>
+<script type="text/javascript" language="Javascript" src="SmartPointers.aspx_files/article.js"></script>
+<script type="text/javascript" language="Javascript" src="SmartPointers.aspx_files/m.js"></script>
+<script type="text/javascript" language="Javascript">//<![CDATA[
+function markAllText(){
+ markTextInElement('implement','contentdiv');
+ markTextInElement('smart','contentdiv');
+ markTextInElement('pointer','contentdiv');
+}
+$(function(){markAllText()});
+var socialLinks = new social();
+socialLinks.PlaceholderId="ATD";socialLinks.ObjectId=15351;
+socialLinks.ObjectTypeId=2;
+socialLinks.addtoMethod=1;
+socialLinks.Horizontal=false;
+socialLinks.Showname=true;
+socialLinks.setupLinks("socialLinks", escape(document.location.href),escape(document.title), 100, 0, "small-text Bold", "AddTo");
+socialLinks.setupMenu();
+$(document).ready(function() {   $('.alert-bar').slideDown('fast');   $('.alert-bar a.close-notify').click(function() {      $('.alert-bar').slideUp('fast');        return false;    });});
+if($.LqmAds)$.LqmAds();
+var oSrchFlt = false, oSrchBox=false,srchBoxFoc=false;
+$(document).ready(function() {
+ InitWatermark('sb_tb', 'Search');
+ var sbar = $('#sb_tb'); 
+ var sfilter = $('#SearchFilter');
+ if (sbar && sfilter) {
+  sfilter.removeClass('popup'); sfilter.hide();
+  sbar.blur(function() { if (!oSrchFlt)sfilter.hide();srchBoxFoc=false; });
+  sbar.focus(function() { oSrchFlt=false;srchBoxFoc=true;sfilter.show(); });
+  sbar.mouseleave(function() { oSrchBox=false; });
+  sbar.mouseover(function() { oSrchBox=true; });
+  sfilter.mouseleave(function() { oSrchFlt=false; if (!srchBoxFoc&&!oSrchBox)sfilter.hide();});
+  sfilter.mouseover(function() { oSrchFlt=true; });
+ }
+});
+$("#ctl00_RateArticle_RateItemWrapper").removeClass("container-rating");$('#clear-rate_ctl00_RateArticle_RCD').click(function () { $('#ctl00_RateArticle_RCD').hide(); return false;});
+function ChkRtctl00_RateArticle(val, objId) {if (val<=3||true) {
+$('div[name=RateItem_' + objId + '] .rating-comment').css("display","");}
+else $('div[name=RateItem_' + objId + '] .rating-comment').css("display","none");}
+
+
+//]]>
+</script>
+
+
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-1735123-1']);
+	_gaq.push(['_trackPageview']);
+	_gaq.push(['_setDomainName', 'www.codeproject.com']);
+	_gaq.push(['_setSessionTimeout', '1200']); 
+
+	(function () {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+	})(); 
+</script>
+
+</body></html>

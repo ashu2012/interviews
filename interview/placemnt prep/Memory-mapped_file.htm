@@ -1,0 +1,400 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="client-firefox client-firefox-3 client-gecko client-win" xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en"><head>
+
+
+<title>Memory-mapped file - Wikipedia, the free encyclopedia</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="generator" content="MediaWiki 1.17wmf1">
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit">
+<link rel="edit" title="Edit this page" href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit">
+<link rel="apple-touch-icon" href="http://en.wikipedia.org/apple-touch-icon.png">
+<link rel="shortcut icon" href="http://en.wikipedia.org/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="http://en.wikipedia.org/w/opensearch_desc.php" title="Wikipedia (en)">
+<link rel="EditURI" type="application/rsd+xml" href="http://en.wikipedia.org/w/api.php?action=rsd">
+<link rel="copyright" href="http://creativecommons.org/licenses/by-sa/3.0/">
+<link rel="alternate" type="application/atom+xml" title="Wikipedia Atom feed" href="http://en.wikipedia.org/w/index.php?title=Special:RecentChanges&amp;feed=atom">
+<link rel="stylesheet" href="Memory-mapped_file_files/load_002.css" type="text/css" media="all">
+<style type="text/css" media="all">.suggestions{overflow:hidden;position:absolute;top:0px;left:0px;width:0px;border:none;z-index:99;padding:0;margin:-1px -1px 0 0} html > body .suggestions{margin:-1px 0 0 0}.suggestions-special{position:relative;background-color:Window;font-size:0.8em;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0;margin-top:-2px;display:none;padding:0.25em 0.25em;line-height:1.25em}.suggestions-results{background-color:white;background-color:Window;font-size:0.8em;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0}.suggestions-result{color:black;color:WindowText;margin:0;line-height:1.5em;padding:0.01em 0.25em;text-align:left}.suggestions-result-current{background-color:#4C59A6;background-color:Highlight;color:white;color:HighlightText}.suggestions-special .special-label{font-size:0.8em;color:gray;text-align:left}.suggestions-special .special-query{color:black;font-style:italic;text-align:left}.suggestions-special .special-hover{background-color:silver}.suggestions-result-current .special-label,.suggestions-result-current .special-query{color:white;color:HighlightText}.autoellipsis-matched,.highlight{font-weight:bold}
+
+/* cache key: enwiki:resourceloader:filter:minify-css:5:8d395f27880b6ffcab73b1c74b0217ea */</style><style type="text/css" media="all">#mw-panel.collapsible-nav div.portal{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAAABCAMAAAA7MLYKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAEtQTFRF29vb2tra4ODg6urq5OTk4uLi6+vr7e3t7Ozs8PDw5+fn4+Pj4eHh3d3d39/f6Ojo5eXl6enp8fHx8/Pz8vLy7+/v3Nzc2dnZ2NjYnErj7QAAAD1JREFUeNq0wQUBACAMALDj7hf6JyUFGxzEnYhC9GaNPG1xVffGDErk/iCigLl1XV2xM49lfAxEaSM+AQYA9HMKuv4liFQAAAAASUVORK5CYII=);background-image:url(http://bits.wikimedia.org/w/extensions-1.17/Vector/modules/./images/portal-break.png?2011-02-12T21:25:00Z)!ie;background-position:left top;background-repeat:no-repeat;padding:0.25em 0 !important;margin:-11px 9px 10px 11px}#mw-panel.collapsible-nav div.portal h5{color:#4D4D4D;font-weight:normal;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA9QTFRFeXl53d3dmpqasbGx////GU0iEgAAAAV0Uk5T/////wD7tg5TAAAAK0lEQVQI12NwgQIG0hhCDAwMTCJAhqMCA4MiWEoIJABiOCooQhULi5BqMgB2bh4svs8t+QAAAABJRU5ErkJggg==) left center no-repeat;background:url(http://bits.wikimedia.org/w/extensions-1.17/Vector/modules/./images/open.png?2011-02-12T21:25:00Z) left center no-repeat!ie;padding:4px 0 3px 1.5em;margin-bottom:0px}#mw-panel.collapsible-nav div.collapsed h5{color:#0645AD;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRF3d3deXl5////nZ2dQA6SoAAAAAN0Uk5T//8A18oNQQAAADNJREFUeNpiYEIDDMQKMKALMDOgCTDCRWACcBG4AEwEIcDITEAFuhnotmC4g4EEzwEEGAADqgHmQSPJKgAAAABJRU5ErkJggg==) left center no-repeat;background:url(http://bits.wikimedia.org/w/extensions-1.17/Vector/modules/./images/closed-ltr.png?2011-02-12T21:25:00Z) left center no-repeat!ie;margin-bottom:0px}#mw-panel.collapsible-nav div h5:hover{cursor:pointer;text-decoration:none}#mw-panel.collapsible-nav div.collapsed h5:hover{text-decoration:underline}#mw-panel.collapsible-nav div.portal div.body{background:none !important;padding-top:0px;display:none}#mw-panel.collapsible-nav div.persistent div.body{display:block}#mw-panel.collapsible-nav div.first h5{display:none}#mw-panel.collapsible-nav div.persistent h5{background:none !important;padding-left:0.7em;cursor:default}#mw-panel.collapsible-nav div.portal div.body ul li{padding:0.25em 0}#mw-panel.collapsible-nav div.first{background-image:none;margin-top:0px}#mw-panel.collapsible-nav div.persistent div.body{margin-left:0.5em}
+
+/* cache key: enwiki:resourceloader:filter:minify-css:5:c5cca4c308b0b64d12b1147b6871e86e */</style><meta name="ResourceLoaderDynamicStyles" content=""><link rel="stylesheet" href="Memory-mapped_file_files/load.css" type="text/css" media="all">
+<style type="text/css" media="all">a.new,#quickbar a.new{color:#ba0000}
+
+/* cache key: enwiki:resourceloader:filter:minify-css:5:f2a9127573a22335c2a9102b208c73e7 */</style>
+<script type="text/javascript">wgNamespaceNumber=0;wgAction="view";wgPageName="Memory-mapped_file";wgMainPageTitle="Main Page";wgWikimediaMobileUrl="http:\/\/en.m.wikipedia.org\/wiki";</script><script src="Memory-mapped_file_files/MobileRedirect.js" type="text/javascript"></script><!--[if lt IE 7]><style type="text/css">body{behavior:url("/w/skins-1.17/vector/csshover.min.htc")}</style><![endif]--><link href="Memory-mapped_file_files/index_002.css" rel="stylesheet" type="text/css"><script type="text/javascript" src="Memory-mapped_file_files/index_003.php"></script><link href="Memory-mapped_file_files/index.css" rel="stylesheet" type="text/css"></head><body class="mediawiki ltr ns-0 ns-subject page-Memory-mapped_file skin-vector">
+		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<!-- content -->
+		<div id="content">
+			<a id="top"></a>
+			<div id="mw-js-message" style="display: none;"></div>
+						<!-- sitenotice -->
+			<div id="siteNotice"><!-- centralNotice loads here --><script type="text/javascript">
+/* <![CDATA[ */
+document.writeln("\x3cdiv id=\"localNotice\"\x3e\x3cp\x3e\x3c/p\x3e\n\x3c/div\x3e");
+/* ]]> */
+</script><div id="localNotice"><p></p>
+</div>
+</div>
+			<!-- /sitenotice -->
+						<!-- firstHeading -->
+			<h1 id="firstHeading" class="firstHeading">Memory-mapped file</h1>
+			<!-- /firstHeading -->
+			<!-- bodyContent -->
+			<div id="bodyContent">
+				<!-- tagline -->
+				<div id="siteSub">From Wikipedia, the free encyclopedia</div>
+				<!-- /tagline -->
+				<!-- subtitle -->
+				<div id="contentSub"></div>
+				<!-- /subtitle -->
+																<!-- jumpto -->
+				<div id="jump-to-nav">
+					Jump to: <a href="#mw-head">navigation</a>,
+					<a href="#p-search">search</a>
+				</div>
+				<!-- /jumpto -->
+								<!-- bodytext -->
+				<p>A <b>memory-mapped file</b> is a segment of <a href="http://en.wikipedia.org/wiki/Virtual_memory">virtual memory</a>
+ which has been assigned a direct byte-for-byte correlation with some 
+portion of a file or file-like resource. This resource is typically a 
+file that is physically present on-disk, but can also be a device, 
+shared memory object, or other resource that the <a href="http://en.wikipedia.org/wiki/Operating_system">operating system</a> can reference through a <a href="http://en.wikipedia.org/wiki/File_descriptor">file descriptor</a>.
+ Once present, this correlation between the file and the memory space 
+permits applications to treat the mapped portion as if it were <a href="http://en.wikipedia.org/wiki/Primary_memory" class="mw-redirect" title="Primary memory">primary memory</a>.</p>
+<table id="toc" class="toc">
+<tbody><tr>
+<td>
+<div id="toctitle">
+<h2>Contents</h2>
+ <span class="toctoggle">[<a href="#" class="internal" id="togglelink">hide</a>]</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Benefits"><span class="tocnumber">1</span> <span class="toctext">Benefits</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Drawbacks"><span class="tocnumber">2</span> <span class="toctext">Drawbacks</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Common_uses"><span class="tocnumber">3</span> <span class="toctext">Common uses</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Platform_support"><span class="tocnumber">4</span> <span class="toctext">Platform support</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#References"><span class="tocnumber">5</span> <span class="toctext">References</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#External_links"><span class="tocnumber">6</span> <span class="toctext">External links</span></a></li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit&amp;section=1" title="Edit section: Benefits">edit</a>]</span> <span class="mw-headline" id="Benefits">Benefits</span></h2>
+<p>The primary benefit of memory mapping a file is increasing I/O performance, especially when used on small files.<sup class="Template-Fact" title="This claim needs references to reliable sources from September 2009" style="white-space: nowrap;">[<i><a href="http://en.wikipedia.org/wiki/Wikipedia:Citation_needed" title="Wikipedia:Citation needed">citation needed</a></i>]</sup>
+ Accessing memory mapped files is faster than using direct read and 
+write operations for two reasons. Firstly, a system call is orders of 
+magnitude slower than a simple change to a program's local memory. 
+Secondly, in most operating systems the memory region mapped actually <i>is</i> the kernel's <a href="http://en.wikipedia.org/wiki/Page_cache">page cache</a> (file cache), meaning that no copies need to be created in user space.</p>
+<p>Certain application level memory-mapped file operations also perform 
+better than their physical file counterparts. Applications can access 
+and update data in the file directly and in-place, as opposed to seeking
+ from the start of the file or rewriting the entire edited contents to a
+ temporary location. Since the memory-mapped file is handled internally 
+in pages, linear file access (as seen, for example, in <a href="http://en.wikipedia.org/wiki/Flat_file" class="mw-redirect" title="Flat file">flat file</a>
+ data storage or configuration files) requires disk access only when a 
+new page boundary is crossed, and can write larger sections of the file 
+to disk in a single operation.</p>
+<p>A possible benefit of memory-mapped files is a "lazy loading", thus 
+using small amounts of RAM even for a very large file. Trying to load 
+the entire contents of a file that is significantly larger than the 
+amount of memory available can cause severe <a href="http://en.wikipedia.org/wiki/Thrashing_%28computer_science%29" title="Thrashing (computer science)">thrashing</a>
+ as the operating system reads from disk into memory and simultaneously 
+pages from memory back to disk. Memory-mapping may not only bypass the 
+page file completely, but the system only needs to load the smaller 
+page-sized sections as data is being edited, similarly to <a href="http://en.wikipedia.org/wiki/Demand_paging">demand paging</a> scheme used for programs.</p>
+<p>The memory mapping process is handled by the <a href="http://en.wikipedia.org/wiki/Memory_management" title="Memory management">virtual memory manager</a>, which is the same subsystem responsible for dealing with the <a href="http://en.wikipedia.org/wiki/Page_file" class="mw-redirect" title="Page file">page file</a>. Memory mapped files are loaded into memory one entire <a href="http://en.wikipedia.org/wiki/Memory_page" title="Memory page" class="mw-redirect">page</a> at a time. The <a href="http://en.wikipedia.org/wiki/Page_size" class="mw-redirect" title="Page size">page size</a>
+ is selected by the operating system for maximum performance. Since page
+ file management is one of the most critical elements of a virtual 
+memory system, loading page sized sections of a file into physical 
+memory is typically a very highly optimized system function.<sup id="cite_ref-0" class="reference"><a href="#cite_note-0"><span>[</span>1<span>]</span></a></sup></p>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit&amp;section=2" title="Edit section: Drawbacks">edit</a>]</span> <span class="mw-headline" id="Drawbacks">Drawbacks</span></h2>
+<p>The major reason to choose memory mapped file I/O is performance. 
+Nevertheless there can be tradeoffs. The standard I/O approach is costly
+ due to system call overhead and memory copying. The memory mapped 
+approach has its cost in <a href="http://en.wikipedia.org/wiki/Page_fault#Minor_page_fault" title="Page fault">minor page faults</a> - when a block of data is loaded in <a href="http://en.wikipedia.org/wiki/Page_cache">page cache</a>,
+ but is not yet mapped into the process's virtual memory space. In some 
+circumstances, memory mapped file I/O can be substantially slower than 
+standard file I/O.<sup id="cite_ref-1" class="reference"><a href="#cite_note-1"><span>[</span>2<span>]</span></a></sup></p>
+<p>Another drawback of memory mapped files relates to a given architecture's <a href="http://en.wikipedia.org/wiki/Memory_address" title="Memory address">address space</a>: a file larger than the addressable space can have only portions mapped at a time, complicating reading it. For example, a <a href="http://en.wikipedia.org/wiki/32-bit">32-bit</a> architecture such as Intel's <a href="http://en.wikipedia.org/wiki/IA-32">IA-32</a> can only directly address 4 <a href="http://en.wikipedia.org/wiki/GiB" class="mw-redirect" title="GiB">GiB</a> or smaller portions of files. This drawback is avoided in the case of devices addressing memory when an <a href="http://en.wikipedia.org/wiki/IOMMU">IOMMU</a> is present.</p>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit&amp;section=3" title="Edit section: Common uses">edit</a>]</span> <span class="mw-headline" id="Common_uses">Common uses</span></h2>
+<p>Perhaps the most common use for a memory-mapped file is the process loader in most modern operating systems (including <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Microsoft Windows</a> and <a href="http://en.wikipedia.org/wiki/Unix-like">Unix-like</a>
+ systems.) When a process is started, the operating system uses a memory
+ mapped file to bring the executable file, along with any loadable 
+modules, into memory for execution. Most memory-mapping systems use a 
+technique called <a href="http://en.wikipedia.org/wiki/Demand_paging">demand paging</a>, where the file is loaded into physical memory in subsets (one page each), and only when that page is actually referenced.<sup id="cite_ref-2" class="reference"><a href="#cite_note-2"><span>[</span>3<span>]</span></a></sup>
+ In the specific case of executable files, this permits the OS to 
+selectively load only those portions of a process image that actually 
+need to execute.</p>
+<p>Another common use for memory-mapped files is to share memory between multiple processes. In modern <a href="http://en.wikipedia.org/wiki/Protected_mode">protected mode</a>
+ operating systems, processes are generally not permitted to access 
+memory space that is allocated for use by another process. (A program's 
+attempt to do so causes <a href="http://en.wikipedia.org/wiki/Page_fault#Invalid_page_fault" title="Page fault">invalid page faults</a> or <a href="http://en.wikipedia.org/wiki/Segmentation_violation" title="Segmentation violation" class="mw-redirect">segmentation violations</a>.)
+ There are a number of techniques available to safely share memory, and 
+memory-mapped file I/O is one of the most popular. Two or more 
+applications can simultaneously map a single physical file into memory 
+and access this memory. For example, the Microsoft Windows operating 
+system provides a mechanism for applications to memory-map a shared 
+segment of the system's page file itself and share data via this 
+section.</p>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit&amp;section=4" title="Edit section: Platform support">edit</a>]</span> <span class="mw-headline" id="Platform_support">Platform support</span></h2>
+<p>Most modern operating systems or runtime environments support some form of memory-mapped file access. The function <tt><a href="http://en.wikipedia.org/wiki/Mmap">mmap</a>()</tt><sup id="cite_ref-3" class="reference"><a href="#cite_note-3"><span>[</span>4<span>]</span></a></sup>, which creates a mapping of a file given a file descriptor, starting location in the file, and a length, is part of the <a href="http://en.wikipedia.org/wiki/POSIX">POSIX</a> specification, so the wide variety of POSIX-compliant systems, such as <a href="http://en.wikipedia.org/wiki/Unix">UNIX</a>, <a href="http://en.wikipedia.org/wiki/Linux">Linux</a>, <a href="http://en.wikipedia.org/wiki/Mac_OS_X">Mac OS X</a> <sup id="cite_ref-4" class="reference"><a href="#cite_note-4"><span>[</span>5<span>]</span></a></sup> or <a href="http://en.wikipedia.org/wiki/OpenVMS">OpenVMS</a>, support a common mechanism for memory mapping files. The Microsoft Windows operating systems also support a group of <a href="http://en.wikipedia.org/wiki/API" class="mw-redirect" title="API">API</a> functions for this purpose, such as <tt>CreateFileMapping()</tt> <sup id="cite_ref-5" class="reference"><a href="#cite_note-5"><span>[</span>6<span>]</span></a></sup>.</p>
+<p>The <a href="http://en.wikipedia.org/wiki/Boost_C%2B%2B_Libraries">Boost C++ Libraries</a> provide a portable implementation of memory-mapped files for Microsoft Windows and POSIX-compliant platforms.<sup id="cite_ref-6" class="reference"><a href="#cite_note-6"><span>[</span>7<span>]</span></a></sup></p>
+<p>The <a href="http://en.wikipedia.org/wiki/Java_%28programming_language%29" title="Java (programming language)">Java programming language</a> provides classes and methods to access memory mapped files, such as <b><code><a href="http://download.oracle.com/javase/6/docs/api/java/nio/channels/FileChannel.html" class="external text" rel="nofollow">FileChannel</a></code></b>.</p>
+<p>The <a href="http://en.wikipedia.org/wiki/D_%28programming_language%29" title="D (programming language)">D programming language</a> supports memory mapped files in its standard library (std.mmfile module). <sup id="cite_ref-7" class="reference"><a href="#cite_note-7"><span>[</span>8<span>]</span></a></sup></p>
+<p><a href="http://en.wikipedia.org/wiki/Ruby_%28programming_language%29" title="Ruby (programming language)">Ruby</a> has a gem (library) called Mmap, which implements memory-mapped file objects.</p>
+<p>Since version 1.6, <a href="http://en.wikipedia.org/wiki/Python_programming_language" title="Python programming language" class="mw-redirect">Python</a> has included a <tt><b>mmap</b></tt> module in its Standard Library<sup id="cite_ref-py-1.6-release-notes_8-0" class="reference"><a href="#cite_note-py-1.6-release-notes-8"><span>[</span>9<span>]</span></a></sup>. Details of the module vary according to whether the host platform is <a href="http://en.wikipedia.org/wiki/Microsoft_Windows" title="Microsoft Windows">Windows</a> or <a href="http://en.wikipedia.org/wiki/Unix-like">Unix-like</a>.</p>
+<p>For <a href="http://en.wikipedia.org/wiki/Perl">Perl</a> there are a several modules available for memory mapping files on the <a href="http://en.wikipedia.org/wiki/CPAN">CPAN</a>, such as <tt><b>Sys::Mmap</b></tt> <sup id="cite_ref-sys-mmap-cpan-module_9-0" class="reference"><a href="#cite_note-sys-mmap-cpan-module-9"><span>[</span>10<span>]</span></a></sup> and <tt><b>File::Map</b></tt> <sup id="cite_ref-file-map-cpan-module_10-0" class="reference"><a href="#cite_note-file-map-cpan-module-10"><span>[</span>11<span>]</span></a></sup>.</p>
+<p>The Microsoft .NET runtime natively provides managed access to memory
+ mapped files in version 4 of the runtime. For previous versions, there 
+are third-party libraries which do so <sup id="cite_ref-11" class="reference"><a href="#cite_note-11"><span>[</span>12<span>]</span></a></sup>.</p>
+<p>PHP supported memory mapping techniques in a number of native file 
+access functions such as file_get_contents() but has removed this in 5.3
+ (see <a href="http://svn.php.net/viewvc?view=revision&amp;revision=255970" class="external text" rel="nofollow">revision log</a>)</p>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit&amp;section=5" title="Edit section: References">edit</a>]</span> <span class="mw-headline" id="References">References</span></h2>
+<ol class="references">
+<li id="cite_note-0"><b><a href="#cite_ref-0">^</a></b> <a href="http://msdn2.microsoft.com/en-us/library/ms810613.aspx" class="external free" rel="nofollow">http://msdn2.microsoft.com/en-us/library/ms810613.aspx</a>, "What Do Memory-Mapped Files Have to Offer?".</li>
+<li id="cite_note-1"><b><a href="#cite_ref-1">^</a></b> <a href="http://lists.freebsd.org/pipermail/freebsd-questions/2004-June/050371.html" class="external free" rel="nofollow">http://lists.freebsd.org/pipermail/freebsd-questions/2004-June/050371.html</a>, read vs. mmap (or io vs. page faults) by <a href="http://en.wikipedia.org/wiki/Matthew_Dillon_%28computer_scientist%29" title="Matthew Dillon (computer scientist)">Matthew Dillon</a></li>
+<li id="cite_note-2"><b><a href="#cite_ref-2">^</a></b> <a href="http://www.linux-tutorial.info/modules.php?name=Tutorial&amp;pageid=89" class="external free" rel="nofollow">http://www.linux-tutorial.info/modules.php?name=Tutorial&amp;pageid=89</a>, "Demand Paging"</li>
+<li id="cite_note-3"><b><a href="#cite_ref-3">^</a></b> <a href="http://www.ecst.csuchico.edu/%7Ebeej/guide/ipc/mmap.html" class="external text" rel="nofollow">Memory Mapped Files</a></li>
+<li id="cite_note-4"><b><a href="#cite_ref-4">^</a></b> <a href="http://www.apple.com/macosx/technology/unix.html" class="external text" rel="nofollow">Apple - Mac OS X Leopard - Technology - UNIX</a></li>
+<li id="cite_note-5"><b><a href="#cite_ref-5">^</a></b> <a href="http://msdn2.microsoft.com/en-us/library/aa366537.aspx" class="external text" rel="nofollow">CreateFileMapping Function (Windows)</a></li>
+<li id="cite_note-6"><b><a href="#cite_ref-6">^</a></b> <a href="http://www.boost.org/doc/libs/1_40_0/libs/iostreams/doc/classes/mapped_file.html" class="external free" rel="nofollow">http://www.boost.org/doc/libs/1_40_0/libs/iostreams/doc/classes/mapped_file.html</a></li>
+<li id="cite_note-7"><b><a href="#cite_ref-7">^</a></b> <a href="http://www.digitalmars.com/d/2.0/phobos/std_mmfile.html" class="external free" rel="nofollow">http://www.digitalmars.com/d/2.0/phobos/std_mmfile.html</a></li>
+<li id="cite_note-py-1.6-release-notes-8"><b><a href="#cite_ref-py-1.6-release-notes_8-0">^</a></b> <span class="citation web"><a href="http://web.archive.org/web/20061230034955/http://www.python.org/download/releases/1.6.1/#new-modules-in-1-6" class="external text" rel="nofollow">""New Modules in 1.6""</a>. Archived from <a href="http://www.python.org/download/releases/1.6.1/#new-modules-in-1-6" class="external text" rel="nofollow">the original</a> on 30 December 2006<span class="printonly">. <a href="http://web.archive.org/web/20061230034955/http://www.python.org/download/releases/1.6.1/#new-modules-in-1-6" class="external free" rel="nofollow">http://web.archive.org/web/20061230034955/http://www.python.org/download/releases/1.6.1/#new-modules-in-1-6</a></span><span class="reference-accessdate">. Retrieved 23 December 2008</span>.</span><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=bookitem&amp;rft.btitle=%22New+Modules+in+1.6%22&amp;rft.atitle=&amp;rft_id=http%3A%2F%2Fweb.archive.org%2Fweb%2F20061230034955%2Fhttp%3A%2F%2Fwww.python.org%2Fdownload%2Freleases%2F1.6.1%2F%23new-modules-in-1-6&amp;rfr_id=info:sid/en.wikipedia.org:Memory-mapped_file"><span style="display: none;">&nbsp;</span></span></li>
+<li id="cite_note-sys-mmap-cpan-module-9"><b><a href="#cite_ref-sys-mmap-cpan-module_9-0">^</a></b> <span class="citation web"><a href="http://search.cpan.org/perldoc?Sys::Mmap" class="external text" rel="nofollow">"Sys::Mmap Perl Module"</a><span class="printonly">. <a href="http://search.cpan.org/perldoc?Sys::Mmap" class="external free" rel="nofollow">http://search.cpan.org/perldoc?Sys::Mmap</a></span>.</span><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=bookitem&amp;rft.btitle=Sys%3A%3AMmap+Perl+Module&amp;rft.atitle=&amp;rft_id=http%3A%2F%2Fsearch.cpan.org%2Fperldoc%3FSys%3A%3AMmap&amp;rfr_id=info:sid/en.wikipedia.org:Memory-mapped_file"><span style="display: none;">&nbsp;</span></span></li>
+<li id="cite_note-file-map-cpan-module-10"><b><a href="#cite_ref-file-map-cpan-module_10-0">^</a></b> <span class="citation web"><a href="http://search.cpan.org/perldoc?File::Map" class="external text" rel="nofollow">"File::Map Perl Module"</a><span class="printonly">. <a href="http://search.cpan.org/perldoc?File::Map" class="external free" rel="nofollow">http://search.cpan.org/perldoc?File::Map</a></span>.</span><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=bookitem&amp;rft.btitle=File%3A%3AMap+Perl+Module&amp;rft.atitle=&amp;rft_id=http%3A%2F%2Fsearch.cpan.org%2Fperldoc%3FFile%3A%3AMap&amp;rfr_id=info:sid/en.wikipedia.org:Memory-mapped_file"><span style="display: none;">&nbsp;</span></span></li>
+<li id="cite_note-11"><b><a href="#cite_ref-11">^</a></b> <a href="http://winterdom.com/dev/net" class="external text" rel="nofollow">DotNet</a></li>
+</ol>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit&amp;section=6" title="Edit section: External links">edit</a>]</span> <span class="mw-headline" id="External_links">External links</span></h2>
+
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 2098/1000000
+Post-expand include size: 10614/2048000 bytes
+Template argument size: 4743/2048000 bytes
+Expensive parser function count: 1/500
+-->
+
+<!-- Saved in parser cache with key enwiki:pcache:idhash:8246248-0!*!0!!en!* and timestamp 20110428232344 -->
+<div class="printfooter">
+Retrieved from "<a href="http://en.wikipedia.org/wiki/Memory-mapped_file">http://en.wikipedia.org/wiki/Memory-mapped_file</a>"</div>
+				<!-- /bodytext -->
+								<!-- catlinks -->
+				<div id="catlinks" class="catlinks"><div id="mw-normal-catlinks"><a href="http://en.wikipedia.org/wiki/Special:Categories" title="Special:Categories">Categories</a>: <span dir="ltr"><a href="http://en.wikipedia.org/wiki/Category:Virtual_memory" title="Category:Virtual memory">Virtual memory</a></span></div><div id="mw-hidden-catlinks" class="mw-hidden-cats-hidden">Hidden categories: <span dir="ltr"><a href="http://en.wikipedia.org/wiki/Category:All_articles_with_unsourced_statements" title="Category:All articles with unsourced statements">All articles with unsourced statements</a></span> | <span dir="ltr"><a href="http://en.wikipedia.org/wiki/Category:Articles_with_unsourced_statements_from_September_2009" title="Category:Articles with unsourced statements from September 2009">Articles with unsourced statements from September 2009</a></span></div></div>				<!-- /catlinks -->
+												<div class="visualClear"></div>
+			</div>
+			<!-- /bodyContent -->
+		</div>
+		<!-- /content -->
+		<!-- header -->
+		<div id="mw-head" class="noprint">
+			
+<!-- 0 -->
+<div id="p-personal" class="">
+	<h5>Personal tools</h5>
+	<ul>
+					<li id="pt-login"><a href="http://en.wikipedia.org/w/index.php?title=Special:UserLogin&amp;returnto=Memory-mapped_file&amp;campaign=ACP3" title="You are encouraged to log in; however, it is not mandatory. [alt-shift-o]" accesskey="o">Log in / create account</a></li>
+			</ul>
+</div>
+
+<!-- /0 -->
+			<div id="left-navigation">
+				
+<!-- 0 -->
+<div id="p-namespaces" class="vectorTabs">
+	<h5>Namespaces</h5>
+	<ul>
+					<li id="ca-nstab-main" class="selected"><span><a href="http://en.wikipedia.org/wiki/Memory-mapped_file" title="View the content page [alt-shift-c]" accesskey="c">Article</a></span></li>
+					<li id="ca-talk"><span><a href="http://en.wikipedia.org/wiki/Talk:Memory-mapped_file" title="Discussion about the content page [alt-shift-t]" accesskey="t">Discussion</a></span></li>
+			</ul>
+</div>
+
+<!-- /0 -->
+
+<!-- 1 -->
+<div id="p-variants" class="vectorMenu emptyPortlet">
+		<h5><span>Variants</span><a href="#"></a></h5>
+	<div class="menu">
+		<ul>
+					</ul>
+	</div>
+</div>
+
+<!-- /1 -->
+			</div>
+			<div id="right-navigation">
+				
+<!-- 0 -->
+<div id="p-views" class="vectorTabs">
+	<h5>Views</h5>
+	<ul>
+					<li id="ca-view" class="selected"><span><a href="http://en.wikipedia.org/wiki/Memory-mapped_file">Read</a></span></li>
+					<li id="ca-edit"><span><a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=edit" title="You can edit this page. 
+Please use the preview button before saving. [alt-shift-e]" accesskey="e">Edit</a></span></li>
+					<li id="ca-history" class="collapsible "><span><a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;action=history" title="Past versions of this page [alt-shift-h]" accesskey="h">View history</a></span></li>
+			</ul>
+</div>
+
+<!-- /0 -->
+
+<!-- 1 -->
+<div id="p-cactions" class="vectorMenu emptyPortlet">
+	<h5><span>Actions</span><a href="#"></a></h5>
+	<div class="menu">
+		<ul>
+					</ul>
+	</div>
+</div>
+
+<!-- /1 -->
+
+<!-- 2 -->
+<div id="p-search">
+	<h5><label for="searchInput">Search</label></h5>
+	<form action="/w/index.php" id="searchform">
+		<input name="title" value="Special:Search" type="hidden">
+				<div id="simpleSearch">
+						<input autocomplete="off" class="placeholder" placeholder="Search" tabindex="1" id="searchInput" name="search" title="Search Wikipedia [alt-shift-f]" accesskey="f" value="Search" type="text">
+						<button id="searchButton" type="submit" name="button" title="Search Wikipedia for this text"><img src="Memory-mapped_file_files/search-ltr.png" alt="Search"></button>
+					</div>
+			</form>
+</div>
+
+<!-- /2 -->
+			</div>
+		</div>
+		<!-- /header -->
+		<!-- panel -->
+			<div id="mw-panel" class="noprint collapsible-nav">
+				<!-- logo -->
+					<div id="p-logo"><a style="background-image: url(&quot;http://upload.wikimedia.org/wikipedia/en/b/bc/Wiki.png&quot;);" href="http://en.wikipedia.org/wiki/Main_Page" title="Visit the main page"></a></div>
+				<!-- /logo -->
+				
+<!-- navigation -->
+<div class="portal first persistent" id="p-navigation">
+	<h5>Navigation</h5>
+	<div class="body">
+				<ul>
+					<li id="n-mainpage-description"><a href="http://en.wikipedia.org/wiki/Main_Page" title="Visit the main page [alt-shift-z]" accesskey="z">Main page</a></li>
+					<li id="n-contents"><a href="http://en.wikipedia.org/wiki/Portal:Contents" title="Guides to browsing Wikipedia">Contents</a></li>
+					<li id="n-featuredcontent"><a href="http://en.wikipedia.org/wiki/Portal:Featured_content" title="Featured content – the best of Wikipedia">Featured content</a></li>
+					<li id="n-currentevents"><a href="http://en.wikipedia.org/wiki/Portal:Current_events" title="Find background information on current events">Current events</a></li>
+					<li id="n-randompage"><a href="http://en.wikipedia.org/wiki/Special:Random" title="Load a random article [alt-shift-x]" accesskey="x">Random article</a></li>
+					<li id="n-sitesupport"><a href="http://wikimediafoundation.org/wiki/Special:Landingcheck?landing_page=WMFJA085&amp;language=en&amp;utm_source=donate&amp;utm_medium=sidebar&amp;utm_campaign=20101204SB002" title="Support us">Donate to Wikipedia</a></li>
+				</ul>
+			</div>
+</div>
+
+<!-- /navigation -->
+
+<!-- SEARCH -->
+
+<!-- /SEARCH -->
+
+<!-- interaction -->
+<div class="portal expanded" id="p-interaction">
+	<h5 tabindex="2">Interaction</h5>
+	<div style="display: block;" class="body">
+				<ul>
+					<li id="n-help"><a href="http://en.wikipedia.org/wiki/Help:Contents" title="Guidance on how to use and edit Wikipedia">Help</a></li>
+					<li id="n-aboutsite"><a href="http://en.wikipedia.org/wiki/Wikipedia:About" title="Find out about Wikipedia">About Wikipedia</a></li>
+					<li id="n-portal"><a href="http://en.wikipedia.org/wiki/Wikipedia:Community_portal" title="About the project, what you can do, where to find things">Community portal</a></li>
+					<li id="n-recentchanges"><a href="http://en.wikipedia.org/wiki/Special:RecentChanges" title="The list of recent changes in the wiki [alt-shift-r]" accesskey="r">Recent changes</a></li>
+					<li id="n-contact"><a href="http://en.wikipedia.org/wiki/Wikipedia:Contact_us" title="How to contact Wikipedia">Contact Wikipedia</a></li>
+				</ul>
+			</div>
+</div>
+
+<!-- /interaction -->
+
+<!-- TOOLBOX -->
+<div class="portal collapsed" id="p-tb">
+	<h5 tabindex="3">Toolbox</h5>
+	<div class="body">
+		<ul>
+					<li id="t-whatlinkshere"><a href="http://en.wikipedia.org/wiki/Special:WhatLinksHere/Memory-mapped_file" title="List of all English Wikipedia pages containing links to this page [alt-shift-j]" accesskey="j">What links here</a></li>
+						<li id="t-recentchangeslinked"><a href="http://en.wikipedia.org/wiki/Special:RecentChangesLinked/Memory-mapped_file" title="Recent changes in pages linked from this page [alt-shift-k]" accesskey="k">Related changes</a></li>
+																																					<li id="t-upload"><a href="http://en.wikipedia.org/wiki/Wikipedia:Upload" title="Upload files [alt-shift-u]" accesskey="u">Upload file</a></li>
+											<li id="t-specialpages"><a href="http://en.wikipedia.org/wiki/Special:SpecialPages" title="List of all special pages [alt-shift-q]" accesskey="q">Special pages</a></li>
+											<li id="t-permalink"><a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;oldid=425723045" title="Permanent link to this revision of the page">Permanent link</a></li>
+				<li id="t-cite"><a href="http://en.wikipedia.org/w/index.php?title=Special:Cite&amp;page=Memory-mapped_file&amp;id=425723045" title="Information on how to cite this page">Cite this page</a></li>		</ul>
+	</div>
+</div>
+
+<!-- /TOOLBOX -->
+
+<!-- coll-print_export -->
+<div class="portal collapsed" id="p-coll-print_export">
+	<h5 tabindex="4">Print/export</h5>
+	<div class="body">
+				<ul id="collectionPortletList"><li id="coll-create_a_book"><a href="http://en.wikipedia.org/w/index.php?title=Special:Book&amp;bookcmd=book_creator&amp;referer=Memory-mapped+file" title="Create a book or page collection" rel="nofollow">Create a book</a></li><li id="coll-download-as-rl"><a href="http://en.wikipedia.org/w/index.php?title=Special:Book&amp;bookcmd=render_article&amp;arttitle=Memory-mapped+file&amp;oldid=425723045&amp;writer=rl" title="Download a PDF version of this wiki page" rel="nofollow">Download as PDF</a></li><li id="t-print"><a href="http://en.wikipedia.org/w/index.php?title=Memory-mapped_file&amp;printable=yes" title="Printable version of this page [alt-shift-p]" accesskey="p">Printable version</a></li></ul>			</div>
+</div>
+
+<!-- /coll-print_export -->
+
+<!-- LANGUAGES -->
+<div class="portal expanded" id="p-lang">
+	<h5 tabindex="5">Languages</h5>
+	<div style="display: block;" class="body">
+		<ul>
+					<li class="interwiki-es"><a href="http://es.wikipedia.org/wiki/Archivo_proyectado_en_memoria" title="Archivo proyectado en memoria">Español</a></li>
+					<li class="interwiki-ru"><a href="http://ru.wikipedia.org/wiki/%D0%9E%D1%82%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%84%D0%B0%D0%B9%D0%BB%D0%B0_%D0%B2_%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D1%8C" title="Отображение файла в память">Русский</a></li>
+				</ul>
+	</div>
+</div>
+
+<!-- /LANGUAGES -->
+			</div>
+		<!-- /panel -->
+		<!-- footer -->
+		<div id="footer">
+											<ul id="footer-info">
+																	<li id="footer-info-lastmod"> This page was last modified on 24 April 2011 at 21:31.<br></li>
+																							<li id="footer-info-copyright">Text is available under the <a rel="license" href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">Creative Commons Attribution-ShareAlike License</a><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/" style="display: none;"></a>;
+additional terms may apply.
+See <a href="http://wikimediafoundation.org/wiki/Terms_of_Use">Terms of Use</a> for details.<br>
+Wikipedia® is a registered trademark of the <a href="http://www.wikimediafoundation.org/">Wikimedia Foundation, Inc.</a>, a non-profit organization.<br></li><li class="noprint"><a class="internal" href="http://en.wikipedia.org/wiki/Wikipedia:Contact_us">Contact us</a></li>
+															</ul>
+															<ul id="footer-places">
+																	<li id="footer-places-privacy"><a href="http://wikimediafoundation.org/wiki/Privacy_policy" title="wikimedia:Privacy policy">Privacy policy</a></li>
+																							<li id="footer-places-about"><a href="http://en.wikipedia.org/wiki/Wikipedia:About" title="Wikipedia:About">About Wikipedia</a></li>
+																							<li id="footer-places-disclaimer"><a href="http://en.wikipedia.org/wiki/Wikipedia:General_disclaimer" title="Wikipedia:General disclaimer">Disclaimers</a></li>
+															</ul>
+											<ul id="footer-icons" class="noprint">
+					<li id="footer-copyrightico">
+						<a href="http://wikimediafoundation.org/"><img src="Memory-mapped_file_files/wikimedia-button.png" alt="Wikimedia Foundation" height="31" width="88"></a>
+					</li>
+					<li id="footer-poweredbyico">
+						<a href="http://www.mediawiki.org/"><img src="Memory-mapped_file_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></a>
+					</li>
+				</ul>
+						<div style="clear: both;"></div>
+		</div>
+		<!-- /footer -->
+		
+<script src="Memory-mapped_file_files/load.php" type="text/javascript"></script><script src="Memory-mapped_file_files/load_004.php" type="text/javascript"></script>
+<script type="text/javascript">if ( window.mediaWiki ) {
+	mediaWiki.config.set({"wgCanonicalNamespace": "", "wgCanonicalSpecialPageName": false, "wgNamespaceNumber": 0, "wgPageName": "Memory-mapped_file", "wgTitle": "Memory-mapped file", "wgAction": "view", "wgArticleId": 8246248, "wgIsArticle": true, "wgUserName": null, "wgUserGroups": ["*"], "wgCurRevisionId": 425723045, "wgCategories": ["All articles with unsourced statements", "Articles with unsourced statements from September 2009", "Virtual memory"], "wgBreakFrames": false, "wgRestrictionEdit": [], "wgRestrictionMove": [], "wgSearchNamespaces": [0], "wgFlaggedRevsParams": {"tags": {"status": {"levels": 1, "quality": 2, "pristine": 3}}}, "wgStableRevisionId": null, "wgRevContents": {"error": "Unable to get content.", "waiting": "Waiting for content"}, "wgWikimediaMobileUrl": "http://en.m.wikipedia.org/wiki", "wgVectorEnabledModules": {"collapsiblenav": true, "collapsibletabs": true, "editwarning": true, "expandablesearch": false, "footercleanup": false, "sectioneditlinks": false, "simplesearch": true, "experiments": true}, "wgWikiEditorEnabledModules": {"toolbar": true, "dialogs": true, "templateEditor": false, "templates": false, "addMediaWizard": false, "preview": false, "previewDialog": false, "publish": false, "toc": false}, "wgTrackingToken": "c935d6dc0faeaae67d3641197aa0e582", "Geo": {"city": "", "country": ""}, "wgNoticeProject": "wikipedia"});
+}
+</script>
+<script type="text/javascript">if ( window.mediaWiki ) {
+	mediaWiki.loader.load(["mediawiki.legacy.wikibits", "mediawiki.util", "mediawiki.legacy.ajax", "mediawiki.legacy.mwsuggest", "ext.vector.collapsibleNav", "ext.vector.collapsibleTabs", "ext.vector.editWarning", "ext.vector.simpleSearch", "ext.UserBuckets", "ext.articleFeedback.startup"]);
+	mediaWiki.loader.go();
+}
+</script><script type="text/javascript" src="Memory-mapped_file_files/load_005.php"></script><script type="text/javascript" src="Memory-mapped_file_files/load_002.php"></script>
+
+<script src="Memory-mapped_file_files/index_002.php" type="text/javascript"></script>
+<script src="Memory-mapped_file_files/load_003.php" type="text/javascript"></script><script type="text/javascript" src="Memory-mapped_file_files/index.php"></script>
+<script type="text/javascript">if ( window.mediaWiki ) {
+	mediaWiki.user.options.set({"ccmeonemails":0,"cols":80,"contextchars":50,"contextlines":5,"date":"default","diffonly":0,"disablemail":0,"disablesuggest":0,"editfont":"default","editondblclick":0,"editsection":1,"editsectiononrightclick":0,"enotifminoredits":0,"enotifrevealaddr":0,"enotifusertalkpages":1,"enotifwatchlistpages":0,"extendwatchlist":0,"externaldiff":0,"externaleditor":0,"fancysig":0,"forceeditsummary":0,"gender":"unknown","hideminor":0,"hidepatrolled":0,"highlightbroken":1,"imagesize":2,"justify":0,"math":1,"minordefault":0,"newpageshidepatrolled":0,"nocache":0,"noconvertlink":0,"norollbackdiff":0,"numberheadings":0,"previewonfirst":0,"previewontop":1,"quickbar":1,"rcdays":7,"rclimit":50,"rememberpassword":0,"rows":25,"searchlimit":20,"showhiddencats":0,"showjumplinks":1,"shownumberswatching":1,"showtoc":1,"showtoolbar":1,"skin":"vector","stubthreshold":0,"thumbsize":4,"underline":2,"uselivepreview":0,"usenewrc":0,"watchcreations":1,"watchdefault":0,"watchdeletion":0,
+	"watchlistdays":"3","watchlisthideanons":0,"watchlisthidebots":0,"watchlisthideliu":0,"watchlisthideminor":0,"watchlisthideown":0,"watchlisthidepatrolled":0,"watchmoves":0,"wllimit":250,"flaggedrevssimpleui":1,"flaggedrevsstable":false,"flaggedrevseditdiffs":true,"flaggedrevsviewdiffs":false,"vector-simplesearch":1,"useeditwarning":1,"vector-collapsiblenav":1,"usebetatoolbar":1,"usebetatoolbar-cgd":1,"variant":"en","language":"en","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false,"searchNs100":false,"searchNs101":false,"searchNs108":false,"searchNs109":false});;mediaWiki.loader.state({"user.options":"ready"});
+	
+	/* cache key: enwiki:resourceloader:filter:minify-js:5:27c920e3d777c540f5f38bf4516bf8fd */
+}
+</script><script type="text/javascript" src="Memory-mapped_file_files/a"></script>		<!-- fixalpha -->
+		<script type="text/javascript"> if ( window.isMSIE55 ) fixalpha(); </script>
+		<!-- /fixalpha -->
+		<!-- Served by srv233 in 0.442 secs. -->			<div class="suggestions" style="top: 72px; width: 204px; display: none; left: auto; right: 29px;"><div class="suggestions-results"></div><div class="suggestions-special"></div></div></body></html>

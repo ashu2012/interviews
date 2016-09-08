@@ -1,0 +1,1245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+
+
+	<title>
+	Map / Reduce – A visual explanation
+</title><meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="author" content="Ayende Rahien">
+<meta name="Generator" content="Subtext Version 2.0.0.0">
+<link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://feeds.feedburner.com/AyendeRahien">
+<link type="text/css" rel="stylesheet" href="map-reduce-ndash-a-visual-explanation.aspx_files/css.css">
+<link id="Rsd" rel="EditURI" type="application/rsd+xml" title="RSD" href="http://ayende.com/Blog/rsd.xml.ashx"><link id="AtomLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://feeds.feedburner.com/AyendeRahien">
+		<script type="text/javascript" src="map-reduce-ndash-a-visual-explanation.aspx_files/common.js"></script>
+		<script type="text/javascript">
+			var subtextAllowedHtmlTags = ['a', 'b', 'strong', 'blockquote', 'p', 'i', 'em', 'u', 'strike', 'super', 'sub', 'code'];
+			var subtextBlogInfo = new blogInfo('/Blog/', '/Blog/');
+		</script>
+		<link rel="pingback" href="http://ayende.com/Blog/Services/Pingback.aspx"></head><body>
+		<form name="Form1" method="post" action="map-reduce-ndash-a-visual-explanation.aspx" id="Form1">
+<div>
+<input name="PostComment_ascx_ctl00_answer" id="PostComment_ascx_ctl00_answer" value="" type="hidden">
+<input name="__EVENTTARGET" id="__EVENTTARGET" value="" type="hidden">
+<input name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" type="hidden">
+<input name="__VIEWSTATE" id="__VIEWSTATE" value="" type="hidden">
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['Form1'];
+if (!theForm) {
+    theForm = document.Form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="map-reduce-ndash-a-visual-explanation.aspx_files/WebResource.js" type="text/javascript"></script>
+
+
+<script src="map-reduce-ndash-a-visual-explanation.aspx_files/ScriptResource.js" type="text/javascript"></script>
+<script src="map-reduce-ndash-a-visual-explanation.aspx_files/ScriptResource_003.js" type="text/javascript"></script>
+<script src="map-reduce-ndash-a-visual-explanation.aspx_files/ScriptResource_002.js" type="text/javascript"></script>
+<div>
+
+	<input name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" type="hidden">
+	<input name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" type="hidden">
+</div>
+            <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('SubtextScriptManager', document.getElementById('Form1'));
+Sys.WebForms.PageRequestManager.getInstance()._updateControls(['tcommentsUpdatePanelWrapper'], [], [], 90);
+//]]>
+</script>
+
+			
+<div id="main">
+    
+<div id="header">
+	<div id="logoarea">
+		<div id="logoimage">
+			<a href="http://www.ayende.com/Blog/">
+				<img alt="Ayende's Logo" class="topLogo" src="map-reduce-ndash-a-visual-explanation.aspx_files/logo.jpg">
+			</a>
+		</div>
+		<div class="header_title"><a id="Header1_HeaderTitle" title="The Title Of This Blog." href="http://ayende.com/Blog/Default.aspx">Ayende @ Rahien</a></div>
+		<div class="header_subtitle">Unnatural acts on source code</div>
+	</div>
+</div>
+
+   <script language="JavaScript" src="map-reduce-ndash-a-visual-explanation.aspx_files/audio-player.js"></script>
+   <script language="JavaScript" src="map-reduce-ndash-a-visual-explanation.aspx_files/jquery-1.js"></script>
+   <script type="text/javascript"> 
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script><script src="map-reduce-ndash-a-visual-explanation.aspx_files/ga.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        var pageTracker = _gat._getTracker("UA-5476351-1");
+        pageTracker._trackPageview();
+    </script>
+
+    <div id="mainBody">
+        <div id="sidebar">
+	
+            <div class="section">
+                <h3>NHibernate Course</h3>
+                <p>Advanced NHibernate Course, March 7 - 9, 2011. Dallas, Texas.</p>
+		<p><a href="http://www.eventbee.com/view/dallas-nhibernate">Register NOW for early bird pricing</a></p>
+            </div>
+          
+		
+            <div class="section">
+<div id="lqdmad">
+<div style="display: none;" id="lqdmrd"><a href="http://lakequincy.com/devmavens">Microsoft Advertising</a> loading...</div>
+<p class="dmAdText">
+    <a href="http://lakequincy.com/devmavens">Ads Via Dev<b>Mavens</b></a>
+</p>
+<div>
+<div class="lqm_ad" lqm_channel="1" lqm_publisher="783" lqm_zone="1" lqm_format="20"><a href="http://a.lakequincy.com/c.ashx?channel=1&amp;format=20&amp;pageid=D89BE2DD-3355-CFE5-B3CC-5BAEFCBFCC4B&amp;publisher=783&amp;tags=undefined%2cmap%2c+reduce&amp;target=_blank&amp;ypos=389&amp;zone=1&amp;renderhtml=true&amp;callback=jsonp1302760467878&amp;url=http%253A%252F%252Fayende.com%252FBlog%252Farchive%252F2010%252F03%252F14%252Fmap-reduce-ndash-a-visual-explanation.aspx&amp;country=IN&amp;userguid=00000000-0000-0000-0000-000000000000&amp;placement=9723&amp;creative=9018" target="_blank"><img src="map-reduce-ndash-a-visual-explanation.aspx_files/634327644230973642.jpg" alt="Click Here" class="dmAdImg" border="0" height="90" width="120"></a><p class="dmAdText">Telerik JustCode - the code analysis and refactoring tool that saves your time. <a href="http://a.lakequincy.com/c.ashx?channel=1&amp;format=20&amp;pageid=D89BE2DD-3355-CFE5-B3CC-5BAEFCBFCC4B&amp;publisher=783&amp;tags=undefined%2cmap%2c+reduce&amp;target=_blank&amp;ypos=389&amp;zone=1&amp;renderhtml=true&amp;callback=jsonp1302760467878&amp;url=http%253A%252F%252Fayende.com%252FBlog%252Farchive%252F2010%252F03%252F14%252Fmap-reduce-ndash-a-visual-explanation.aspx&amp;country=IN&amp;userguid=00000000-0000-0000-0000-000000000000&amp;placement=9723&amp;creative=9018" target="_blank">Try now!</a></p></div>
+<a href="http://lakequincy.com/?783" style="text-align: right; font-size: 8px; display: block; color: rgb(0, 0, 0); text-decoration: none; font-family: Sans-Serif; margin: 0pt; padding: 0pt;">Ads by Lake Quincy Media</a>
+</div>
+</div>
+            </div>
+            <div class="section">
+                <h3>
+                    My Book</h3>
+                <a href="http://www.manning.com/affiliate/idevaffiliate.php?id=854_111">
+                    <img src="map-reduce-ndash-a-visual-explanation.aspx_files/rahien_cover150.jpg" alt="DSLs in Boo Cover" border="0"><br>
+                    DSLs in BOO</a>
+            </div>
+         <div class="section">
+			<h3>Future Posts</h3>
+			<div id="futurePosts">
+<ol>
+	
+	<li>
+		3 hours
+		<br>
+		Performance numbers in the pub</li>
+	
+	<li>
+		1 day
+		<br>
+		Code Review: Who Can Help Me</li>
+	
+	<li>
+		2 days
+		<br>
+		Humane dates in RavenDB</li>
+	
+	<li>
+		3 days
+		<br>
+		RavenDB: Safe by default design – it works!</li>
+	
+	<li>
+		4 days
+		<br>
+		When unit testing a server, why not USE the server?</li>
+	
+	<li>
+		5 days
+		<br>
+		What were you doing with last year logs?</li>
+	
+	<li>
+		6 days
+		<br>
+		Find the bug: Why do I get a Null Reference Exception?</li>
+	
+	<li>
+		7 days
+		<br>
+		When race conditions &amp; unbounded result sets are actually the solution</li>
+	
+	<li>
+		8 days
+		<br>
+		When race conditions &amp; unbounded result sets are actually the solution – the resolution</li>
+	
+	<li>
+		9 days
+		<br>
+		I would like to busy too, but…</li>
+	
+</ol>
+</div>
+			<script langauge="javascript">
+				$('#futurePosts').load('http://ayende.com/Blog/FuturePosts.aspx');
+			</script>
+         </div>
+        <div class="section">
+            <h3>
+                Contact me:</h3>
+            <p>
+                My name is Oren Eini and you can reach me by email:<br>
+                <a href="mailto:Ayende@ayende.com">Ayende@ayende.com</a><br>
+                Cell: +972 52-548-6969 
+                <br>
+                <a href="http://www.ayende.com/about-me.aspx">About me</a></p>
+        </div>
+         <div class="section">
+            <h3>NHibernate</h3>
+            <p>
+            <a href="http://nhforge.org/">NHibernate Homepage</a>
+            </p>
+        </div>
+        
+            <div class="section">
+                
+<h3>Blog Stats</h3>
+	<ul>
+		<li>Posts - 4801
+		<!--
+		<li>Stories - 0
+		<li>Trackbacks - 522
+		-->
+		</li><li>Comments - 32910
+	
+	</li>
+</ul>
+            </div>
+            <div class="section">
+                <h3>
+                    Subscribe:</h3>
+                <a href="http://feeds.feedburner.com/AyendeRahien">
+                    <img src="map-reduce-ndash-a-visual-explanation.aspx_files/AyendeRahien.gif" style="border: 0pt none;" alt="" height="26" width="88">
+                </a>
+            </div>
+            <div class="section">
+                
+<div id="recentComments">
+<h3>Recent Comments</h3>
+
+              <ul>
+       
+              <li><a id="RecentComments1_feedList_ctl01_Link" title="Reader Comment." href="http://ayende.com/Blog/archive/2011/04/12/the-seven-deadly-sins-for-the-developer-some-restrictions.aspx#44924">@FredrikHow is it possible you've seen this in pro...</a><br>by Me</li>
+       
+              <li><a id="RecentComments1_feedList_ctl02_Link" title="Reader Comment." href="http://ayende.com/Blog/archive/2011/04/12/the-seven-deadly-sins-for-the-developer-some-restrictions.aspx#44923">@TonyOf the original 7 deadly sins, from the Bible...</a><br>by fschwiet</li>
+       
+              <li><a id="RecentComments1_feedList_ctl03_Link" title="Reader Comment." href="http://ayende.com/Blog/archive/2011/04/12/the-seven-deadly-sins-for-the-developer-some-restrictions.aspx#44922">// C# .net codeApplication.DoEvents();NOOOOOOOOOOO...</a><br>by Adam Langley</li>
+       
+              <li><a id="RecentComments1_feedList_ctl04_Link" title="Reader Comment." href="http://ayende.com/Blog/archive/2011/04/12/the-seven-deadly-sins-for-the-developer-some-restrictions.aspx#44921">public class SomeWrapper : IDisposable{  private A...</a><br>by Adam Langley</li>
+       
+              <li><a id="RecentComments1_feedList_ctl05_Link" title="Reader Comment." href="http://ayende.com/Blog/archive/2011/04/12/the-seven-deadly-sins-for-the-developer-some-restrictions.aspx#44920">Just lazy... only writing 3 out of 7.</a><br>by Russell Wilson</li>
+       
+              </ul>
+       
+</div>
+            </div>
+            <div class="section">
+                
+<h3>My Links</h3>
+<ul>
+	<li><a id="MyLinks1_HomeLink" title="Link to the home page." href="http://ayende.com/Blog/Default.aspx">Home</a></li>
+	<li><a id="MyLinks1_ContactLink" accesskey="9" title="Contact form." href="http://ayende.com/Blog/contact.aspx">Contact</a></li>
+	<li><a id="MyLinks1_Syndication" title="Subscribe to this feed." href="http://feeds.feedburner.com/AyendeRahien">Syndication</a><a id="MyLinks1_XMLLink" title="Subscribe to this feed." href="http://feeds.feedburner.com/AyendeRahien"><img title="Subscribe to this feed." src="map-reduce-ndash-a-visual-explanation.aspx_files/xml.gif" style="border-width: 0px;"></a></li>
+	<li><a id="MyLinks1_Admin" title="Login Form." href="http://ayende.com/Blog/login.aspx">Login</a></li>
+</ul>
+            </div>
+            <div class="section">
+                
+
+            </div>
+            <div class="section">
+                
+		<h3>Post Categories</h3>
+		
+				<ul>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl01_Link" title="" rel="" href="http://ayende.com/Blog/category/544.aspx">Agile</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl01_RssLink" title="Subscribe to Agile" href="http://ayende.com/Blog/category/544.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl02_Link" title="" rel="" href="http://ayende.com/Blog/category/497.aspx">Ajax</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl02_RssLink" title="Subscribe to Ajax" href="http://ayende.com/Blog/category/497.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl03_Link" title="" rel="" href="http://ayende.com/Blog/category/546.aspx">ALT.NET</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl03_RssLink" title="Subscribe to ALT.NET" href="http://ayende.com/Blog/category/546.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl04_Link" title="" rel="" href="http://ayende.com/Blog/category/563.aspx">Architecture</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl04_RssLink" title="Subscribe to Architecture" href="http://ayende.com/Blog/category/563.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl05_Link" title="" rel="" href="http://ayende.com/Blog/category/451.aspx">Binsor</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl05_RssLink" title="Subscribe to Binsor" href="http://ayende.com/Blog/category/451.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl06_Link" title="" rel="" href="http://ayende.com/Blog/category/536.aspx">Blog</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl06_RssLink" title="Subscribe to Blog" href="http://ayende.com/Blog/category/536.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl07_Link" title="" rel="" href="http://ayende.com/Blog/category/498.aspx">Boo</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl07_RssLink" title="Subscribe to Boo" href="http://ayende.com/Blog/category/498.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl08_Link" title="" rel="" href="http://ayende.com/Blog/category/460.aspx">Books</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl08_RssLink" title="Subscribe to Books" href="http://ayende.com/Blog/category/460.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl09_Link" title="" rel="" href="http://ayende.com/Blog/category/499.aspx">Bugs</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl09_RssLink" title="Subscribe to Bugs" href="http://ayende.com/Blog/category/499.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl10_Link" title="" rel="" href="http://ayende.com/Blog/category/500.aspx">C#</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl10_RssLink" title="Subscribe to C#" href="http://ayende.com/Blog/category/500.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl11_Link" title="" rel="" href="http://ayende.com/Blog/category/489.aspx">Castle</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl11_RssLink" title="Subscribe to Castle" href="http://ayende.com/Blog/category/489.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl12_Link" title="" rel="" href="http://ayende.com/Blog/category/567.aspx">Cloud</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl12_RssLink" title="Subscribe to Cloud" href="http://ayende.com/Blog/category/567.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl13_Link" title="" rel="" href="http://ayende.com/Blog/category/456.aspx">CodeGen</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl13_RssLink" title="Subscribe to CodeGen" href="http://ayende.com/Blog/category/456.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl14_Link" title="" rel="" href="http://ayende.com/Blog/category/457.aspx">Community</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl14_RssLink" title="Subscribe to Community" href="http://ayende.com/Blog/category/457.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl15_Link" title="" rel="" href="http://ayende.com/Blog/category/502.aspx">Databases</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl15_RssLink" title="Subscribe to Databases" href="http://ayende.com/Blog/category/502.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl16_Link" title="" rel="" href="http://ayende.com/Blog/category/504.aspx">Design</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl16_RssLink" title="Subscribe to Design" href="http://ayende.com/Blog/category/504.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl17_Link" title="" rel="" href="http://ayende.com/Blog/category/467.aspx">Development</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl17_RssLink" title="Subscribe to Development" href="http://ayende.com/Blog/category/467.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl18_Link" title="" rel="" href="http://ayende.com/Blog/category/543.aspx">DevTeach</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl18_RssLink" title="Subscribe to DevTeach" href="http://ayende.com/Blog/category/543.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl19_Link" title="" rel="" href="http://ayende.com/Blog/category/547.aspx">Domain Specific Languages</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl19_RssLink" title="Subscribe to Domain Specific Languages" href="http://ayende.com/Blog/category/547.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl20_Link" title="" rel="" href="http://ayende.com/Blog/category/468.aspx">DotNetRocks</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl20_RssLink" title="Subscribe to DotNetRocks" href="http://ayende.com/Blog/category/468.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl21_Link" title="" rel="" href="http://ayende.com/Blog/category/562.aspx">EF Prof</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl21_RssLink" title="Subscribe to EF Prof" href="http://ayende.com/Blog/category/562.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl22_Link" title="" rel="" href="http://ayende.com/Blog/category/557.aspx">Git</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl22_RssLink" title="Subscribe to Git" href="http://ayende.com/Blog/category/557.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl23_Link" title="" rel="" href="http://ayende.com/Blog/category/458.aspx">Hardware</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl23_RssLink" title="Subscribe to Hardware" href="http://ayende.com/Blog/category/458.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl24_Link" title="" rel="" href="http://ayende.com/Blog/category/471.aspx">Hebrew</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl24_RssLink" title="Subscribe to Hebrew" href="http://ayende.com/Blog/category/471.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl25_Link" title="" rel="" href="http://ayende.com/Blog/category/541.aspx">Hibernating Rhinos</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl25_RssLink" title="Subscribe to Hibernating Rhinos" href="http://ayende.com/Blog/category/541.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl26_Link" title="" rel="" href="http://ayende.com/Blog/category/472.aspx">Humor</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl26_RssLink" title="Subscribe to Humor" href="http://ayende.com/Blog/category/472.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl27_Link" title="" rel="" href="http://ayende.com/Blog/category/474.aspx">Interviews</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl27_RssLink" title="Subscribe to Interviews" href="http://ayende.com/Blog/category/474.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl28_Link" title="" rel="" href="http://ayende.com/Blog/category/506.aspx">IoC</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl28_RssLink" title="Subscribe to IoC" href="http://ayende.com/Blog/category/506.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl29_Link" title="" rel="" href="http://ayende.com/Blog/category/560.aspx">L2SProf</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl29_RssLink" title="Subscribe to L2SProf" href="http://ayende.com/Blog/category/560.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl30_Link" title="" rel="" href="http://ayende.com/Blog/category/507.aspx">Langauges</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl30_RssLink" title="Subscribe to Langauges" href="http://ayende.com/Blog/category/507.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl31_Link" title="" rel="" href="http://ayende.com/Blog/category/508.aspx">Legacy</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl31_RssLink" title="Subscribe to Legacy" href="http://ayende.com/Blog/category/508.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl32_Link" title="" rel="" href="http://ayende.com/Blog/category/566.aspx">LumenQ</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl32_RssLink" title="Subscribe to LumenQ" href="http://ayende.com/Blog/category/566.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl33_Link" title="" rel="" href="http://ayende.com/Blog/category/556.aspx">Macto</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl33_RssLink" title="Subscribe to Macto" href="http://ayende.com/Blog/category/556.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl34_Link" title="" rel="" href="http://ayende.com/Blog/category/550.aspx">Messaging</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl34_RssLink" title="Subscribe to Messaging" href="http://ayende.com/Blog/category/550.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl35_Link" title="" rel="" href="http://ayende.com/Blog/category/480.aspx">Microsoft</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl35_RssLink" title="Subscribe to Microsoft" href="http://ayende.com/Blog/category/480.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl36_Link" title="" rel="" href="http://ayende.com/Blog/category/482.aspx">Miscellaneous</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl36_RssLink" title="Subscribe to Miscellaneous" href="http://ayende.com/Blog/category/482.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl37_Link" title="" rel="" href="http://ayende.com/Blog/category/551.aspx">NH Prof</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl37_RssLink" title="Subscribe to NH Prof" href="http://ayende.com/Blog/category/551.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl38_Link" title="" rel="" href="http://ayende.com/Blog/category/510.aspx">NHibernate</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl38_RssLink" title="Subscribe to NHibernate" href="http://ayende.com/Blog/category/510.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl39_Link" title="" rel="" href="http://ayende.com/Blog/category/565.aspx">NoSQL</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl39_RssLink" title="Subscribe to NoSQL" href="http://ayende.com/Blog/category/565.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl40_Link" title="" rel="" href="http://ayende.com/Blog/category/549.aspx">NServiceBus</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl40_RssLink" title="Subscribe to NServiceBus" href="http://ayende.com/Blog/category/549.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl41_Link" title="" rel="" href="http://ayende.com/Blog/category/511.aspx">O/R Mappers</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl41_RssLink" title="Subscribe to O/R Mappers" href="http://ayende.com/Blog/category/511.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl42_Link" title="" rel="" href="http://ayende.com/Blog/category/488.aspx">Open Source</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl42_RssLink" title="Subscribe to Open Source" href="http://ayende.com/Blog/category/488.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl43_Link" title="" rel="" href="http://ayende.com/Blog/category/493.aspx">Performance</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl43_RssLink" title="Subscribe to Performance" href="http://ayende.com/Blog/category/493.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl44_Link" title="" rel="" href="http://ayende.com/Blog/category/494.aspx">Ponderring</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl44_RssLink" title="Subscribe to Ponderring" href="http://ayende.com/Blog/category/494.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl45_Link" title="" rel="" href="http://ayende.com/Blog/category/495.aspx">Presentations</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl45_RssLink" title="Subscribe to Presentations" href="http://ayende.com/Blog/category/495.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl46_Link" title="" rel="" href="http://ayende.com/Blog/category/496.aspx">Programming</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl46_RssLink" title="Subscribe to Programming" href="http://ayende.com/Blog/category/496.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl47_Link" title="" rel="" href="http://ayende.com/Blog/category/564.aspx">Raven</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl47_RssLink" title="Subscribe to Raven" href="http://ayende.com/Blog/category/564.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl48_Link" title="" rel="" href="http://ayende.com/Blog/category/524.aspx">Reviews</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl48_RssLink" title="Subscribe to Reviews" href="http://ayende.com/Blog/category/524.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl49_Link" title="" rel="" href="http://ayende.com/Blog/category/486.aspx">Rhino Commons</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl49_RssLink" title="Subscribe to Rhino Commons" href="http://ayende.com/Blog/category/486.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl50_Link" title="" rel="" href="http://ayende.com/Blog/category/555.aspx">Rhino DHT</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl50_RssLink" title="Subscribe to Rhino DHT" href="http://ayende.com/Blog/category/555.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl51_Link" title="" rel="" href="http://ayende.com/Blog/category/558.aspx">Rhino DivanDB</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl51_RssLink" title="Subscribe to Rhino DivanDB" href="http://ayende.com/Blog/category/558.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl52_Link" title="" rel="" href="http://ayende.com/Blog/category/545.aspx">Rhino ETL</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl52_RssLink" title="Subscribe to Rhino ETL" href="http://ayende.com/Blog/category/545.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl53_Link" title="" rel="" href="http://ayende.com/Blog/category/487.aspx">Rhino Mocks</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl53_RssLink" title="Subscribe to Rhino Mocks" href="http://ayende.com/Blog/category/487.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl54_Link" title="" rel="" href="http://ayende.com/Blog/category/548.aspx">Rhino Security</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl54_RssLink" title="Subscribe to Rhino Security" href="http://ayende.com/Blog/category/548.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl55_Link" title="" rel="" href="http://ayende.com/Blog/category/554.aspx">Rhino Service Bus</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl55_RssLink" title="Subscribe to Rhino Service Bus" href="http://ayende.com/Blog/category/554.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl56_Link" title="" rel="" href="http://ayende.com/Blog/category/514.aspx">Subversion</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl56_RssLink" title="Subscribe to Subversion" href="http://ayende.com/Blog/category/514.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl57_Link" title="" rel="" href="http://ayende.com/Blog/category/492.aspx">Suse</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl57_RssLink" title="Subscribe to Suse" href="http://ayende.com/Blog/category/492.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl58_Link" title="" rel="" href="http://ayende.com/Blog/category/515.aspx">Test Driven Development</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl58_RssLink" title="Subscribe to Test Driven Development" href="http://ayende.com/Blog/category/515.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl59_Link" title="" rel="" href="http://ayende.com/Blog/category/561.aspx">UberProf</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl59_RssLink" title="Subscribe to UberProf" href="http://ayende.com/Blog/category/561.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl60_Link" title="" rel="" href="http://ayende.com/Blog/category/532.aspx">version dotNext</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl60_RssLink" title="Subscribe to version dotNext" href="http://ayende.com/Blog/category/532.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl61_Link" title="" rel="" href="http://ayende.com/Blog/category/534.aspx">War Stories</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl61_RssLink" title="Subscribe to War Stories" href="http://ayende.com/Blog/category/534.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl62_Link" title="" rel="" href="http://ayende.com/Blog/category/453.aspx">Wheel Of Time</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl62_RssLink" title="Subscribe to Wheel Of Time" href="http://ayende.com/Blog/category/453.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl63_Link" title="" rel="" href="http://ayende.com/Blog/category/519.aspx">WPF</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl63_RssLink" title="Subscribe to WPF" href="http://ayende.com/Blog/category/519.aspx/rss">(rss)</a></li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl64_Link" title="" rel="" href="http://ayende.com/Blog/category/540.aspx">WTF?!</a> <a id="ArchiveLinks1_Categories_CatList_ctl00_LinkList_ctl64_RssLink" title="Subscribe to WTF?!" href="http://ayende.com/Blog/category/540.aspx/rss">(rss)</a></li>
+			
+				</ul>
+			
+	
+		<h3>Archives</h3>
+		
+				<ul>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl01_Link" title="" rel="" href="http://ayende.com/Blog/archive/2011/04.aspx">April, 2011 (13)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl02_Link" title="" rel="" href="http://ayende.com/Blog/archive/2011/03.aspx">March, 2011 (23)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl03_Link" title="" rel="" href="http://ayende.com/Blog/archive/2011/02.aspx">February, 2011 (11)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl04_Link" title="" rel="" href="http://ayende.com/Blog/archive/2011/01.aspx">January, 2011 (26)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl05_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/12.aspx">December, 2010 (29)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl06_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/11.aspx">November, 2010 (27)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl07_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/10.aspx">October, 2010 (35)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl08_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/09.aspx">September, 2010 (33)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl09_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/08.aspx">August, 2010 (44)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl10_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/07.aspx">July, 2010 (17)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl11_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/06.aspx">June, 2010 (20)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl12_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/05.aspx">May, 2010 (53)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl13_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/04.aspx">April, 2010 (29)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl14_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/03.aspx">March, 2010 (35)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl15_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/02.aspx">February, 2010 (33)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl16_Link" title="" rel="" href="http://ayende.com/Blog/archive/2010/01.aspx">January, 2010 (36)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl17_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/12.aspx">December, 2009 (37)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl18_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/11.aspx">November, 2009 (35)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl19_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/10.aspx">October, 2009 (53)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl20_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/09.aspx">September, 2009 (60)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl21_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/08.aspx">August, 2009 (66)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl22_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/07.aspx">July, 2009 (29)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl23_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/06.aspx">June, 2009 (24)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl24_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/05.aspx">May, 2009 (52)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl25_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/04.aspx">April, 2009 (63)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl26_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/03.aspx">March, 2009 (35)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl27_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/02.aspx">February, 2009 (53)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl28_Link" title="" rel="" href="http://ayende.com/Blog/archive/2009/01.aspx">January, 2009 (50)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl29_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/12.aspx">December, 2008 (58)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl30_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/11.aspx">November, 2008 (65)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl31_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/10.aspx">October, 2008 (46)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl32_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/09.aspx">September, 2008 (48)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl33_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/08.aspx">August, 2008 (96)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl34_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/07.aspx">July, 2008 (87)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl35_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/06.aspx">June, 2008 (45)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl36_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/05.aspx">May, 2008 (51)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl37_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/04.aspx">April, 2008 (52)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl38_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/03.aspx">March, 2008 (70)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl39_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/02.aspx">February, 2008 (43)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl40_Link" title="" rel="" href="http://ayende.com/Blog/archive/2008/01.aspx">January, 2008 (49)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl41_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/12.aspx">December, 2007 (100)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl42_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/11.aspx">November, 2007 (52)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl43_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/10.aspx">October, 2007 (109)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl44_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/09.aspx">September, 2007 (68)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl45_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/08.aspx">August, 2007 (80)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl46_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/07.aspx">July, 2007 (56)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl47_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/06.aspx">June, 2007 (150)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl48_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/05.aspx">May, 2007 (115)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl49_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/04.aspx">April, 2007 (73)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl50_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/03.aspx">March, 2007 (124)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl51_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/02.aspx">February, 2007 (102)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl52_Link" title="" rel="" href="http://ayende.com/Blog/archive/2007/01.aspx">January, 2007 (68)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl53_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/12.aspx">December, 2006 (95)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl54_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/11.aspx">November, 2006 (51)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl55_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/10.aspx">October, 2006 (115)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl56_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/09.aspx">September, 2006 (56)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl57_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/08.aspx">August, 2006 (88)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl58_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/07.aspx">July, 2006 (54)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl59_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/06.aspx">June, 2006 (103)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl60_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/05.aspx">May, 2006 (89)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl61_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/04.aspx">April, 2006 (84)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl62_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/03.aspx">March, 2006 (143)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl63_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/02.aspx">February, 2006 (78)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl64_Link" title="" rel="" href="http://ayende.com/Blog/archive/2006/01.aspx">January, 2006 (64)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl65_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/12.aspx">December, 2005 (70)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl66_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/11.aspx">November, 2005 (97)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl67_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/10.aspx">October, 2005 (91)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl68_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/09.aspx">September, 2005 (61)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl69_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/08.aspx">August, 2005 (74)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl70_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/07.aspx">July, 2005 (92)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl71_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/06.aspx">June, 2005 (100)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl72_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/05.aspx">May, 2005 (53)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl73_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/04.aspx">April, 2005 (42)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl74_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/03.aspx">March, 2005 (41)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl75_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/02.aspx">February, 2005 (84)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl76_Link" title="" rel="" href="http://ayende.com/Blog/archive/2005/01.aspx">January, 2005 (31)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl77_Link" title="" rel="" href="http://ayende.com/Blog/archive/2004/12.aspx">December, 2004 (49)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl78_Link" title="" rel="" href="http://ayende.com/Blog/archive/2004/11.aspx">November, 2004 (26)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl79_Link" title="" rel="" href="http://ayende.com/Blog/archive/2004/10.aspx">October, 2004 (26)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl80_Link" title="" rel="" href="http://ayende.com/Blog/archive/2004/09.aspx">September, 2004 (6)</a> </li>
+			
+				<li><a id="ArchiveLinks1_Categories_CatList_ctl01_LinkList_ctl81_Link" title="" rel="" href="http://ayende.com/Blog/archive/2004/04.aspx">April, 2004 (10)</a> </li>
+			
+				</ul>
+			
+	
+
+            </div>
+            <div class="section">
+                
+            </div>
+        
+    </div>
+    <div id="content">
+        
+					
+
+
+<script type="text/javascript">
+function AddDotNetKicks()
+{
+    var insertLocation = document.getElementById('postToolbar');
+    if(insertLocation)
+    {
+        var currentPageUrl = document.location.protocol + "//" + document.location.host + document.location.pathname;
+        var dotnetkicksLink = document.createElement('a');
+        dotnetkicksLink.href = 'http://www.dotnetkicks.com/kick/?url=' + currentPageUrl;
+        var dotnetkicksImg = document.createElement('IMG');
+        dotnetkicksImg.src = 'http://www.dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=' + currentPageUrl;
+        dotnetkicksImg.border = 0;
+        dotnetkicksLink.appendChild(dotnetkicksImg);
+        insertLocation.appendChild(dotnetkicksLink);
+    }
+}
+
+
+function addLoadEvent(fn)
+{
+    if (window.addEventListener)
+        window.addEventListener('load', fn, false)
+    else if (window.attachEvent)
+        window.attachEvent('onload', fn);
+}
+addLoadEvent(AddDotNetKicks);
+</script>
+	<div class="post">
+		<p>
+			<a id="viewpost_ascx_TitleUrl" title="Title of this entry." class="TitleLinkStyle" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx">Map / Reduce – A visual explanation</a>
+		</p>
+		
+
+ <style type="text/css">
+
+        #headerPrevNext * { padding: 0; margin: 0 } /* just a reset */
+
+
+
+        #headerPrevNext { color: #993300; font-family: Verdana; }
+
+        #headerPrevNext h1 { background-color: #ffcc66; border-bottom: 1px solid #999999; font-family: Georgia; font-size: 0.9em; padding: 4px; text-align: center; }
+
+        #headerPrevNext ul { margin-top: 3px; margin-left: 3px; color: #993300 }
+
+        #headerPrevNext li { display: inline; font-size: 0.7em }
+
+        #headerPrevNext li em { color: #cc8514; font-family: Georgia; padding-right: 3px }
+
+        #headerPrevNext li:nth-child(2), #headerPrevNext li:nth-child(4) { color: #4c1a00; }
+
+        #headerPrevNext a { color: inherit; padding: 2px; text-decoration: none; }
+
+        #headerPrevNext a:hover, #headerPrevNext a:hover em { background-color: #993300; color: #ffffff; }
+
+        
+
+    </style>
+
+
+<div id="headerPrevNext">
+<ul>
+	<li><a id="viewpost_ascx_PreviousNext_MainLink" href="http://ayende.com/Blog/Default.aspx">Home</a></li>
+
+	<li><a id="viewpost_ascx_PreviousNext_PrevLink" title="previous post" href="http://ayende.com/Blog/archive/2010/03/13/nhibernate-symbol-amp-source-server-support.aspx">previous: NHibernate symbol &amp; source server support</a></li>
+
+	<li><a id="viewpost_ascx_PreviousNext_NextLink" title="next post" href="http://ayende.com/Blog/archive/2010/03/15/what-is-mapreduce-for-anyway.aspx">next: What is map/reduce for, anyway?</a></li>
+</ul>
+</div>
+<!--
+
+<span id="viewpost_ascx_PreviousNext_LeftPipe" class="prevNextSeparator"> | </span>
+<span id="viewpost_ascx_PreviousNext_RightPipe" class="prevNextSeparator"> | </span>
+
+-->
+
+		<p>Map/Reduce is a term commonly thrown about these days, in essence, 
+it is just a way to take a big task and divide it into discrete tasks 
+that can be done in parallel. A common use case for Map/Reduce is in 
+document database, which is why I found myself thinking deeply about 
+this.</p>  <p>Let us say that we have a set of documents with the following form:</p>  <blockquote>   <pre class="csharpcode">{
+  <span class="str">"type"</span>: <span class="str">"post"</span>,
+  <span class="str">"name"</span>: <span class="str">"Raven's Map/Reduce functionality"</span>,
+  <span class="str">"blog_id"</span>: 1342,
+  <span class="str">"post_id"</span>: 29293921,
+  <span class="str">"tags"</span>: [<span class="str">"raven"</span>, <span class="str">"nosql"</span>],
+  <span class="str">"post_content"</span>: <span class="str">"&lt;p&gt;...&lt;/p&gt;"</span>,
+  <span class="str">"comments"</span>: [
+    { 
+      <span class="str">"source_ip"</span>: <span class="str">'124.2.21.2'</span>,
+      <span class="str">"author"</span>: <span class="str">"martin"</span>,
+      <span class="str">"text"</span>: <span class="str">"..."</span>
+  }]
+}</pre>
+  <style type="text/css"><![CDATA[
+.csharpcode {
+	background-color: #ffffff; font-family: consolas, "Courier New", courier, monospace; color: black; font-size: small
+}
+.csharpcode pre {
+	background-color: #ffffff; font-family: consolas, "Courier New", courier, monospace; color: black; font-size: small
+}
+.csharpcode pre {
+	margin: 0em
+}
+.csharpcode .rem {
+	color: #008000
+}
+.csharpcode .kwrd {
+	color: #0000ff
+}
+.csharpcode .str {
+	color: #006080
+}
+.csharpcode .op {
+	color: #0000c0
+}
+.csharpcode .preproc {
+	color: #cc6633
+}
+.csharpcode .asp {
+	background-color: #ffff00
+}
+.csharpcode .html {
+	color: #800000
+}
+.csharpcode .attr {
+	color: #ff0000
+}
+.csharpcode .alt {
+	background-color: #f4f4f4; margin: 0em; width: 100%
+}
+.csharpcode .lnum {
+	color: #606060
+}]]></style></blockquote>
+
+<p>And we want to answer a question over more than a single document. 
+That sort of operation requires us to use aggregation, and over large 
+amount of data, that is best done using Map/Reduce, to split the work.</p>
+
+<p>Map / Reduce is just a pair of functions, operating over a list of 
+data. In C#, LInq actually gives us a great chance to do things in a way
+ that make it very easy to understand and work with. Let us say that we 
+want to be about to get a count of comments per blog. We can do that 
+using the following Map / Reduce queries:</p>
+
+<blockquote>
+  <pre class="csharpcode"><font color="#0000ff">from</font> post <span class="kwrd">in</span> docs.posts
+<font color="#0000ff">select</font> <span class="kwrd">new</span> {
+  post.blog_id, 
+  comments_length = comments.length 
+  };
+
+<font color="#0000ff">from</font> agg <span class="kwrd">in</span> results
+<font color="#0000ff">group</font> agg by agg.key <font color="#0000ff">into</font> g
+<font color="#0000ff">select</font> <span class="kwrd">new</span> { 
+  agg.blog_id, 
+  comments_length = g.Sum(x=&gt;x.comments_length) 
+  };</pre>
+  <style type="text/css"><![CDATA[
+.csharpcode {
+	background-color: #ffffff; font-family: consolas, "Courier New", courier, monospace; color: black; font-size: small
+}
+.csharpcode pre {
+	background-color: #ffffff; font-family: consolas, "Courier New", courier, monospace; color: black; font-size: small
+}
+.csharpcode pre {
+	margin: 0em
+}
+.csharpcode .rem {
+	color: #008000
+}
+.csharpcode .kwrd {
+	color: #0000ff
+}
+.csharpcode .str {
+	color: #006080
+}
+.csharpcode .op {
+	color: #0000c0
+}
+.csharpcode .preproc {
+	color: #cc6633
+}
+.csharpcode .asp {
+	background-color: #ffff00
+}
+.csharpcode .html {
+	color: #800000
+}
+.csharpcode .attr {
+	color: #ff0000
+}
+.csharpcode .alt {
+	background-color: #f4f4f4; margin: 0em; width: 100%
+}
+.csharpcode .lnum {
+	color: #606060
+}]]></style></blockquote>
+
+<p>There are a couple of things to note here:</p>
+
+<ul>
+  <li>The first query is the map query, it maps the input document into the final format. </li>
+
+  <li>The second query is the reduce query, it operate over a set of results and produce an answer. </li>
+
+  <li>Note that the reduce query <em>must</em> return its result in the same format that it received it, why will be explained shortly. </li>
+
+  <li>The first value in the result is the key, which is what we are aggregating on (think the group by clause in SQL). </li>
+</ul>
+
+<p>Let us see how this works, we start by applying the map query to the set of documents that we have, producing this output:</p>
+
+<p><a href="http://ayende.com/Blog/images/ayende_com/Blog/WindowsLiveWriter/MapReduceAvisualexplanation_B89B/image_2.png"><img style="border-width: 0px; display: inline;" title="image" alt="image" src="map-reduce-ndash-a-visual-explanation.aspx_files/image_thumb.png" border="0" height="411" width="905"></a></p>
+
+<p>The next step is to start reducing the results, in real Map/Reduce 
+algorithms, we partition the original input, and work toward the final 
+result. In this case, imagine that the output of the first step was 
+divided into groups of 3 (so 4 groups overall), and then the reduce 
+query was applied to it, giving us:</p>
+
+<p><a href="http://ayende.com/Blog/images/ayende_com/Blog/WindowsLiveWriter/MapReduceAvisualexplanation_B89B/image_4.png"><img style="border: 0px none; display: inline;" title="image" alt="image" src="map-reduce-ndash-a-visual-explanation.aspx_files/image_thumb_1.png" border="0" height="597" width="647"></a> </p>
+
+<p>You can see why it was called reduce, for every batch, we apply a sum
+ by blog_id to get a new Total Comments value. We started with 11 rows, 
+and we ended up with just 10. That is where it gets interesting, because
+ we are still not done, we can still reduce the data further.</p>
+
+<p>This is what we do in the third step, reducing the data further 
+still. That is why the input &amp; output format of the reduce query 
+must match, we will feed the output of several the reduce queries as the
+ input of a new one. You can also see that now we moved from having 10 
+rows to have just 7.</p>
+
+<p><a href="http://ayende.com/Blog/images/ayende_com/Blog/WindowsLiveWriter/MapReduceAvisualexplanation_B89B/image_6.png"><img style="border: 0px none; display: inline;" title="image" alt="image" src="map-reduce-ndash-a-visual-explanation.aspx_files/image_thumb_2.png" border="0" height="593" width="632"></a> </p>
+
+<p>And the final step is:</p>
+
+<p><a href="http://ayende.com/Blog/images/ayende_com/Blog/WindowsLiveWriter/MapReduceAvisualexplanation_B89B/image_8.png"><img style="border: 0px none; display: inline;" title="image" alt="image" src="map-reduce-ndash-a-visual-explanation.aspx_files/image_thumb_3.png" border="0" height="341" width="623"></a> </p>
+
+<p>And now we are done, we can reduce the data any further because all the keys are unique.</p>
+
+<p>There is another interesting property of Map / Reduce, let us say 
+that I just added a comment to a post, that would obviously invalidate 
+the results of the query, right?</p>
+
+<p>Well, yes, but not <em>all </em>of them. Assuming that I added a comment to the post whose id is 10, what would I need to do to recalculate the right result?</p>
+
+<ul>
+  <li>Map Doc #10 again</li>
+
+  <li>Reduce Step 2, Batch #3 again</li>
+
+  <li>Reduce Step 3, Batch #1 again</li>
+
+  <li>Reduce Step 4</li>
+</ul>
+
+<p>What is important is that I did <em>not </em>have to touch quite a bit of the data, making the recalculation effort far cheaper than it would be otherwise.</p>
+
+<p>And that is (more or less) the notion of Map / Reduce.</p>
+		<div id="postToolbar"><a href="http://www.dotnetkicks.com/kick/?url=http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx"><img src="map-reduce-ndash-a-visual-explanation.aspx_files/KickItImageGenerator.png" border="0"></a></div>
+		<p class="postfoot">
+			<a href="javascript:window.print();" class="printIcon"><span>Print</span></a> | posted on Sunday, March 14, 2010 12:00 PM
+		</p>
+	</div>
+	<!--
+   <rdf:RDF 
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+
+      <rdf:Description
+         rdf:about="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx"
+         dc:identifier="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx"
+         dc:title="Map / Reduce &ndash; A visual explanation"
+         trackback:ping="http://ayende.com/Blog/services/trackbacks/11353.aspx" 
+      />
+   </rdf:RDF>
+-->
+	<div id="commentsUpdatePanelWrapper">
+	
+<a name="feedback" title="feedback anchor"></a>
+<div id="comments">
+<h3>Feedback</h3>
+	
+	
+			<div class="comment-anon">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl00_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/IdenticonHandler.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38706">#</a>&nbsp;<a name="38706"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 12:53 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl00_NameLink" title="anon" target="_blank">anon</a>
+				</h4>
+				<p>
+					hey!! thanks for the intro to map.reduce. heard about the term, never got around to investigating it. shall read more.
+					<a id="Comments_ascx_CommentList_ctl00_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl00$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Andre-Loker">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl01_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar.jpg" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38707">#</a>&nbsp;<a name="38707"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 1:20 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl01_NameLink" title="http://blog.andreloker.de/" href="http://blog.andreloker.de/" target="_blank">Andre Loker</a>
+				</h4>
+				<p>
+					Thanks a lot - another buzzword demystified!
+					<a id="Comments_ascx_CommentList_ctl01_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl01$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Torkel">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl02_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_006.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38708">#</a>&nbsp;<a name="38708"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 1:43 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl02_NameLink" title="http://www.codinginstinct.com/" href="http://www.codinginstinct.com/" target="_blank">Torkel</a>
+				</h4>
+				<p>
+					Great explaination. 
+					<a id="Comments_ascx_CommentList_ctl02_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl02$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Haacked">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl03_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_004.jpg" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38709">#</a>&nbsp;<a name="38709"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 8:49 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl03_NameLink" title="http://haacked.com/" href="http://haacked.com/" target="_blank">Haacked</a>
+				</h4>
+				<p>
+					Great visualization! What's interesting to me is that Map/Reduce 
+will only work with aggregation operations that are associative (and 
+commutative if allowed to be re-ordered) over the set of data.<br><br>I 
+wonder how often that comes up? Using a summation is an obvious choice 
+for map/reduce since addition is both associative and commutative.<br><br>However,
+ a set of navigation instructions would probably not work well with 
+map/reduce. I wonder what algorithms you would do then.
+					<a id="Comments_ascx_CommentList_ctl03_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl03$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Ayende-Rahien">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl04_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_002.jpg" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38710">#</a>&nbsp;<a name="38710"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 9:38 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl04_NameLink" title="http://ayende.com/Blog/" class="author" href="http://ayende.com/Blog/" target="_blank">Ayende Rahien</a>
+				</h4>
+				<p>
+					Haacked,<br>Average is a common thing to do that isn't easily associative.<br>You
+ handle that by splitting the operation into two distinct operations, 
+total count, and count of the values, both of which are associative, and
+ then apply the final op in the end.<br>The fun part is that by its very
+ nature, reduce requires you to perform the sort of operations that are 
+either naturally that way, or can be composed of operations with this 
+proeprty.<br><br>Calculating navigation is a weighted graph problem. That doesn't really lend itself to map/reduce solution set.<br>Look at tomorrow's post for more information about appropriate usage.
+					<a id="Comments_ascx_CommentList_ctl04_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl04$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Chris-Ballance">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl05_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_003.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38711">#</a>&nbsp;<a name="38711"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 9:43 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl05_NameLink" title="http://chrisballance.com/" href="http://chrisballance.com/" target="_blank">Chris Ballance</a>
+				</h4>
+				<p>
+					Great description and visualization of Map / Reduce.  Really appreciate the LINQ example.
+					<a id="Comments_ascx_CommentList_ctl05_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl05$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Frans-Bouma">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl06_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/IdenticonHandler_003.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38712">#</a>&nbsp;<a name="38712"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 9:45 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl06_NameLink" title="http://weblogs.asp.net/fbouma" href="http://weblogs.asp.net/fbouma" target="_blank">Frans Bouma</a>
+				</h4>
+				<p>
+					Original MapReduce paper by google (with graphical explanations as well)<br><a rel="nofollow external" href="http://labs.google.com/papers/mapreduce-osdi04.pdf" title="http://labs.google.com/papers/mapreduce-osdi04.pdf">http://labs.google.com/papers/mapreduce-osdi04.pdf</a><br><br>
+					<a id="Comments_ascx_CommentList_ctl06_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl06$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Haacked">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl07_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_004.jpg" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38713">#</a>&nbsp;<a name="38713"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/14/2010 10:01 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl07_NameLink" title="http://haacked.com/" href="http://haacked.com/" target="_blank">Haacked</a>
+				</h4>
+				<p>
+					I think that'll make a great follow-up blog post. Map/Reduce is 
+given so much attention now people tend to start thinking of it as a 
+hammer for all nails. It'd be good to see where it is and isn't 
+appropriate. :)
+					<a id="Comments_ascx_CommentList_ctl07_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl07$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Andrew">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl08_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/IdenticonHandler_002.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38714">#</a>&nbsp;<a name="38714"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 12:21 AM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl08_NameLink" title="Andrew" target="_blank">Andrew</a>
+				</h4>
+				<p>
+					.Net 4 with PLINK would probably let you use this exact query and be parallel.
+					<a id="Comments_ascx_CommentList_ctl08_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl08$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-David-M.-Sherr">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl09_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_009.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38715">#</a>&nbsp;<a name="38715"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 8:15 AM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl09_NameLink" title="http://www.newglobalenterprises.net/" href="http://www.newglobalenterprises.net/" target="_blank">David M. Sherr</a>
+				</h4>
+				<p>
+					What part of "fork" and "join" don't we understand?
+					<a id="Comments_ascx_CommentList_ctl09_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl09$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Ayende-Rahien">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl10_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_002.jpg" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38716">#</a>&nbsp;<a name="38716"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 9:58 AM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl10_NameLink" title="http://ayende.com/Blog/" class="author" href="http://ayende.com/Blog/" target="_blank">Ayende Rahien</a>
+				</h4>
+				<p>
+					You might want to explain what you mean here
+					<a id="Comments_ascx_CommentList_ctl10_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl10$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Claudio">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl11_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_003.jpg" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38717">#</a>&nbsp;<a name="38717"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 10:05 AM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl11_NameLink" title="http://theorymatters.wordpress.com/" href="http://theorymatters.wordpress.com/" target="_blank">Claudio</a>
+				</h4>
+				<p>
+					Good visualization.<br><br>Google made MapReduce famous, and most people think it's something really cool invented by Google. <br>MapReduce it's an old concept that belongs to Skeleton Programming Models, proposed by Murray Cole in 1989. <br><br>MapReduce
+ is a Data parallel skeleton, because is data-centric parallelism (while
+ pipeline/farm are called functional/stream parallel skeletons).<br><br>Just to mention, this is a page from 1993, a programming language (P3L), from the parallel programming group in Pisa: <a rel="nofollow external" href="http://www.di.unipi.it/%7Esusanna/p3lintro.html" title="http://www.di.unipi.it/~susanna/p3lintro.html">http://www.di.unipi.it/~susanna/p3lintro.html</a> , look for MAP/REDUCE :)<br><br>...Google patented it :)
+					<a id="Comments_ascx_CommentList_ctl11_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl11$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-DaringNoob">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl12_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38718">#</a>&nbsp;<a name="38718"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 4:13 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl12_NameLink" title="DaringNoob" target="_blank">DaringNoob</a>
+				</h4>
+				<p>
+					Map Reduce is the cloud version of multi-threading. It is not related to database queries.
+					<a id="Comments_ascx_CommentList_ctl12_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl12$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Dan-lash">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl13_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_002.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38719">#</a>&nbsp;<a name="38719"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 4:53 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl13_NameLink" title="http://danlash.com/" href="http://danlash.com/" target="_blank">Dan lash</a>
+				</h4>
+				<p>
+					"Note that the reduce query must return its result in the same format that it received it"<br><br>I
+ don't think this is universally true of reduce functions. The basic 
+reduce/fold function only specifices that a function is used to iterate 
+over a list and build up a return value. The return value *can* be 
+another list of items in the same structure, but it could also just be a
+ primitive.<br><br><a rel="nofollow external" href="http://en.wikipedia.org/wiki/Fold_" title="http://en.wikipedia.org/wiki/Fold_">http://en.wikipedia.org/wiki/Fold_</a>(higher-order_function)<br><br>"The
+ folding of the list [1,2,3,4,5] with the addition operator would result
+ in 15, the sum of the elements of the list [1,2,3,4,5]. To a rough 
+approximation, one can think of this fold as replacing the commas in the
+ list with the + operation, giving 1 + 2 + 3 + 4 + 5."<br><br>Specifically,
+ the reduce function used by Google's algorithms (and others) may 
+require that, but it is not the essense of reduce.
+					<a id="Comments_ascx_CommentList_ctl13_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl13$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Ayende-Rahien">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl14_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_002.jpg" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38720">#</a>&nbsp;<a name="38720"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 4:57 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl14_NameLink" title="http://ayende.com/Blog" href="http://ayende.com/Blog" target="_blank">Ayende Rahien</a>
+				</h4>
+				<p>
+					Dan,<br>It _IS_ required if you want to be able to split the results and combine them later on.<br>In other words, if you need to run the reduce function over the results of the reduce function.
+					<a id="Comments_ascx_CommentList_ctl14_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl14$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-hank">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl15_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_004.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38722">#</a>&nbsp;<a name="38722"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 8:12 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl15_NameLink" title="hank" target="_blank">hank</a>
+				</h4>
+				<p>
+					"And now we are done, we can reduce the data any further because all the keys are unique."<br><br>Did you mean "we can't" reduce?
+					<a id="Comments_ascx_CommentList_ctl15_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl15$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-munseym">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl16_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_007.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38723">#</a>&nbsp;<a name="38723"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 8:34 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl16_NameLink" title="munseym" target="_blank">munseym</a>
+				</h4>
+				<p>
+					More good coverage of Map/Reduce at <a rel="nofollow external" href="http://nlp.stanford.edu/IR-book/pdf/04const.pdf" title="http://nlp.stanford.edu/IR-book/pdf/04const.pdf">http://nlp.stanford.edu/IR-book/pdf/04const.pdf</a> page 9-13 of the PDF, or page 74-78 of the page numbers printed on the page.  HTML version available starting with page <a rel="nofollow external" href="http://nlp.stanford.edu/IR-book/html/htmledition/distributed-indexing-1.html" title="http://nlp.stanford.edu/IR-book/html/htmledition/distributed-indexing-1.html">nlp.stanford.edu/.../distributed-indexing-1.html</a>
+					<a id="Comments_ascx_CommentList_ctl16_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl16$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Justin">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl17_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/IdenticonHandler_004.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38724">#</a>&nbsp;<a name="38724"></a>re: Map / Reduce – A visual explanation
+						<span>
+							3/15/2010 9:39 PM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl17_NameLink" title="Justin" target="_blank">Justin</a>
+				</h4>
+				<p>
+					Great introduction to MapReduce.<br><br>As others have said map reduce is not new, and most modern RDBMS's incorporate a form of it.<br><br>For example MSSQL parallel execution plans with aggregates or CLR UDF's are essentially mapreduce.<br><br>Some RDBMS implementations can even scale out share nothing like a mapreduce cluster(Not MSSQL unfortunately,  see Teradata).<br><br>Checkout: <a rel="nofollow external" href="http://databasecolumn.vertica.com/database-innovation/mapreduce-a-major-step-backwards/" title="http://databasecolumn.vertica.com/database-innovation/mapreduce-a-major-step-backwards/">databasecolumn.vertica.com/.../mapreduce-a-majo...</a>  for a relational perspective on mapreduce.<br><br><br><br>
+					<a id="Comments_ascx_CommentList_ctl17_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl17$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Atul-kash">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl18_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_005.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#38728">#</a>&nbsp;<a name="38728"></a>A visual explanation
+						<span>
+							3/17/2010 2:51 AM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl18_NameLink" title="http://www.gameranx.com/" href="http://www.gameranx.com/" target="_blank">Atul kash</a>
+				</h4>
+				<p>
+					Now I know what MapReduce is all about, Thanks for the heads up. Appreciate it!
+					<a id="Comments_ascx_CommentList_ctl18_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl18$EditLink','')"></a>
+				</p>
+			</div>
+		
+			<div class="comment-Mahesh-Iyer">
+				<hr style="visibility: hidden; clear: both;">
+				<img id="Comments_ascx_CommentList_ctl19_GravatarImg" class="avatar" src="map-reduce-ndash-a-visual-explanation.aspx_files/avatar_008.png" alt="Gravatar" style="border-width: 0px;">
+				<h4>
+					<a title="permalink: re: Map / Reduce – A visual explanation" href="http://ayende.com/Blog/archive/2010/03/14/map-reduce-ndash-a-visual-explanation.aspx#39078">#</a>&nbsp;<a name="39078"></a>re: Map / Reduce – A visual explanation
+						<span>
+							4/21/2010 2:56 AM
+						</span>
+					<a id="Comments_ascx_CommentList_ctl19_NameLink" title="http://www.mapreduce.org/" href="http://www.mapreduce.org/" target="_blank">Mahesh Iyer</a>
+				</h4>
+				<p>
+					Great New Resource on MapReduce - <a rel="nofollow external" href="http://www.mapreduce.org/" title="www.MapReduce.org">www.MapReduce.org</a>, includes blog posts by Industry experts, whitepapers, webcasts and tutorials. Check it out...
+					<a id="Comments_ascx_CommentList_ctl19_EditLink" href="javascript:__doPostBack('Comments_ascx$CommentList$ctl19$EditLink','')"></a>
+				</p>
+			</div>
+		
+</div><div class="commentsClosedMessage"><span style="font-style: italic;">Comments have been closed on this topic.</span></div>
+</div>
+				
+        <div class="eofp">
+            
+<p id="footer">
+	Powered by: 
+	<br>
+	<a id="Footer1_Hyperlink2" title="Powered By Subtext" name="Hyperlink1" href="http://sourceforge.net/projects/subtext/"><img title="Powered By Subtext" src="map-reduce-ndash-a-visual-explanation.aspx_files/PoweredBySubtext85x33.png" style="border-width: 0px;"></a>
+	<a id="Footer1_Hyperlink3" title="Powered By ASP.NET" name="Hyperlink1" href="http://asp.net/"><img title="Powered By ASP.NET" src="map-reduce-ndash-a-visual-explanation.aspx_files/PoweredByAsp.gif" style="border-width: 0px;"></a>
+	<br>
+	Copyright © Ayende Rahien
+</p>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">//<![CDATA[
+    if (typeof jQuery == 'undefined') {
+        document.write(unescape("%3Cscript src='http://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js' type='text/javascript' %3E%3C/script%3E"));
+    }//]]></script>
+<script type="text/javascript" language="Javascript" src="map-reduce-ndash-a-visual-explanation.aspx_files/m.js"></script>
+<script type="text/javascript" language="Javascript"> if($.LqmAds){$.LqmAds();$('#lqdmrd').hide();}</script>
+
+		
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(PBR_ApplicationInit);var PBR_WaitText = 'Submitting...';var PBR_MonitoredUpdatePanels = new Array('commentsUpdatePanelWrapper');var PBR_WaitTexts = new Array();var PBR_WaitImages = new Array();
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+Sys.Application.initialize();
+//]]>
+</script>
+</form>
+	
+	</body></html>

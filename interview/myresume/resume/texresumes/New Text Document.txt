@@ -1,0 +1,24 @@
+(1)Implementation of Mips Processor 
+Implementation of MIPS processor having Instruction-fetch & Register-decode unit,ALU, Register file and MEM unit using SRam and Block Ram .Work was done on Spartan-3(FPGA board)in Verilog with help of Xilinix IDE.
+(2)Extension of Nachos
+Implemented some features like System Calls, Scheduling Algorithms, Multiprogramming and Virtual Memory on Nachos  operating system in C++.
+(3)Oberon Compiler
+Developed a bare minimal compiler for Oberon language in java with almost all  features having  lexical ,Syntax Analyzer and  Semantic analyzer phase .It can compile programs involving recursion and simple case statements.4000 lines of code java.
+(4)Parallel Solver for Very Large System of Equations
+Successfully developed a solver for a large system of equations of order 50000x50000 using MPI and openMP .It is for clusters and mesh connected computers, with inputs in , GF2  and  real field .
+(5)Concurrent Vi
+Aim was to make Vi a concurrent editor of Linux able to edit same file by more than one process.we implemented user defined locks in the data section for concurrency.Code was submitted on sourceforg.net and get much appreciation from open source community as it was totally new feature in the Vi  .Project involved going into the vim source code of more that 6000 lines.
+(6)User level Thread Library with mutual exclusion support
+Implemented user level thread library taking care of issues like scheduling, starvation and fairness using  Linux system calls provided in ucontext.h, signal.h, sched.h, & setjmp.h like makecontext , swapcontext etc.
+Studied various distributed mutual exclusion algorithms (non-token and token based) and measured throughput and synchronization delays for  them .
+(7)UDP-Chat System 
+We Developed a chat system with functionalities of conferencing and file sending .We have implemented reliability, flow control and congestion control over transport layer in User Datagram Protocol (UDP) using socket programming.we also checked the performance of our chatting protocol using The Network Simulator - ns2.
+(8)Motion Detector
+Implemented a motion detection algorithm for video using background subtraction which can detect moving objects in the video in still camera position.1500 lines of code in C\#.Net.
+(9)Dual Stapler
+As a part of ART course project we made a single stapler able to use two kind of pins . we  designed a innovative multipurpose stapler, we secured A grade in this.
+(10)Similarity Search in Time Series Database
+Aim was to implement the technique for fast retrieval and search similar time series  in large video & audio database .  Dynamic Time Warping(DTW ) method is studied for searching  KNN(K^th  nearest neighbor) quarries .
+(11)Offline Biometric Signature Verification
+Developed a signature verification system using SVM(Support Vector Machines )  which can be used for scanned images of signature of person.Maximum Accuracy achieved was 80% in skilled forgery and 83% in random forgery .
+ code was written in matlab .

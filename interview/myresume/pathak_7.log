@@ -1,0 +1,20 @@
+This is TeX, Version 3.14159 (MiKTeX 2) (preloaded format=latex 2000.11.28)  14 MAR 2012 14:19
+**pathak_7.tex
+(pathak_7.tex
+LaTeX2e <2000/06/01>
+Babel <v3.6Z> and hyphenation patterns for english, french, german, ngerman, dumylang, nohyphenation, loaded.
+
+! LaTeX Error: File `res.cls' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
+
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.4 
+     
+*** (cannot \read from terminal in nonstop modes)
+
+No pages of output.
